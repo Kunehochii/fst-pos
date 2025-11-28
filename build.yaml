@@ -1,0 +1,58 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          - lib/**/*.dart
+        options:
+          # Generate copyWith method
+          copy_with: true
+          # Generate == and hashCode
+          equal: true
+          # Generate toString
+          to_string: true
+          # Use default union key
+          union_key: runtimeType
+          # Make classes immutable by default
+          make_collections_unmodifiable: true
+
+      json_serializable:
+        options:
+          # Use explicit toJson
+          explicit_to_json: true
+          # Include fields with null values
+          include_if_null: false
+          # Use field rename strategy
+          field_rename: snake
+          # Check for required keys
+          checked: true
+          # Create factory in generated code
+          create_factory: true
+          # Create toJson in generated code
+          create_to_json: true
+
+      drift_dev:
+        options:
+          # Generate companion classes
+          generate_companions: true
+          # Generate mutable classes
+          mutable_classes: false
+          # Raw result set data
+          raw_result_set_data: false
+          # Apply converters on variables
+          apply_converters_on_variables: true
+          # Generate values in copy with
+          generate_values_in_copy_with: true
+          # Named parameters
+          named_parameters: true
+          # Named parameters always required
+          named_parameters_always_required: false
+          # Scoped dart components
+          scoped_dart_components: true
+          # Store date time as text
+          store_date_time_values_as_text: true
+
+      riverpod_generator:
+        options:
+          # Provider name suffix
+          provider_name_suffix: Provider
