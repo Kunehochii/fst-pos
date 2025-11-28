@@ -5,4 +5,5 @@
 /// - domain/     - Entities, repository interfaces, use cases
 /// - presentation/ - Pages, widgets, state management (providers)
 
+export 'auth/auth.dart';
 export 'home/home.dart';

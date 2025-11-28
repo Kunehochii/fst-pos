@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/router/app_router.dart';
+import '../../features/auth/auth.dart';
 
 /// Main application layout with sidebar navigation.
 ///
@@ -11,16 +13,16 @@ import '../../core/router/app_router.dart';
 ///
 /// Usage:
 /// Used automatically by GoRouter's ShellRoute in app_router.dart.
-class MainLayout extends StatefulWidget {
+class MainLayout extends ConsumerStatefulWidget {
   final Widget child;
 
   const MainLayout({super.key, required this.child});
 
   @override
-  State<MainLayout> createState() => _MainLayoutState();
+  ConsumerState<MainLayout> createState() => _MainLayoutState();
 }
 
-class _MainLayoutState extends State<MainLayout> {
+class _MainLayoutState extends ConsumerState<MainLayout> {
   final _controller = SideMenuController();
 
   @override
@@ -114,35 +116,73 @@ class _MainLayoutState extends State<MainLayout> {
   }
 
   Widget _buildFooter(bool isOpen) {
+    final cashier = ref.watch(currentCashierProvider);
+    final isOffline = ref.watch(isOfflineModeProvider);
+
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const CircleAvatar(
-            radius: 16,
-            child: Icon(Icons.person, size: 20),
-          ),
-          if (isOpen) ...[
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          if (isOffline)
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'User Name',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    'user@example.com',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  const Icon(Icons.cloud_off, size: 14, color: Colors.orange),
+                  if (isOpen) ...[
+                    const SizedBox(width: 4),
+                    const Text(
+                      'Offline',
+                      style: TextStyle(fontSize: 12, color: Colors.orange),
+                    ),
+                  ],
                 ],
               ),
             ),
-          ],
+          Row(
+            children: [
+              const CircleAvatar(
+                radius: 16,
+                child: Icon(Icons.person, size: 20),
+              ),
+              if (isOpen) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        cashier?.username ?? 'Unknown',
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        cashier?.branchName ?? '',
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.logout, size: 20),
+                  tooltip: 'Logout',
+                  onPressed: () async {
+                    await ref.read(authNotifierProvider.notifier).logout();
+                  },
+                ),
+              ],
+            ],
+          ),
         ],
       ),
     );

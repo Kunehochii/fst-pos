@@ -18,6 +18,11 @@ class ApiEndpoints {
 class _AuthEndpoints {
   const _AuthEndpoints();
 
+  // Cashier auth endpoints
+  String get cashierLogin => '/auth/cashier/login';
+  String get cashierMe => '/auth/cashier/me';
+
+  // Legacy/unused
   String get login => '/auth/login';
   String get register => '/auth/register';
   String get logout => '/auth/logout';
