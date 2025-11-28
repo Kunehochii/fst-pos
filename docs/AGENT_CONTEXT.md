@@ -400,9 +400,49 @@ flutter build web --release
 
 ## UI Components
 
+### Design Philosophy
+
+The FST POS app follows a **modern, minimal, and clean design** philosophy inspired by shadcn/ui principles:
+
+**Core Principles:**
+
+1. **Simplicity over complexity** - Clean interfaces with purposeful whitespace
+2. **Subtle depth** - Light shadows and borders instead of heavy gradients
+3. **Consistent spacing** - Generous padding (16-28px) for breathing room
+4. **Professional color palette** - Deep Navy primary with white foreground
+5. **Clear hierarchy** - Typography and color establish visual importance
+6. **Smooth interactions** - Gentle transitions and loading states
+
+**Visual Guidelines:**
+
+- **Cards**: White background, subtle border (`AppColors.border`), soft shadow, 16px border radius
+- **Buttons**: Primary uses deep navy blue with white text; secondary uses muted backgrounds
+- **Forms**: Clear labels above inputs, adequate spacing (20px between fields)
+- **Icons**: Use Lucide icons consistently at 18-20px for inline, 32-36px for featured
+- **Text**: Dark foreground for content, muted foreground for secondary text
+- **Backgrounds**: Subtle gradients (white to muted) for visual interest without distraction
+
+**Component Patterns:**
+
+- Login/auth pages: Centered card with logo icon above, subtle gradient background
+- Sidebar: Primary navy background with white text/icons, accent highlight for selection
+- Content areas: Clean white background with structured card layouts
+- Toasts: Surface cards with icon + title + message pattern
+
 ### Main Layout (Sidebar)
 
-All pages are wrapped in `MainLayout` via GoRouter's `ShellRoute`. The sidebar uses `flutter_side_menu`.
+All pages are wrapped in `MainLayout` via GoRouter's `ShellRoute`. The sidebar uses `flutter_side_menu` with a **deep navy blue (primary)** background and **white** text/icons for high contrast and professional appearance.
+
+```dart
+// Sidebar styling
+SideMenu(
+  backgroundColor: AppColors.primary,
+  // Menu items with white foreground
+  icon: Icon(Icons.dashboard, color: AppColors.primaryForeground),
+  titleStyle: TextStyle(color: AppColors.primaryForeground),
+  highlightSelectedColor: AppColors.sidebarAccent,
+)
+```
 
 ### shadcn_flutter
 

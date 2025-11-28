@@ -1,6 +1,6 @@
 name: fst_pos
 description: "FST POS - Point of Sale Application"
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -57,10 +57,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
+
   assets:
     - .env
-    - .env.development
-    - .env.production
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

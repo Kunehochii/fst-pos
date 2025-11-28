@@ -4,12 +4,15 @@ import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/router/app_router.dart';
+import '../../core/theme/app_colors.dart';
 import '../../features/auth/auth.dart';
 
 /// Main application layout with sidebar navigation.
 ///
 /// This widget wraps all pages and provides consistent navigation.
 /// The sidebar uses flutter_side_menu for collapsible navigation.
+/// Features a deep navy blue (primary color) sidebar with white text
+/// for a modern, professional look.
 ///
 /// Usage:
 /// Used automatically by GoRouter's ShellRoute in app_router.dart.
@@ -39,6 +42,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
             hasResizerToggle: true,
             minWidth: 70,
             maxWidth: 250,
+            backgroundColor: AppColors.primary,
             builder: (data) {
               return SideMenuData(
                 header: _buildHeader(data.isOpen),
@@ -60,15 +64,20 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          const Icon(Icons.point_of_sale, size: 32),
+          Icon(
+            Icons.point_of_sale,
+            size: 32,
+            color: AppColors.primaryForeground,
+          ),
           if (isOpen) ...[
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Text(
                 'FST POS',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.primaryForeground,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -85,32 +94,67 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       SideMenuItemDataTile(
         isSelected: currentPath == AppRoutes.home,
         onTap: () => context.go(AppRoutes.home),
-        icon: const Icon(Icons.dashboard),
+        icon: Icon(Icons.dashboard, color: AppColors.primaryForeground),
         title: 'Dashboard',
+        titleStyle: TextStyle(color: AppColors.primaryForeground),
+        selectedTitleStyle: TextStyle(
+          color: AppColors.primaryForeground,
+          fontWeight: FontWeight.w600,
+        ),
+        highlightSelectedColor: AppColors.sidebarAccent,
+        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
       ),
       SideMenuItemDataTile(
         isSelected: currentPath == AppRoutes.products,
         onTap: () => context.go(AppRoutes.products),
-        icon: const Icon(Icons.inventory),
+        icon: Icon(Icons.inventory, color: AppColors.primaryForeground),
         title: 'Products',
+        titleStyle: TextStyle(color: AppColors.primaryForeground),
+        selectedTitleStyle: TextStyle(
+          color: AppColors.primaryForeground,
+          fontWeight: FontWeight.w600,
+        ),
+        highlightSelectedColor: AppColors.sidebarAccent,
+        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
       ),
       SideMenuItemDataTile(
         isSelected: currentPath == AppRoutes.orders,
         onTap: () => context.go(AppRoutes.orders),
-        icon: const Icon(Icons.receipt_long),
+        icon: Icon(Icons.receipt_long, color: AppColors.primaryForeground),
         title: 'Orders',
+        titleStyle: TextStyle(color: AppColors.primaryForeground),
+        selectedTitleStyle: TextStyle(
+          color: AppColors.primaryForeground,
+          fontWeight: FontWeight.w600,
+        ),
+        highlightSelectedColor: AppColors.sidebarAccent,
+        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
       ),
       SideMenuItemDataTile(
         isSelected: currentPath == AppRoutes.customers,
         onTap: () => context.go(AppRoutes.customers),
-        icon: const Icon(Icons.people),
+        icon: Icon(Icons.people, color: AppColors.primaryForeground),
         title: 'Customers',
+        titleStyle: TextStyle(color: AppColors.primaryForeground),
+        selectedTitleStyle: TextStyle(
+          color: AppColors.primaryForeground,
+          fontWeight: FontWeight.w600,
+        ),
+        highlightSelectedColor: AppColors.sidebarAccent,
+        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
       ),
       SideMenuItemDataTile(
         isSelected: currentPath == AppRoutes.settings,
         onTap: () => context.go(AppRoutes.settings),
-        icon: const Icon(Icons.settings),
+        icon: Icon(Icons.settings, color: AppColors.primaryForeground),
         title: 'Settings',
+        titleStyle: TextStyle(color: AppColors.primaryForeground),
+        selectedTitleStyle: TextStyle(
+          color: AppColors.primaryForeground,
+          fontWeight: FontWeight.w600,
+        ),
+        highlightSelectedColor: AppColors.sidebarAccent,
+        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
       ),
     ];
   }
@@ -129,18 +173,18 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.2),
+                color: AppColors.warning.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.cloud_off, size: 14, color: Colors.orange),
+                  Icon(Icons.cloud_off, size: 14, color: AppColors.warning),
                   if (isOpen) ...[
                     const SizedBox(width: 4),
-                    const Text(
+                    Text(
                       'Offline',
-                      style: TextStyle(fontSize: 12, color: Colors.orange),
+                      style: TextStyle(fontSize: 12, color: AppColors.warning),
                     ),
                   ],
                 ],
@@ -148,9 +192,14 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
             ),
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 16,
-                child: Icon(Icons.person, size: 20),
+                backgroundColor: AppColors.sidebarAccent,
+                child: Icon(
+                  Icons.person,
+                  size: 20,
+                  color: AppColors.primaryForeground,
+                ),
               ),
               if (isOpen) ...[
                 const SizedBox(width: 12),
@@ -161,20 +210,29 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
                     children: [
                       Text(
                         cashier?.username ?? 'Unknown',
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primaryForeground,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         cashier?.branchName ?? '',
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.primaryForeground.withOpacity(0.7),
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.logout, size: 20),
+                  icon: Icon(
+                    Icons.logout,
+                    size: 20,
+                    color: AppColors.primaryForeground,
+                  ),
                   tooltip: 'Logout',
                   onPressed: () async {
                     await ref.read(authNotifierProvider.notifier).logout();

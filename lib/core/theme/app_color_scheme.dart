@@ -59,5 +59,14 @@ abstract final class AppColorScheme {
     chart3: AppColors.chart3,
     chart4: AppColors.chart4,
     chart5: AppColors.chart5,
+    // Sidebar colors
+    sidebar: AppColors.sidebar,
+    sidebarForeground: AppColors.sidebarForeground,
+    sidebarPrimary: AppColors.sidebarPrimary,
+    sidebarPrimaryForeground: AppColors.sidebarPrimaryForeground,
+    sidebarAccent: AppColors.sidebarAccent,
+    sidebarAccentForeground: AppColors.sidebarAccentForeground,
+    sidebarBorder: AppColors.sidebarBorder,
+    sidebarRing: AppColors.sidebarRing,
   );
 }
