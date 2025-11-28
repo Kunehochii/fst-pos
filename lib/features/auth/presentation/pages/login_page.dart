@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../providers/auth_provider.dart';
 
 /// Login page for cashier authentication.
@@ -26,7 +27,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _usernameController = TextEditingController();
   final _accessKeyController = TextEditingController();
   bool _isLoading = false;
-  bool _obscurePassword = true;
   String? _usernameError;
   String? _accessKeyError;
 
@@ -74,25 +74,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       },
       error: (error, _) {
         final message = _getErrorMessage(error);
-        showToast(
-          context: context,
-          builder: (context, overlay) => SurfaceCard(
-            child: Basic(
-              leading: Icon(
-                LucideIcons.circleAlert,
-                color: AppColors.destructive,
-              ),
-              title: const Text('Login Failed'),
-              subtitle: Text(message),
-              trailing: GhostButton(
-                density: ButtonDensity.icon,
-                onPressed: overlay.close,
-                child: const Icon(LucideIcons.x),
-              ),
-            ),
-          ),
-          location: ToastLocation.topCenter,
-          showDuration: const Duration(seconds: 4),
+        AppToast.error(
+          context,
+          title: 'Login Failed',
+          message: message,
         );
       },
     );
@@ -114,11 +99,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final destructiveColor = theme.colorScheme.destructive;
-
     return Scaffold(
-      child: Container(
+      body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -138,25 +120,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Logo/Brand Section
-                  Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      LucideIcons.store,
-                      size: 36,
-                      color: AppColors.primaryForeground,
-                    ),
+                  AppIconBox(
+                    icon: Icons.store,
+                    backgroundColor: AppColors.primary,
+                    iconColor: AppColors.primaryForeground,
+                    size: 72,
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -178,138 +146,56 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(height: 32),
                   // Login Card
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: AppColors.border,
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 24,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
+                  AppCard(
+                    elevation: 1,
                     padding: const EdgeInsets.all(28),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Username field
-                        Text(
-                          'Username',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.foreground,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
+                        AppTextField(
                           controller: _usernameController,
-                          placeholder: const Text('Enter your username'),
-                          features: [
-                            InputFeature.leading(
-                              Icon(
-                                LucideIcons.user,
-                                size: 18,
-                                color: AppColors.mutedForeground,
-                              ),
-                            ),
-                          ],
+                          label: 'Username',
+                          hintText: 'Enter your username',
+                          prefixIcon: Icons.person_outline,
+                          errorText: _usernameError,
                           onChanged: (_) {
                             if (_usernameError != null) {
                               setState(() => _usernameError = null);
                             }
                           },
                         ),
-                        if (_usernameError != null) ...[
-                          const SizedBox(height: 6),
-                          Text(
-                            _usernameError!,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: destructiveColor,
-                            ),
-                          ),
-                        ],
                         const SizedBox(height: 20),
                         // Access Key field
-                        Text(
-                          'Access Key',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.foreground,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
+                        AppTextField(
                           controller: _accessKeyController,
-                          placeholder: const Text('Enter your access key'),
-                          obscureText: _obscurePassword,
-                          features: [
-                            InputFeature.leading(
-                              Icon(
-                                LucideIcons.keyRound,
-                                size: 18,
-                                color: AppColors.mutedForeground,
-                              ),
-                            ),
-                            InputFeature.passwordToggle(),
-                          ],
+                          label: 'Access Key',
+                          hintText: 'Enter your access key',
+                          prefixIcon: Icons.key_outlined,
+                          obscureText: true,
+                          showPasswordToggle: true,
+                          errorText: _accessKeyError,
                           onChanged: (_) {
                             if (_accessKeyError != null) {
                               setState(() => _accessKeyError = null);
                             }
                           },
                         ),
-                        if (_accessKeyError != null) ...[
-                          const SizedBox(height: 6),
-                          Text(
-                            _accessKeyError!,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: destructiveColor,
-                            ),
-                          ),
-                        ],
                         const SizedBox(height: 28),
                         // Sign In button
-                        PrimaryButton(
+                        AppButton.primary(
                           onPressed: _isLoading ? null : _handleLogin,
-                          child: _isLoading
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: AppColors.primaryForeground,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const Text('Signing in...'),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text('Sign In'),
-                                    const SizedBox(width: 8),
-                                    Icon(
-                                      LucideIcons.arrowRight,
-                                      size: 18,
-                                      color: AppColors.primaryForeground,
-                                    ),
-                                  ],
+                          isLoading: _isLoading,
+                          isExpanded: true,
+                          icon: _isLoading
+                              ? null
+                              : const Icon(
+                                  Icons.arrow_forward,
+                                  size: 18,
+                                  color: Colors.white,
                                 ),
+                          child: Text(_isLoading ? 'Signing in...' : 'Sign In'),
                         ),
                       ],
                     ),

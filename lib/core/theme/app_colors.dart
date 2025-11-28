@@ -6,12 +6,11 @@ import 'package:flutter/widgets.dart';
 /// and converted from OKLCH to Flutter Color format.
 ///
 /// Use these colors for:
-/// - Non-shadcn_flutter components
 /// - Custom widgets
 /// - Platform-specific styling
+/// - Direct color access when theme context is unavailable
 ///
-/// For shadcn_flutter components, use the theme configured in main.dart
-/// which uses [AppColorScheme] for consistent theming.
+/// For themed components, use Theme.of(context).colorScheme instead.
 abstract final class AppColors {
   // ==========================================================================
   // PRIMARY COLORS - Deep Navy Blue

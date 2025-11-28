@@ -53,7 +53,7 @@ class CashierModel with _$CashierModel {
 class LoginRequest with _$LoginRequest {
   const factory LoginRequest({
     required String username,
-    required String accessKey,
+    @JsonKey(name: 'accessKey') required String accessKey,
   }) = _LoginRequest;
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>

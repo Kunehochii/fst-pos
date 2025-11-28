@@ -54,17 +54,16 @@ _$LoginRequestImpl _$$LoginRequestImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$LoginRequestImpl(
           username: $checkedConvert('username', (v) => v as String),
-          accessKey: $checkedConvert('access_key', (v) => v as String),
+          accessKey: $checkedConvert('accessKey', (v) => v as String),
         );
         return val;
       },
-      fieldKeyMap: const {'accessKey': 'access_key'},
     );
 
 Map<String, dynamic> _$$LoginRequestImplToJson(_$LoginRequestImpl instance) =>
     <String, dynamic>{
       'username': instance.username,
-      'access_key': instance.accessKey,
+      'accessKey': instance.accessKey,
     };
 
 _$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>

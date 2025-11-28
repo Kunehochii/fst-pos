@@ -12,7 +12,7 @@
 | **Platforms**        | Android, Web only                          |
 | **State Management** | Riverpod + riverpod_generator              |
 | **Routing**          | GoRouter + go_router_builder               |
-| **UI Framework**     | shadcn_flutter + flutter_side_menu         |
+| **UI Framework**     | Flutter Material + flutter_side_menu       |
 | **Theme**            | Custom FST color scheme (Deep Navy + Teal) |
 | **HTTP Client**      | Dio with interceptors                      |
 | **Local Database**   | Drift (SQLite)                             |
@@ -26,7 +26,7 @@
 
 ```
 lib/
-├── main.dart                      # App entry point (Riverpod + GoRouter + shadcn_ui)
+├── main.dart                      # App entry point (Riverpod + GoRouter + Material)
 ├── core/                          # Shared infrastructure
 │   ├── core.dart                  # Barrel export
 │   ├── config/
@@ -46,7 +46,7 @@ lib/
 │   │   └── secure_storage.dart    # JWT token storage wrapper
 │   ├── theme/
 │   │   ├── app_colors.dart        # Raw color palette for custom widgets
-│   │   └── app_color_scheme.dart  # shadcn_flutter theme configuration
+│   │   └── app_theme.dart         # Material theme configuration
 │   └── utils/
 │       └── logger.dart            # Debug logging utility
 ├── features/                      # Feature modules (clean architecture)
@@ -69,6 +69,12 @@ lib/
     ├── shared.dart                # Barrel export
     └── widgets/
         ├── widgets.dart           # Barrel export
+        ├── app_button.dart        # Primary/secondary/ghost buttons
+        ├── app_card.dart          # Styled card container
+        ├── app_icon_box.dart      # Icon with background
+        ├── app_loading.dart       # Loading indicators
+        ├── app_text_field.dart    # Styled text input
+        ├── app_toast.dart         # Toast notifications
         └── main_layout.dart       # Sidebar navigation shell
 ```
 
@@ -402,7 +408,7 @@ flutter build web --release
 
 ### Design Philosophy
 
-The FST POS app follows a **modern, minimal, and clean design** philosophy inspired by shadcn/ui principles:
+The FST POS app follows a **modern, minimal, and clean design** philosophy:
 
 **Core Principles:**
 
@@ -418,7 +424,7 @@ The FST POS app follows a **modern, minimal, and clean design** philosophy inspi
 - **Cards**: White background, subtle border (`AppColors.border`), soft shadow, 16px border radius
 - **Buttons**: Primary uses deep navy blue with white text; secondary uses muted backgrounds
 - **Forms**: Clear labels above inputs, adequate spacing (20px between fields)
-- **Icons**: Use Lucide icons consistently at 18-20px for inline, 32-36px for featured
+- **Icons**: Use Material icons consistently at 18-20px for inline, 32-36px for featured
 - **Text**: Dark foreground for content, muted foreground for secondary text
 - **Backgrounds**: Subtle gradients (white to muted) for visual interest without distraction
 
@@ -444,27 +450,172 @@ SideMenu(
 )
 ```
 
-### shadcn_flutter
+---
 
-Import: `import 'package:shadcn_flutter/shadcn_flutter.dart';`
+## Reusable Components
 
-Use shadcn_flutter components for consistent styling.
+The shared widgets in `lib/shared/widgets/` provide consistent UI components across the app.
 
-**Note:** This package exports widgets that conflict with Flutter Material. Hide conflicting names:
+### AppButton
+
+Multi-variant button component.
 
 ```dart
-import 'package:flutter/material.dart' hide TextField, Card, Scaffold, ...;
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:fst_pos/shared/widgets/widgets.dart';
+
+// Primary filled button
+AppButton.primary(
+  onPressed: () => print('Pressed'),
+  child: Text('Submit'),
+  isLoading: false,
+  isExpanded: true,  // Full width
+  icon: Icon(Icons.send),
+)
+
+// Secondary outlined button
+AppButton.secondary(
+  onPressed: () {},
+  child: Text('Cancel'),
+)
+
+// Ghost/text button
+AppButton.ghost(
+  onPressed: () {},
+  child: Text('Skip'),
+)
+
+// Destructive/danger button
+AppButton.destructive(
+  onPressed: () {},
+  child: Text('Delete'),
+)
 ```
 
-Key differences from Material:
+### AppTextField
 
-- `Scaffold(child: ...)` instead of `Scaffold(body: ...)`
-- `TextField(placeholder: Widget(...))` instead of `InputDecoration`
-- `InputFeature.leading(icon)` for input icons
-- `InputFeature.passwordToggle()` for password visibility
-- Text modifiers: `.h2()`, `.muted()`, `.semiBold()`, `.textCenter()`
-- `PrimaryButton`, `SecondaryButton`, `GhostButton`, `DestructiveButton`
+Styled text input with label, icons, and password toggle.
+
+```dart
+AppTextField(
+  controller: _controller,
+  label: 'Email',
+  hintText: 'Enter your email',
+  prefixIcon: Icons.email,
+  errorText: _errorMessage,
+  onChanged: (value) {},
+)
+
+// Password field with toggle
+AppTextField(
+  controller: _passwordController,
+  label: 'Password',
+  hintText: 'Enter password',
+  prefixIcon: Icons.lock,
+  obscureText: true,
+  showPasswordToggle: true,
+)
+```
+
+### AppCard
+
+Styled card container with consistent theming.
+
+```dart
+AppCard(
+  padding: EdgeInsets.all(16),
+  elevation: 1,  // 0 for flat, >0 for shadow
+  onTap: () {},  // Optional - makes card tappable
+  child: Column(
+    children: [
+      Text('Card Title'),
+      Text('Card content'),
+    ],
+  ),
+)
+```
+
+### AppToast
+
+Toast notification utility for feedback messages.
+
+```dart
+// Show success toast
+AppToast.success(
+  context,
+  title: 'Success',
+  message: 'Your changes have been saved.',
+);
+
+// Show error toast
+AppToast.error(
+  context,
+  title: 'Error',
+  message: 'Something went wrong.',
+);
+
+// Show warning toast
+AppToast.warning(
+  context,
+  title: 'Warning',
+  message: 'Please check your input.',
+);
+
+// Show info toast
+AppToast.info(
+  context,
+  title: 'Info',
+  message: 'New updates available.',
+);
+
+// Custom toast with type
+AppToast.show(
+  context,
+  title: 'Custom',
+  message: 'Custom message',
+  type: ToastType.success,
+  duration: Duration(seconds: 5),
+);
+```
+
+### AppIconBox
+
+Icon container with background color and shadow.
+
+```dart
+AppIconBox(
+  icon: Icons.store,
+  backgroundColor: AppColors.primary,
+  iconColor: AppColors.primaryForeground,
+  size: 72,
+  iconSize: 36,
+  borderRadius: 16,
+)
+```
+
+### AppLoadingIndicator
+
+Loading indicators for async states.
+
+```dart
+// Simple loading indicator
+AppLoadingIndicator(
+  message: 'Loading...',
+  size: 32,
+  color: AppColors.primary,
+)
+
+// Full-screen centered loading overlay
+AppLoadingOverlay(message: 'Please wait...')
+```
+
+### Adding New Reusable Components
+
+When creating a new reusable component:
+
+1. Create file in `lib/shared/widgets/` with prefix `app_`
+2. Add export to `lib/shared/widgets/widgets.dart`
+3. Document usage with examples in this section
+4. Follow existing patterns for consistency
 
 ---
 
@@ -497,38 +648,36 @@ The app uses a unified color scheme derived from the FST admin dashboard for vis
 
 ### Theme Configuration
 
-The theme is configured in `main.dart` using a custom color scheme:
+The theme is configured in `main.dart` using Material Design:
 
 ```dart
-import 'core/theme/app_color_scheme.dart';
+import 'core/theme/app_theme.dart';
 
-ShadcnApp.router(
+MaterialApp.router(
+  theme: AppTheme.light,
+  darkTheme: AppTheme.dark,
   themeMode: ThemeMode.light,
-  theme: ThemeData(
-    colorScheme: AppColorScheme.light,
-    radius: 0.8,
-  ),
   // ...
 )
 ```
 
 ### Using Colors
 
-#### For shadcn_flutter Components
+#### Via Theme Context (Preferred)
 
-Colors are applied automatically via the theme. Access theme colors in widgets:
+Access theme colors in widgets for automatic theme support:
 
 ```dart
 final theme = Theme.of(context);
 Container(
   color: theme.colorScheme.primary,
-  child: Text('Hello', style: TextStyle(color: theme.colorScheme.primaryForeground)),
+  child: Text('Hello', style: TextStyle(color: theme.colorScheme.onPrimary)),
 )
 ```
 
-#### For Custom/Non-shadcn_flutter Widgets
+#### Direct Color Access
 
-Use `AppColors` for direct color access:
+Use `AppColors` for custom widgets or when theme context is unavailable:
 
 ```dart
 import 'package:fst_pos/core/theme/app_colors.dart';
@@ -813,19 +962,20 @@ The `AuthInterceptor` automatically:
 
 ## File Locations Reference
 
-| Need               | Location                                                        |
-| ------------------ | --------------------------------------------------------------- |
-| Add API endpoint   | `lib/core/network/api_endpoints.dart`                           |
-| Add route          | `lib/core/router/app_router.dart`                               |
-| Add database table | `lib/core/database/app_database.dart`                           |
-| Add env variable   | `.env` files + `lib/core/config/env_config.dart`                |
-| Add storage key    | `lib/core/storage/secure_storage.dart`                          |
-| Add sidebar item   | `lib/shared/widgets/main_layout.dart`                           |
-| Add/modify colors  | `lib/core/theme/app_colors.dart`                                |
-| Add/modify theme   | `lib/core/theme/app_color_scheme.dart`                          |
-| Auth providers     | `lib/features/auth/presentation/providers/auth_provider.dart`   |
-| Auth repository    | `lib/features/auth/data/repositories/auth_repository_impl.dart` |
-| Login page         | `lib/features/auth/presentation/pages/login_page.dart`          |
+| Need                | Location                                                        |
+| ------------------- | --------------------------------------------------------------- |
+| Add API endpoint    | `lib/core/network/api_endpoints.dart`                           |
+| Add route           | `lib/core/router/app_router.dart`                               |
+| Add database table  | `lib/core/database/app_database.dart`                           |
+| Add env variable    | `.env` files + `lib/core/config/env_config.dart`                |
+| Add storage key     | `lib/core/storage/secure_storage.dart`                          |
+| Add sidebar item    | `lib/shared/widgets/main_layout.dart`                           |
+| Add/modify colors   | `lib/core/theme/app_colors.dart`                                |
+| Add/modify theme    | `lib/core/theme/app_theme.dart`                                 |
+| Add reusable widget | `lib/shared/widgets/` + export in `widgets.dart`                |
+| Auth providers      | `lib/features/auth/presentation/providers/auth_provider.dart`   |
+| Auth repository     | `lib/features/auth/data/repositories/auth_repository_impl.dart` |
+| Login page          | `lib/features/auth/presentation/pages/login_page.dart`          |
 
 ---
 

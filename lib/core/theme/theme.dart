@@ -1,9 +1,9 @@
 /// Theme configuration for FST POS application.
 ///
 /// Provides:
-/// - [AppColors] - Raw color palette for non-shadcn_flutter components
-/// - [AppColorScheme] - shadcn_flutter color scheme for theming
+/// - [AppColors] - Raw color palette for custom widgets
+/// - [AppTheme] - Material theme configuration
 library;
 
-export 'app_color_scheme.dart';
 export 'app_colors.dart';
+export 'app_theme.dart';

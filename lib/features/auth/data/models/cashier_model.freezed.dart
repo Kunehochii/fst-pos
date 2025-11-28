@@ -318,6 +318,7 @@ LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$LoginRequest {
   String get username => throw _privateConstructorUsedError;
+  @JsonKey(name: 'accessKey')
   String get accessKey => throw _privateConstructorUsedError;
 
   /// Serializes this LoginRequest to a JSON map.
@@ -336,7 +337,7 @@ abstract class $LoginRequestCopyWith<$Res> {
           LoginRequest value, $Res Function(LoginRequest) then) =
       _$LoginRequestCopyWithImpl<$Res, LoginRequest>;
   @useResult
-  $Res call({String username, String accessKey});
+  $Res call({String username, @JsonKey(name: 'accessKey') String accessKey});
 }
 
 /// @nodoc
@@ -378,7 +379,7 @@ abstract class _$$LoginRequestImplCopyWith<$Res>
       __$$LoginRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String username, String accessKey});
+  $Res call({String username, @JsonKey(name: 'accessKey') String accessKey});
 }
 
 /// @nodoc
@@ -413,7 +414,9 @@ class __$$LoginRequestImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$LoginRequestImpl implements _LoginRequest {
-  const _$LoginRequestImpl({required this.username, required this.accessKey});
+  const _$LoginRequestImpl(
+      {required this.username,
+      @JsonKey(name: 'accessKey') required this.accessKey});
 
   factory _$LoginRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginRequestImplFromJson(json);
@@ -421,6 +424,7 @@ class _$LoginRequestImpl implements _LoginRequest {
   @override
   final String username;
   @override
+  @JsonKey(name: 'accessKey')
   final String accessKey;
 
   @override
@@ -461,8 +465,9 @@ class _$LoginRequestImpl implements _LoginRequest {
 
 abstract class _LoginRequest implements LoginRequest {
   const factory _LoginRequest(
-      {required final String username,
-      required final String accessKey}) = _$LoginRequestImpl;
+          {required final String username,
+          @JsonKey(name: 'accessKey') required final String accessKey}) =
+      _$LoginRequestImpl;
 
   factory _LoginRequest.fromJson(Map<String, dynamic> json) =
       _$LoginRequestImpl.fromJson;
@@ -470,6 +475,7 @@ abstract class _LoginRequest implements LoginRequest {
   @override
   String get username;
   @override
+  @JsonKey(name: 'accessKey')
   String get accessKey;
 
   /// Create a copy of LoginRequest
