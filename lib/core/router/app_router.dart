@@ -17,14 +17,19 @@ part 'app_router.g.dart';
 /// ```
 @riverpod
 GoRouter appRouter(Ref ref) {
-  final authState = ref.watch(authNotifierProvider);
+  // Use ref.read instead of ref.watch to avoid recreating the router
+  // The refreshListenable handles auth state changes
+  final authNotifier = _AuthStateNotifier(ref);
 
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
-    refreshListenable: _AuthStateNotifier(ref),
+    refreshListenable: authNotifier,
     redirect: (context, state) {
       final isLoggingIn = state.matchedLocation == AppRoutes.login;
+
+      // Read current auth state (don't watch - router uses refreshListenable)
+      final authState = ref.read(authNotifierProvider);
 
       // Handle loading state - don't redirect while loading
       final isLoading = authState.isLoading;

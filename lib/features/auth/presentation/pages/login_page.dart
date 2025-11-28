@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/errors/failure.dart';
-import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../providers/auth_provider.dart';
@@ -62,16 +60,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    // Check if login was successful
+    // Check if login failed (show error)
+    // On success, the router's refreshListenable will automatically redirect to home
     final authState = ref.read(authNotifierProvider);
     authState.whenOrNull(
-      data: (state) {
-        state.whenOrNull(
-          authenticated: (_, __) {
-            context.go(AppRoutes.home);
-          },
-        );
-      },
       error: (error, _) {
         final message = _getErrorMessage(error);
         AppToast.error(
@@ -90,7 +82,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         network: (message) => message,
         cache: (message) => message,
         auth: (message) => message,
-        validation: (message, _) => message,
+        validation: (message, _, __) => message,
         unknown: (message) => message,
       );
     }

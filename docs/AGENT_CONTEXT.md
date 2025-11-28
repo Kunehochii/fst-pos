@@ -169,8 +169,52 @@ class ProductModel with _$ProductModel {
 
 ### 3. Error Handling (Failure union type)
 
+The error handling system is designed to work with NestJS backend responses.
+
+#### NestJS Error Response Formats
+
+Standard error (401, 403, 404, 500, etc.):
+```json
+{
+  "message": "Invalid credentials",
+  "error": "Unauthorized",
+  "statusCode": 401
+}
+```
+
+Validation error (400, 422):
+```json
+{
+  "message": "Validation failed",
+  "errors": [
+    {
+      "expected": "object",
+      "code": "invalid_type",
+      "path": ["fieldName"],
+      "message": "Invalid input: expected object, received string"
+    }
+  ]
+}
+```
+
+#### Failure Types
+
 ```dart
-// In repository
+// Available failure types
+Failure.server(message: 'Error', statusCode: 500)  // Server errors
+Failure.network(message: 'No connection')          // Network issues
+Failure.cache(message: 'Cache error')              // Local storage errors
+Failure.auth(message: 'Unauthorized')              // 401 auth errors
+Failure.validation(                                 // Validation errors
+  message: 'Validation failed',
+  errors: [ValidationErrorDetail(...)],
+)
+Failure.unknown(message: 'Error')                  // Fallback
+```
+
+#### In Repository
+
+```dart
 Future<(Failure?, List<Product>?)> getProducts() async {
   try {
     final data = await _remote.getProducts();
@@ -179,15 +223,56 @@ Future<(Failure?, List<Product>?)> getProducts() async {
     return (e.toAppException().toFailure(), null);
   }
 }
+```
 
-// In UI
+#### In UI - Handling Errors
+
+```dart
 final (failure, products) = await repository.getProducts();
 if (failure != null) {
-  // Handle error
+  // Pattern match on failure type
+  failure.when(
+    server: (message, statusCode) => AppToast.error(context, title: 'Server Error', message: message),
+    network: (message) => AppToast.error(context, title: 'Network Error', message: message),
+    auth: (message) => context.go(AppRoutes.login),
+    validation: (message, fieldErrors, errors) {
+      // Handle validation errors
+      if (errors != null && errors.isNotEmpty) {
+        for (final error in errors) {
+          print('Field: ${error.fieldPath}, Error: ${error.message}');
+        }
+      }
+      AppToast.error(context, title: 'Validation Error', message: message);
+    },
+    cache: (message) => AppToast.error(context, title: 'Cache Error', message: message),
+    unknown: (message) => AppToast.error(context, title: 'Error', message: message),
+  );
   return;
 }
 // Use products!
 ```
+
+#### Exception Types
+
+The system provides typed exceptions that convert to failures:
+
+```dart
+AuthException       // -> Failure.auth (401 responses)
+ServerException     // -> Failure.server (5xx responses)
+NetworkException    // -> Failure.network (connection issues)
+CacheException      // -> Failure.cache (local storage)
+ValidationException // -> Failure.validation (400/422 with errors array)
+AppException        // -> Failure.unknown (fallback)
+```
+
+#### DioException Mapping
+
+The `DioExceptionMapper` extension automatically:
+- Parses NestJS error response structure
+- Extracts `message` and `error` fields
+- Parses `errors` array for validation details
+- Maps HTTP status codes to appropriate exception types
+- Converts timeout/connection errors to NetworkException
 
 ### 4. Offline-First with SyncQueue
 
