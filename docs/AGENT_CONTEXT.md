@@ -6,18 +6,19 @@
 
 ## Quick Facts
 
-| Aspect | Value |
-|--------|-------|
-| **Project** | FST POS (Point of Sale) |
-| **Platforms** | Android, Web only |
-| **State Management** | Riverpod + riverpod_generator |
-| **Routing** | GoRouter + go_router_builder |
-| **UI Framework** | shadcn_flutter + flutter_side_menu |
-| **HTTP Client** | Dio with interceptors |
-| **Local Database** | Drift (SQLite) |
-| **Secure Storage** | flutter_secure_storage (JWT tokens) |
-| **Code Generation** | freezed, json_serializable, drift_dev |
-| **Environment** | flutter_dotenv (.env files) |
+| Aspect               | Value                                      |
+| -------------------- | ------------------------------------------ |
+| **Project**          | FST POS (Point of Sale)                    |
+| **Platforms**        | Android, Web only                          |
+| **State Management** | Riverpod + riverpod_generator              |
+| **Routing**          | GoRouter + go_router_builder               |
+| **UI Framework**     | shadcn_flutter + flutter_side_menu         |
+| **Theme**            | Custom FST color scheme (Deep Navy + Teal) |
+| **HTTP Client**      | Dio with interceptors                      |
+| **Local Database**   | Drift (SQLite)                             |
+| **Secure Storage**   | flutter_secure_storage (JWT tokens)        |
+| **Code Generation**  | freezed, json_serializable, drift_dev      |
+| **Environment**      | flutter_dotenv (.env files)                |
 
 ---
 
@@ -43,6 +44,9 @@ lib/
 │   │   └── app_router.dart        # GoRouter config + route constants
 │   ├── storage/
 │   │   └── secure_storage.dart    # JWT token storage wrapper
+│   ├── theme/
+│   │   ├── app_colors.dart        # Raw color palette for custom widgets
+│   │   └── app_color_scheme.dart  # shadcn_flutter theme configuration
 │   └── utils/
 │       └── logger.dart            # Debug logging utility
 ├── features/                      # Feature modules (clean architecture)
@@ -73,6 +77,7 @@ lib/
 ## Architecture Rules
 
 ### Layer Dependencies
+
 ```
 Presentation → Domain → Data
      ↓            ↓        ↓
@@ -86,6 +91,7 @@ Presentation → Domain → Data
 - **Presentation layer uses** domain interfaces via Riverpod DI
 
 ### File Naming
+
 - `snake_case` for all files
 - Suffix by type: `_page.dart`, `_widget.dart`, `_provider.dart`, `_model.dart`, `_entity.dart`, `_repository.dart`, `_repository_impl.dart`, `_datasource.dart`
 
@@ -116,7 +122,7 @@ Future<List<Product>> products(Ref ref) async {
 class Cart extends _$Cart {
   @override
   CartState build() => const CartState(items: []);
-  
+
   void addItem(Product product) {
     state = state.copyWith(items: [...state.items, product]);
   }
@@ -141,7 +147,7 @@ class Product with _$Product {
 @freezed
 class ProductModel with _$ProductModel {
   const ProductModel._();
-  
+
   const factory ProductModel({
     required String id,
     required String name,
@@ -150,7 +156,7 @@ class ProductModel with _$ProductModel {
   }) = _ProductModel;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
-  
+
   Product toEntity() => Product(id: id, name: name, price: price, quantity: quantity);
 }
 ```
@@ -183,7 +189,7 @@ if (failure != null) {
 // Save locally first, queue for sync
 Future<Product> createProduct(Product product) async {
   await _db.insertProduct(product.toDbModel());
-  
+
   try {
     return await _remote.createProduct(product.toApiModel());
   } on DioException {
@@ -242,12 +248,12 @@ class ProductRemoteDataSource {
 
 ## Available Core Providers
 
-| Provider | Type | Description |
-|----------|------|-------------|
-| `apiClientProvider` | `Dio` | Configured HTTP client with auth |
-| `appDatabaseProvider` | `AppDatabase` | Drift database instance |
-| `secureStorageProvider` | `SecureStorage` | Token storage |
-| `appRouterProvider` | `GoRouter` | App router instance |
+| Provider                | Type            | Description                      |
+| ----------------------- | --------------- | -------------------------------- |
+| `apiClientProvider`     | `Dio`           | Configured HTTP client with auth |
+| `appDatabaseProvider`   | `AppDatabase`   | Drift database instance          |
+| `secureStorageProvider` | `SecureStorage` | Token storage                    |
+| `appRouterProvider`     | `GoRouter`      | App router instance              |
 
 ---
 
@@ -262,6 +268,7 @@ DEBUG_MODE=true
 ```
 
 Access via:
+
 ```dart
 EnvConfig.apiBaseUrl    // String
 EnvConfig.apiTimeout    // int (milliseconds)
@@ -279,6 +286,7 @@ StorageKeys.userId        // Current user ID
 ```
 
 Methods:
+
 ```dart
 await storage.saveAccessToken(token);
 await storage.getAccessToken();
@@ -291,18 +299,20 @@ await storage.clearAll();
 ## Database (Drift)
 
 ### SyncQueue Table (built-in for offline sync)
-| Column | Type | Description |
-|--------|------|-------------|
-| id | int | Auto-increment PK |
-| targetTable | String | Table name |
-| operation | String | 'create', 'update', 'delete' |
-| recordId | String | Record identifier |
-| payload | String | JSON data |
-| createdAt | DateTime | Timestamp |
-| synced | bool | Sync status |
-| syncedAt | DateTime? | When synced |
+
+| Column      | Type      | Description                  |
+| ----------- | --------- | ---------------------------- |
+| id          | int       | Auto-increment PK            |
+| targetTable | String    | Table name                   |
+| operation   | String    | 'create', 'update', 'delete' |
+| recordId    | String    | Record identifier            |
+| payload     | String    | JSON data                    |
+| createdAt   | DateTime  | Timestamp                    |
+| synced      | bool      | Sync status                  |
+| syncedAt    | DateTime? | When synced                  |
 
 ### Adding Tables
+
 ```dart
 // In app_database.dart
 @DataClassName('Product')
@@ -310,7 +320,7 @@ class Products extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   RealColumn get price => real()();
-  
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -348,6 +358,7 @@ flutter build web --release
 ## Creating a New Feature Checklist
 
 1. **Create folder structure:**
+
    ```
    lib/features/[name]/
    ├── [name].dart
@@ -361,15 +372,18 @@ flutter build web --release
    ```
 
 2. **Domain layer first:**
+
    - Create entity with `@freezed`
    - Define repository interface
 
 3. **Data layer:**
+
    - Create model with `@freezed` + `fromJson`
    - Implement datasources (remote/local)
    - Implement repository
 
 4. **Presentation layer:**
+
    - Create providers with `@riverpod`
    - Build pages and widgets
 
@@ -387,10 +401,12 @@ flutter build web --release
 ## UI Components
 
 ### Main Layout (Sidebar)
+
 All pages are wrapped in `MainLayout` via GoRouter's `ShellRoute`. The sidebar uses `flutter_side_menu`.
 
-### shadcn_ui
-Import: `import 'package:shadcn_ui/shadcn_ui.dart';`
+### shadcn_flutter
+
+Import: `import 'package:shadcn_flutter/shadcn_flutter.dart';`
 
 Use shadcn_flutter components for consistent styling.
 
@@ -402,13 +418,110 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 ```
 
 Key differences from Material:
+
 - `Scaffold(child: ...)` instead of `Scaffold(body: ...)`
 - `TextField(placeholder: Widget(...))` instead of `InputDecoration`
 - `InputFeature.leading(icon)` for input icons
 - `InputFeature.passwordToggle()` for password visibility
 - Text modifiers: `.h2()`, `.muted()`, `.semiBold()`, `.textCenter()`
 - `PrimaryButton`, `SecondaryButton`, `GhostButton`, `DestructiveButton`
-- `ColorSchemes.lightBlue`, `ColorSchemes.darkBlue` for themes
+
+---
+
+## Design System & Color Scheme
+
+The app uses a unified color scheme derived from the FST admin dashboard for visual consistency across all platforms.
+
+### Color Palette
+
+| Color           | Hex       | OKLCH                       | Usage                                     |
+| --------------- | --------- | --------------------------- | ----------------------------------------- |
+| **Primary**     | `#1A3A6E` | `oklch(0.35 0.18 250)`      | Deep Navy Blue - buttons, links, emphasis |
+| **Secondary**   | `#2BA5A5` | `oklch(0.65 0.15 195)`      | Vibrant Teal - accents, highlights        |
+| **Background**  | `#FDFDFD` | `oklch(0.995 0 0)`          | Clean white main background               |
+| **Foreground**  | `#171717` | `oklch(0.145 0 0)`          | Near black text                           |
+| **Muted**       | `#F5F5F7` | `oklch(0.97 0.005 250)`     | Subtle backgrounds with blue tint         |
+| **Destructive** | `#DC2626` | `oklch(0.577 0.245 27.325)` | Red for errors/delete actions             |
+| **Border**      | `#E5E5EB` | `oklch(0.92 0.01 250)`      | Subtle border with blue tint              |
+| **Sidebar**     | `#0F1E3D` | `oklch(0.25 0.12 250)`      | Deep navy sidebar background              |
+
+### Chart Colors
+
+| Color   | Hex       | Usage  |
+| ------- | --------- | ------ |
+| Chart 1 | `#2952A3` | Blue   |
+| Chart 2 | `#2BA5A5` | Teal   |
+| Chart 3 | `#34B870` | Green  |
+| Chart 4 | `#D97B2A` | Orange |
+| Chart 5 | `#A855B8` | Purple |
+
+### Theme Configuration
+
+The theme is configured in `main.dart` using a custom color scheme:
+
+```dart
+import 'core/theme/app_color_scheme.dart';
+
+ShadcnApp.router(
+  themeMode: ThemeMode.light,
+  theme: ThemeData(
+    colorScheme: AppColorScheme.light,
+    radius: 0.8,
+  ),
+  // ...
+)
+```
+
+### Using Colors
+
+#### For shadcn_flutter Components
+
+Colors are applied automatically via the theme. Access theme colors in widgets:
+
+```dart
+final theme = Theme.of(context);
+Container(
+  color: theme.colorScheme.primary,
+  child: Text('Hello', style: TextStyle(color: theme.colorScheme.primaryForeground)),
+)
+```
+
+#### For Custom/Non-shadcn_flutter Widgets
+
+Use `AppColors` for direct color access:
+
+```dart
+import 'package:fst_pos/core/theme/app_colors.dart';
+
+Container(
+  decoration: BoxDecoration(
+    color: AppColors.sidebar,
+    border: Border.all(color: AppColors.sidebarBorder),
+  ),
+  child: Text(
+    'Sidebar Item',
+    style: TextStyle(color: AppColors.sidebarForeground),
+  ),
+)
+```
+
+### Semantic Colors
+
+| Name        | Color     | Usage                         |
+| ----------- | --------- | ----------------------------- |
+| Success     | `#22C55E` | Success states, confirmations |
+| Warning     | `#F59E0B` | Warnings, cautions            |
+| Info        | `#3B82F6` | Informational messages        |
+| Destructive | `#DC2626` | Errors, delete actions        |
+
+### Design Tokens
+
+| Token      | Value | Description                           |
+| ---------- | ----- | ------------------------------------- |
+| `radiusLg` | 16px  | Large border radius (cards, dialogs)  |
+| `radiusMd` | 14px  | Medium border radius                  |
+| `radiusSm` | 12px  | Small border radius (buttons, inputs) |
+| `radiusXl` | 20px  | Extra large border radius             |
 
 ---
 
@@ -443,13 +556,13 @@ lib/features/auth/
 
 ### Key Providers
 
-| Provider | Type | Description |
-|----------|------|-------------|
-| `authNotifierProvider` | `AsyncNotifier<AuthState>` | Main auth state with login/logout actions |
-| `currentCashierProvider` | `Cashier?` | Currently logged-in cashier |
-| `isAuthenticatedProvider` | `bool` | Quick auth check |
-| `isOfflineModeProvider` | `bool` | True when using cached session |
-| `authRepositoryProvider` | `AuthRepository` | Repository for DI |
+| Provider                  | Type                       | Description                               |
+| ------------------------- | -------------------------- | ----------------------------------------- |
+| `authNotifierProvider`    | `AsyncNotifier<AuthState>` | Main auth state with login/logout actions |
+| `currentCashierProvider`  | `Cashier?`                 | Currently logged-in cashier               |
+| `isAuthenticatedProvider` | `bool`                     | Quick auth check                          |
+| `isOfflineModeProvider`   | `bool`                     | True when using cached session            |
+| `authRepositoryProvider`  | `AuthRepository`           | Repository for DI                         |
 
 ### AuthState Union
 
@@ -460,9 +573,9 @@ class AuthState with _$AuthState {
     required Cashier cashier,
     @Default(false) bool isOffline,
   }) = Authenticated;
-  
+
   const factory AuthState.unauthenticated() = Unauthenticated;
-  
+
   const factory AuthState.loading() = AuthLoading;
 }
 ```
@@ -478,11 +591,11 @@ class MyWidget extends ConsumerWidget {
     final isLoggedIn = ref.watch(isAuthenticatedProvider);
     final cashier = ref.watch(currentCashierProvider);
     final isOffline = ref.watch(isOfflineModeProvider);
-    
+
     if (!isLoggedIn) {
       return const Text('Not logged in');
     }
-    
+
     return Column(
       children: [
         Text('Welcome, ${cashier?.username}'),
@@ -553,9 +666,9 @@ redirect: (context, state) {
     authenticated: (_, __) => true,
     orElse: () => false,
   ) ?? false;
-  
+
   final isLoginRoute = state.matchedLocation == AppRoutes.login;
-  
+
   if (!isAuthenticated && !isLoginRoute) {
     return AppRoutes.login; // Force login
   }
@@ -582,10 +695,10 @@ bool _isSessionValid(String? loginTimeStr) {
 
 ### API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/auth/cashier/login` | POST | Login with username + accessKey |
-| `/auth/cashier/me` | GET | Get current cashier profile |
+| Endpoint              | Method | Description                     |
+| --------------------- | ------ | ------------------------------- |
+| `/auth/cashier/login` | POST   | Login with username + accessKey |
+| `/auth/cashier/me`    | GET    | Get current cashier profile     |
 
 ### Storage Keys
 
@@ -616,10 +729,10 @@ Future<List<Order>> orders(Ref ref) async {
   if (!isLoggedIn) {
     throw StateError('Must be authenticated');
   }
-  
+
   final cashier = ref.watch(currentCashierProvider);
   final repository = ref.watch(orderRepositoryProvider);
-  
+
   // Filter orders by cashier's branch
   return repository.getOrdersByBranch(cashier!.businessId);
 }
@@ -639,6 +752,7 @@ Failure.unknown(message: '...')
 ```
 
 The `AuthInterceptor` automatically:
+
 - Adds `Authorization: Bearer <token>` header
 - Skip with `options.extra['skipAuth'] = true`
 
@@ -659,18 +773,20 @@ The `AuthInterceptor` automatically:
 
 ## File Locations Reference
 
-| Need | Location |
-|------|----------|
-| Add API endpoint | `lib/core/network/api_endpoints.dart` |
-| Add route | `lib/core/router/app_router.dart` |
-| Add database table | `lib/core/database/app_database.dart` |
-| Add env variable | `.env` files + `lib/core/config/env_config.dart` |
-| Add storage key | `lib/core/storage/secure_storage.dart` |
-| Add sidebar item | `lib/shared/widgets/main_layout.dart` |
-| Auth providers | `lib/features/auth/presentation/providers/auth_provider.dart` |
-| Auth repository | `lib/features/auth/data/repositories/auth_repository_impl.dart` |
-| Login page | `lib/features/auth/presentation/pages/login_page.dart` |
+| Need               | Location                                                        |
+| ------------------ | --------------------------------------------------------------- |
+| Add API endpoint   | `lib/core/network/api_endpoints.dart`                           |
+| Add route          | `lib/core/router/app_router.dart`                               |
+| Add database table | `lib/core/database/app_database.dart`                           |
+| Add env variable   | `.env` files + `lib/core/config/env_config.dart`                |
+| Add storage key    | `lib/core/storage/secure_storage.dart`                          |
+| Add sidebar item   | `lib/shared/widgets/main_layout.dart`                           |
+| Add/modify colors  | `lib/core/theme/app_colors.dart`                                |
+| Add/modify theme   | `lib/core/theme/app_color_scheme.dart`                          |
+| Auth providers     | `lib/features/auth/presentation/providers/auth_provider.dart`   |
+| Auth repository    | `lib/features/auth/data/repositories/auth_repository_impl.dart` |
+| Login page         | `lib/features/auth/presentation/pages/login_page.dart`          |
 
 ---
 
-*Last updated: November 28, 2025*
+_Last updated: November 28, 2025_

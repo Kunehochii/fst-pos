@@ -4,6 +4,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'core/config/env_config.dart';
 import 'core/router/app_router.dart';
+import 'core/theme/app_color_scheme.dart';
 
 /// Application entry point.
 ///
@@ -41,14 +42,10 @@ class FstPosApp extends ConsumerWidget {
 
     return ShadcnApp.router(
       title: 'FST POS',
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       theme: ThemeData(
-        colorScheme: ColorSchemes.lightBlue,
-        radius: 0.5,
-      ),
-      darkTheme: ThemeData.dark(
-        colorScheme: ColorSchemes.darkBlue,
-        radius: 0.5,
+        colorScheme: AppColorScheme.light,
+        radius: 0.8,
       ),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
