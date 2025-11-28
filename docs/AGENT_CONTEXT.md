@@ -12,7 +12,7 @@
 | **Platforms** | Android, Web only |
 | **State Management** | Riverpod + riverpod_generator |
 | **Routing** | GoRouter + go_router_builder |
-| **UI Framework** | shadcn_ui + flutter_side_menu |
+| **UI Framework** | shadcn_flutter + flutter_side_menu |
 | **HTTP Client** | Dio with interceptors |
 | **Local Database** | Drift (SQLite) |
 | **Secure Storage** | flutter_secure_storage (JWT tokens) |
@@ -392,29 +392,238 @@ All pages are wrapped in `MainLayout` via GoRouter's `ShellRoute`. The sidebar u
 ### shadcn_ui
 Import: `import 'package:shadcn_ui/shadcn_ui.dart';`
 
-Use shadcn_ui components for consistent styling. See: https://flutter-shadcn-ui.mariuti.com
+Use shadcn_flutter components for consistent styling.
+
+**Note:** This package exports widgets that conflict with Flutter Material. Hide conflicting names:
+
+```dart
+import 'package:flutter/material.dart' hide TextField, Card, Scaffold, ...;
+import 'package:shadcn_flutter/shadcn_flutter.dart';
+```
+
+Key differences from Material:
+- `Scaffold(child: ...)` instead of `Scaffold(body: ...)`
+- `TextField(placeholder: Widget(...))` instead of `InputDecoration`
+- `InputFeature.leading(icon)` for input icons
+- `InputFeature.passwordToggle()` for password visibility
+- Text modifiers: `.h2()`, `.muted()`, `.semiBold()`, `.textCenter()`
+- `PrimaryButton`, `SecondaryButton`, `GhostButton`, `DestructiveButton`
+- `ColorSchemes.lightBlue`, `ColorSchemes.darkBlue` for themes
 
 ---
 
-## Auth Flow (Template)
+## Auth Flow (Cashier Authentication)
 
-```dart
-// Login
-final response = await _dio.post('/auth/login', data: credentials);
-await _storage.saveAccessToken(response.data['accessToken']);
-await _storage.saveRefreshToken(response.data['refreshToken']);
+The auth system is designed for **offline-first** operation. Cashiers can log in once and continue using the app without network access (for up to 7 days).
 
-// Logout
-await _storage.clearAll();
-context.go('/login');
+### Architecture Overview
 
-// Check auth state
-final isLoggedIn = await _storage.isLoggedIn();
+```
+lib/features/auth/
+├── auth.dart                          # Barrel export
+├── data/
+│   ├── datasources/
+│   │   ├── auth_remote_datasource.dart   # API calls (login, me)
+│   │   └── auth_local_datasource.dart    # SharedPreferences cache
+│   ├── models/
+│   │   └── cashier_model.dart            # API DTOs (LoginRequest, LoginResponse, CashierModel)
+│   └── repositories/
+│       └── auth_repository_impl.dart     # Offline-first implementation
+├── domain/
+│   ├── entities/
+│   │   └── cashier.dart                  # Cashier entity + AuthState union
+│   └── repositories/
+│       └── auth_repository.dart          # Repository interface
+└── presentation/
+    ├── pages/
+    │   └── login_page.dart               # Login screen
+    └── providers/
+        └── auth_provider.dart            # Riverpod state management
 ```
 
-The `AuthInterceptor` automatically:
-- Adds `Authorization: Bearer <token>` header
-- Skip with `options.extra['skipAuth'] = true`
+### Key Providers
+
+| Provider | Type | Description |
+|----------|------|-------------|
+| `authNotifierProvider` | `AsyncNotifier<AuthState>` | Main auth state with login/logout actions |
+| `currentCashierProvider` | `Cashier?` | Currently logged-in cashier |
+| `isAuthenticatedProvider` | `bool` | Quick auth check |
+| `isOfflineModeProvider` | `bool` | True when using cached session |
+| `authRepositoryProvider` | `AuthRepository` | Repository for DI |
+
+### AuthState Union
+
+```dart
+@freezed
+class AuthState with _$AuthState {
+  const factory AuthState.authenticated({
+    required Cashier cashier,
+    @Default(false) bool isOffline,
+  }) = Authenticated;
+  
+  const factory AuthState.unauthenticated() = Unauthenticated;
+  
+  const factory AuthState.loading() = AuthLoading;
+}
+```
+
+### Usage Examples
+
+#### 1. Check Authentication in Widgets
+
+```dart
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoggedIn = ref.watch(isAuthenticatedProvider);
+    final cashier = ref.watch(currentCashierProvider);
+    final isOffline = ref.watch(isOfflineModeProvider);
+    
+    if (!isLoggedIn) {
+      return const Text('Not logged in');
+    }
+    
+    return Column(
+      children: [
+        Text('Welcome, ${cashier?.username}'),
+        if (isOffline) const Text('(Offline Mode)'),
+      ],
+    );
+  }
+}
+```
+
+#### 2. Perform Login
+
+```dart
+await ref.read(authNotifierProvider.notifier).login(
+  username: 'cashier1',
+  accessKey: 'secret123',
+);
+
+// Check result
+final authState = ref.read(authNotifierProvider);
+authState.whenOrNull(
+  data: (state) => state.whenOrNull(
+    authenticated: (cashier, _) => context.go(AppRoutes.home),
+  ),
+  error: (error, _) => showError(error),
+);
+```
+
+#### 3. Perform Logout
+
+```dart
+await ref.read(authNotifierProvider.notifier).logout();
+// Router will automatically redirect to login via auth guard
+```
+
+#### 4. Protect API Calls with Auth Check
+
+```dart
+Future<void> fetchData() async {
+  final isLoggedIn = ref.read(isAuthenticatedProvider);
+  if (!isLoggedIn) {
+    throw AuthException('Not authenticated');
+  }
+  // Proceed with API call...
+}
+```
+
+#### 5. Listen to Auth Changes
+
+```dart
+ref.listen(authNotifierProvider, (previous, next) {
+  next.whenOrNull(
+    data: (state) => state.whenOrNull(
+      unauthenticated: () => context.go(AppRoutes.login),
+    ),
+  );
+});
+```
+
+### Router Integration
+
+The `GoRouter` automatically protects routes:
+
+```dart
+redirect: (context, state) {
+  final authState = ref.read(authNotifierProvider);
+  final isAuthenticated = authState.valueOrNull?.maybeWhen(
+    authenticated: (_, __) => true,
+    orElse: () => false,
+  ) ?? false;
+  
+  final isLoginRoute = state.matchedLocation == AppRoutes.login;
+  
+  if (!isAuthenticated && !isLoginRoute) {
+    return AppRoutes.login; // Force login
+  }
+  if (isAuthenticated && isLoginRoute) {
+    return AppRoutes.home; // Already logged in
+  }
+  return null;
+}
+```
+
+### Offline Session Validity
+
+Sessions cached in SharedPreferences are valid for **7 days**:
+
+```dart
+// In AuthRepositoryImpl
+bool _isSessionValid(String? loginTimeStr) {
+  if (loginTimeStr == null) return false;
+  final loginTime = DateTime.parse(loginTimeStr);
+  final now = DateTime.now();
+  return now.difference(loginTime).inDays < 7;
+}
+```
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/auth/cashier/login` | POST | Login with username + accessKey |
+| `/auth/cashier/me` | GET | Get current cashier profile |
+
+### Storage Keys
+
+```dart
+// SharedPreferences (cached session)
+'cached_cashier'      // JSON-encoded CashierModel
+'login_time'          // ISO8601 timestamp
+
+// SecureStorage (tokens)
+StorageKeys.accessToken   // JWT token
+```
+
+### Adding Auth to New Features
+
+When creating features that require authentication:
+
+1. **Check auth state** before making API calls
+2. **Use `isOfflineModeProvider`** to show offline indicators
+3. **Handle `Failure.auth`** to trigger re-login
+4. **Access cashier info** via `currentCashierProvider`
+
+Example:
+
+```dart
+@riverpod
+Future<List<Order>> orders(Ref ref) async {
+  final isLoggedIn = ref.watch(isAuthenticatedProvider);
+  if (!isLoggedIn) {
+    throw StateError('Must be authenticated');
+  }
+  
+  final cashier = ref.watch(currentCashierProvider);
+  final repository = ref.watch(orderRepositoryProvider);
+  
+  // Filter orders by cashier's branch
+  return repository.getOrdersByBranch(cashier!.businessId);
+}
+```
 
 ---
 
@@ -428,6 +637,10 @@ Failure.auth(message: 'Unauthorized')
 Failure.validation(message: '...', fieldErrors: {...})
 Failure.unknown(message: '...')
 ```
+
+The `AuthInterceptor` automatically:
+- Adds `Authorization: Bearer <token>` header
+- Skip with `options.extra['skipAuth'] = true`
 
 ---
 
@@ -454,6 +667,9 @@ Failure.unknown(message: '...')
 | Add env variable | `.env` files + `lib/core/config/env_config.dart` |
 | Add storage key | `lib/core/storage/secure_storage.dart` |
 | Add sidebar item | `lib/shared/widgets/main_layout.dart` |
+| Auth providers | `lib/features/auth/presentation/providers/auth_provider.dart` |
+| Auth repository | `lib/features/auth/data/repositories/auth_repository_impl.dart` |
+| Login page | `lib/features/auth/presentation/pages/login_page.dart` |
 
 ---
 
