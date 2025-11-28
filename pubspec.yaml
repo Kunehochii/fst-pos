@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.10.1
+  sdk: ^3.5.0
 
 dependencies:
   flutter:
@@ -12,7 +12,7 @@ dependencies:
 
   # UI Components
   cupertino_icons: ^1.0.8
-  shadcn_flutter: ^0.2.9
+  shadcn_ui: ^0.30.0
   flutter_side_menu: ^0.5.0
 
   # State Management

@@ -33,8 +33,6 @@ targets:
 
       drift_dev:
         options:
-          # Generate companion classes
-          generate_companions: true
           # Generate mutable classes
           mutable_classes: false
           # Raw result set data
