@@ -8,6 +8,7 @@ part 'cashier_model.g.dart';
 /// Cashier model for API serialization.
 ///
 /// Maps API response to domain entity.
+/// Note: API returns camelCase keys, so we use explicit JsonKey annotations.
 @freezed
 class CashierModel with _$CashierModel {
   const CashierModel._();
@@ -15,11 +16,11 @@ class CashierModel with _$CashierModel {
   const factory CashierModel({
     required String id,
     required String username,
-    required String branchName,
-    required String businessId,
+    @JsonKey(name: 'branchName') required String branchName,
+    @JsonKey(name: 'businessId') required String businessId,
     @Default([]) List<String> permissions,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    @JsonKey(name: 'createdAt') required DateTime createdAt,
+    @JsonKey(name: 'updatedAt') required DateTime updatedAt,
   }) = _CashierModel;
 
   factory CashierModel.fromJson(Map<String, dynamic> json) =>
