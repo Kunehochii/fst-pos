@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/auth.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/shift/shift.dart';
 import '../../shared/widgets/main_layout.dart';
 
 part 'app_router.g.dart';
@@ -70,7 +71,18 @@ GoRouter appRouter(Ref ref) {
       // Shell route for the main layout with sidebar
       ShellRoute(
         builder: (context, state, child) {
-          return MainLayout(child: child);
+          // Don't apply shift guard on the shift page itself
+          // Users need to access it to time in
+          final isShiftPage = state.matchedLocation == AppRoutes.shift;
+          
+          if (isShiftPage) {
+            return MainLayout(child: child);
+          }
+          
+          // Wrap with ShiftGuard to require time-in before accessing features
+          return MainLayout(
+            child: ShiftGuard(child: child),
+          );
         },
         routes: [
           GoRoute(
@@ -78,6 +90,13 @@ GoRouter appRouter(Ref ref) {
             name: 'home',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: HomePage(),
+            ),
+          ),
+          GoRoute(
+            path: '/shift',
+            name: 'shift',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ShiftPage(),
             ),
           ),
           // Add more routes here following this pattern:

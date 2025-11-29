@@ -12,6 +12,8 @@ class ApiEndpoints {
 
   static const auth = _AuthEndpoints();
   static const users = _UserEndpoints();
+  static const employees = _EmployeeEndpoints();
+  static const shifts = _ShiftEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -36,4 +38,19 @@ class _UserEndpoints {
   String get list => '/users';
   String byId(String id) => '/users/$id';
   String get profile => '/users/profile';
+}
+
+class _EmployeeEndpoints {
+  const _EmployeeEndpoints();
+
+  String get list => '/employees';
+  String byId(String id) => '/employees/$id';
+}
+
+class _ShiftEndpoints {
+  const _ShiftEndpoints();
+
+  String get list => '/shifts';
+  String byId(String id) => '/shifts/$id';
+  String end(String id) => '/shifts/$id/end';
 }
