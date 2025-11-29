@@ -120,8 +120,18 @@ class _AuthStateNotifier extends ChangeNotifier {
 abstract class AppRoutes {
   static const login = '/login';
   static const home = '/';
-  static const products = '/products';
-  static const orders = '/orders';
-  static const customers = '/customers';
-  static const settings = '/settings';
+
+  // Permission-based routes
+  static const sales = '/sales';
+  static const deliveries = '/deliveries';
+  static const stocks = '/stocks';
+  static const kahon = '/kahon';
+  static const salesHistory = '/sales-history';
+  static const profit = '/profit';
+  static const bills = '/bills';
+  static const expenses = '/expenses';
+  static const attachments = '/attachments';
+
+  // Open to all cashiers
+  static const shift = '/shift';
 }

@@ -88,75 +88,149 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
     );
   }
 
+  /// Helper method to check if cashier has a specific permission.
+  bool _hasPermission(Cashier? cashier, String permission) {
+    if (cashier == null) return false;
+    return cashier.permissions.contains(permission);
+  }
+
+  /// Creates a menu item tile with consistent styling.
+  SideMenuItemDataTile _buildMenuItem({
+    required BuildContext context,
+    required String currentPath,
+    required String route,
+    required IconData icon,
+    required String title,
+  }) {
+    return SideMenuItemDataTile(
+      isSelected: currentPath == route,
+      onTap: () => context.go(route),
+      icon: Icon(icon, color: AppColors.primaryForeground),
+      title: title,
+      titleStyle: TextStyle(color: AppColors.primaryForeground),
+      selectedTitleStyle: TextStyle(
+        color: AppColors.primaryForeground,
+        fontWeight: FontWeight.w600,
+      ),
+      highlightSelectedColor: AppColors.sidebarAccent,
+      hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
+    );
+  }
+
   List<SideMenuItemDataTile> _buildMenuItems(
       BuildContext context, String currentPath) {
-    return [
-      SideMenuItemDataTile(
-        isSelected: currentPath == AppRoutes.home,
-        onTap: () => context.go(AppRoutes.home),
-        icon: Icon(Icons.dashboard, color: AppColors.primaryForeground),
-        title: 'Dashboard',
-        titleStyle: TextStyle(color: AppColors.primaryForeground),
-        selectedTitleStyle: TextStyle(
-          color: AppColors.primaryForeground,
-          fontWeight: FontWeight.w600,
-        ),
-        highlightSelectedColor: AppColors.sidebarAccent,
-        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
-      ),
-      SideMenuItemDataTile(
-        isSelected: currentPath == AppRoutes.products,
-        onTap: () => context.go(AppRoutes.products),
-        icon: Icon(Icons.inventory, color: AppColors.primaryForeground),
-        title: 'Products',
-        titleStyle: TextStyle(color: AppColors.primaryForeground),
-        selectedTitleStyle: TextStyle(
-          color: AppColors.primaryForeground,
-          fontWeight: FontWeight.w600,
-        ),
-        highlightSelectedColor: AppColors.sidebarAccent,
-        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
-      ),
-      SideMenuItemDataTile(
-        isSelected: currentPath == AppRoutes.orders,
-        onTap: () => context.go(AppRoutes.orders),
-        icon: Icon(Icons.receipt_long, color: AppColors.primaryForeground),
-        title: 'Orders',
-        titleStyle: TextStyle(color: AppColors.primaryForeground),
-        selectedTitleStyle: TextStyle(
-          color: AppColors.primaryForeground,
-          fontWeight: FontWeight.w600,
-        ),
-        highlightSelectedColor: AppColors.sidebarAccent,
-        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
-      ),
-      SideMenuItemDataTile(
-        isSelected: currentPath == AppRoutes.customers,
-        onTap: () => context.go(AppRoutes.customers),
-        icon: Icon(Icons.people, color: AppColors.primaryForeground),
-        title: 'Customers',
-        titleStyle: TextStyle(color: AppColors.primaryForeground),
-        selectedTitleStyle: TextStyle(
-          color: AppColors.primaryForeground,
-          fontWeight: FontWeight.w600,
-        ),
-        highlightSelectedColor: AppColors.sidebarAccent,
-        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
-      ),
-      SideMenuItemDataTile(
-        isSelected: currentPath == AppRoutes.settings,
-        onTap: () => context.go(AppRoutes.settings),
-        icon: Icon(Icons.settings, color: AppColors.primaryForeground),
-        title: 'Settings',
-        titleStyle: TextStyle(color: AppColors.primaryForeground),
-        selectedTitleStyle: TextStyle(
-          color: AppColors.primaryForeground,
-          fontWeight: FontWeight.w600,
-        ),
-        highlightSelectedColor: AppColors.sidebarAccent,
-        hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
-      ),
-    ];
+    final cashier = ref.watch(currentCashierProvider);
+    final items = <SideMenuItemDataTile>[];
+
+    // Sales - based on SALES permission
+    if (_hasPermission(cashier, 'SALES')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.sales,
+        icon: Icons.point_of_sale,
+        title: 'Sales',
+      ));
+    }
+
+    // Deliveries - based on DELIVERIES permission
+    if (_hasPermission(cashier, 'DELIVERIES')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.deliveries,
+        icon: Icons.local_shipping,
+        title: 'Deliveries',
+      ));
+    }
+
+    // Stocks - based on STOCKS permission
+    if (_hasPermission(cashier, 'STOCKS')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.stocks,
+        icon: Icons.inventory_2,
+        title: 'Stocks',
+      ));
+    }
+
+    // Kahon - based on KAHON permission
+    if (_hasPermission(cashier, 'KAHON')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.kahon,
+        icon: Icons.grid_view,
+        title: 'Kahon',
+      ));
+    }
+
+    // Sales History - based on SALES_HISTORY permission
+    if (_hasPermission(cashier, 'SALES_HISTORY')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.salesHistory,
+        icon: Icons.history,
+        title: 'Sales History',
+      ));
+    }
+
+    // Profit - same permission as SALES_HISTORY
+    if (_hasPermission(cashier, 'SALES_HISTORY')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.profit,
+        icon: Icons.trending_up,
+        title: 'Profit',
+      ));
+    }
+
+    // Bills - based on BILLS permission
+    if (_hasPermission(cashier, 'BILLS')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.bills,
+        icon: Icons.receipt,
+        title: 'Bills',
+      ));
+    }
+
+    // Expenses - based on BILLS permission as well
+    if (_hasPermission(cashier, 'BILLS')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.expenses,
+        icon: Icons.money_off,
+        title: 'Expenses',
+      ));
+    }
+
+    // Attachments - based on ATTACHMENTS permission
+    if (_hasPermission(cashier, 'ATTACHMENTS')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.attachments,
+        icon: Icons.attach_file,
+        title: 'Attachments',
+      ));
+    }
+
+    // Shift - open to all cashiers
+    items.add(_buildMenuItem(
+      context: context,
+      currentPath: currentPath,
+      route: AppRoutes.shift,
+      icon: Icons.schedule,
+      title: 'Shift',
+    ));
+
+    return items;
   }
 
   Widget _buildFooter(bool isOpen) {
