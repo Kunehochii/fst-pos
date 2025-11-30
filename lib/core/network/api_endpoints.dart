@@ -15,6 +15,7 @@ class ApiEndpoints {
   static const employees = _EmployeeEndpoints();
   static const shifts = _ShiftEndpoints();
   static const products = _ProductEndpoints();
+  static const sales = _SalesEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -62,4 +63,23 @@ class _ProductEndpoints {
   /// Cashier endpoints - uses authenticated cashier's token
   String get myProducts => '/products/cashier/my-products';
   String myProductById(String id) => '/products/cashier/my-products/$id';
+}
+
+class _SalesEndpoints {
+  const _SalesEndpoints();
+
+  /// Create a sale (POST /sales)
+  String get create => '/sales';
+
+  /// Get cashier's sales (GET /sales/cashier)
+  String get cashier => '/sales/cashier';
+
+  /// Get sales by date (GET /sales/cashier/by-date)
+  String get cashierByDate => '/sales/cashier/by-date';
+
+  /// Get voided sales (GET /sales/cashier/voided)
+  String get cashierVoided => '/sales/cashier/voided';
+
+  /// Void a sale (POST /sales/:id/void)
+  String void_(String id) => '/sales/$id/void';
 }

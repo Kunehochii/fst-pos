@@ -41,6 +41,12 @@ dependencies:
   # Offline Auth Cache
   shared_preferences: ^2.3.4
 
+  # Unique ID generation
+  uuid: ^4.5.1
+
+  # Network connectivity
+  connectivity_plus: ^6.1.1
+
   # Internationalization
   intl: ^0.20.2
   flutter_thermal_printer: ^1.2.4

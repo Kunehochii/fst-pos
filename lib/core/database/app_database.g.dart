@@ -1148,6 +1148,1564 @@ class ProductCacheMetaCompanion extends UpdateCompanion<ProductCacheMetaRow> {
   }
 }
 
+class $CachedSalesTable extends CachedSales
+    with TableInfo<$CachedSalesTable, CachedSaleRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedSalesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _localIdMeta =
+      const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<String> localId = GeneratedColumn<String>(
+      'local_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _cashierIdMeta =
+      const VerificationMeta('cashierId');
+  @override
+  late final GeneratedColumn<String> cashierId = GeneratedColumn<String>(
+      'cashier_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _totalAmountMeta =
+      const VerificationMeta('totalAmount');
+  @override
+  late final GeneratedColumn<double> totalAmount = GeneratedColumn<double>(
+      'total_amount', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _paymentMethodMeta =
+      const VerificationMeta('paymentMethod');
+  @override
+  late final GeneratedColumn<String> paymentMethod = GeneratedColumn<String>(
+      'payment_method', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isVoidMeta = const VerificationMeta('isVoid');
+  @override
+  late final GeneratedColumn<bool> isVoid = GeneratedColumn<bool>(
+      'is_void', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_void" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _voidedAtMeta =
+      const VerificationMeta('voidedAt');
+  @override
+  late final GeneratedColumn<DateTime> voidedAt = GeneratedColumn<DateTime>(
+      'voided_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _orderIdMeta =
+      const VerificationMeta('orderId');
+  @override
+  late final GeneratedColumn<String> orderId = GeneratedColumn<String>(
+      'order_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncedMeta =
+      const VerificationMeta('isSynced');
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+      'is_synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        localId,
+        cashierId,
+        totalAmount,
+        paymentMethod,
+        isVoid,
+        voidedAt,
+        orderId,
+        data,
+        isSynced,
+        createdAt,
+        updatedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cached_sales';
+  @override
+  VerificationContext validateIntegrity(Insertable<CachedSaleRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    }
+    if (data.containsKey('cashier_id')) {
+      context.handle(_cashierIdMeta,
+          cashierId.isAcceptableOrUnknown(data['cashier_id']!, _cashierIdMeta));
+    } else if (isInserting) {
+      context.missing(_cashierIdMeta);
+    }
+    if (data.containsKey('total_amount')) {
+      context.handle(
+          _totalAmountMeta,
+          totalAmount.isAcceptableOrUnknown(
+              data['total_amount']!, _totalAmountMeta));
+    } else if (isInserting) {
+      context.missing(_totalAmountMeta);
+    }
+    if (data.containsKey('payment_method')) {
+      context.handle(
+          _paymentMethodMeta,
+          paymentMethod.isAcceptableOrUnknown(
+              data['payment_method']!, _paymentMethodMeta));
+    } else if (isInserting) {
+      context.missing(_paymentMethodMeta);
+    }
+    if (data.containsKey('is_void')) {
+      context.handle(_isVoidMeta,
+          isVoid.isAcceptableOrUnknown(data['is_void']!, _isVoidMeta));
+    }
+    if (data.containsKey('voided_at')) {
+      context.handle(_voidedAtMeta,
+          voidedAt.isAcceptableOrUnknown(data['voided_at']!, _voidedAtMeta));
+    }
+    if (data.containsKey('order_id')) {
+      context.handle(_orderIdMeta,
+          orderId.isAcceptableOrUnknown(data['order_id']!, _orderIdMeta));
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(_isSyncedMeta,
+          isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CachedSaleRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CachedSaleRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      localId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_id']),
+      cashierId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cashier_id'])!,
+      totalAmount: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}total_amount'])!,
+      paymentMethod: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}payment_method'])!,
+      isVoid: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_void'])!,
+      voidedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}voided_at']),
+      orderId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}order_id']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      isSynced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $CachedSalesTable createAlias(String alias) {
+    return $CachedSalesTable(attachedDatabase, alias);
+  }
+}
+
+class CachedSaleRow extends DataClass implements Insertable<CachedSaleRow> {
+  /// Sale ID from the server (or local UUID if not synced).
+  final String id;
+
+  /// Local UUID for tracking before server sync.
+  final String? localId;
+
+  /// Cashier ID who made the sale.
+  final String cashierId;
+
+  /// Total sale amount.
+  final double totalAmount;
+
+  /// Payment method (CASH, BANK_TRANSFER, CHECK).
+  final String paymentMethod;
+
+  /// Whether the sale is voided.
+  final bool isVoid;
+
+  /// When the sale was voided.
+  final DateTime? voidedAt;
+
+  /// Optional order ID.
+  final String? orderId;
+
+  /// Complete sale data as JSON (includes items, etc.).
+  final String data;
+
+  /// Whether this sale has been synced to the server.
+  final bool isSynced;
+
+  /// When the sale was created.
+  final DateTime createdAt;
+
+  /// When the sale was last updated.
+  final DateTime updatedAt;
+  const CachedSaleRow(
+      {required this.id,
+      this.localId,
+      required this.cashierId,
+      required this.totalAmount,
+      required this.paymentMethod,
+      required this.isVoid,
+      this.voidedAt,
+      this.orderId,
+      required this.data,
+      required this.isSynced,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || localId != null) {
+      map['local_id'] = Variable<String>(localId);
+    }
+    map['cashier_id'] = Variable<String>(cashierId);
+    map['total_amount'] = Variable<double>(totalAmount);
+    map['payment_method'] = Variable<String>(paymentMethod);
+    map['is_void'] = Variable<bool>(isVoid);
+    if (!nullToAbsent || voidedAt != null) {
+      map['voided_at'] = Variable<DateTime>(voidedAt);
+    }
+    if (!nullToAbsent || orderId != null) {
+      map['order_id'] = Variable<String>(orderId);
+    }
+    map['data'] = Variable<String>(data);
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CachedSalesCompanion toCompanion(bool nullToAbsent) {
+    return CachedSalesCompanion(
+      id: Value(id),
+      localId: localId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localId),
+      cashierId: Value(cashierId),
+      totalAmount: Value(totalAmount),
+      paymentMethod: Value(paymentMethod),
+      isVoid: Value(isVoid),
+      voidedAt: voidedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(voidedAt),
+      orderId: orderId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(orderId),
+      data: Value(data),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CachedSaleRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedSaleRow(
+      id: serializer.fromJson<String>(json['id']),
+      localId: serializer.fromJson<String?>(json['localId']),
+      cashierId: serializer.fromJson<String>(json['cashierId']),
+      totalAmount: serializer.fromJson<double>(json['totalAmount']),
+      paymentMethod: serializer.fromJson<String>(json['paymentMethod']),
+      isVoid: serializer.fromJson<bool>(json['isVoid']),
+      voidedAt: serializer.fromJson<DateTime?>(json['voidedAt']),
+      orderId: serializer.fromJson<String?>(json['orderId']),
+      data: serializer.fromJson<String>(json['data']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'localId': serializer.toJson<String?>(localId),
+      'cashierId': serializer.toJson<String>(cashierId),
+      'totalAmount': serializer.toJson<double>(totalAmount),
+      'paymentMethod': serializer.toJson<String>(paymentMethod),
+      'isVoid': serializer.toJson<bool>(isVoid),
+      'voidedAt': serializer.toJson<DateTime?>(voidedAt),
+      'orderId': serializer.toJson<String?>(orderId),
+      'data': serializer.toJson<String>(data),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CachedSaleRow copyWith(
+          {String? id,
+          Value<String?> localId = const Value.absent(),
+          String? cashierId,
+          double? totalAmount,
+          String? paymentMethod,
+          bool? isVoid,
+          Value<DateTime?> voidedAt = const Value.absent(),
+          Value<String?> orderId = const Value.absent(),
+          String? data,
+          bool? isSynced,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      CachedSaleRow(
+        id: id ?? this.id,
+        localId: localId.present ? localId.value : this.localId,
+        cashierId: cashierId ?? this.cashierId,
+        totalAmount: totalAmount ?? this.totalAmount,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
+        isVoid: isVoid ?? this.isVoid,
+        voidedAt: voidedAt.present ? voidedAt.value : this.voidedAt,
+        orderId: orderId.present ? orderId.value : this.orderId,
+        data: data ?? this.data,
+        isSynced: isSynced ?? this.isSynced,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  CachedSaleRow copyWithCompanion(CachedSalesCompanion data) {
+    return CachedSaleRow(
+      id: data.id.present ? data.id.value : this.id,
+      localId: data.localId.present ? data.localId.value : this.localId,
+      cashierId: data.cashierId.present ? data.cashierId.value : this.cashierId,
+      totalAmount:
+          data.totalAmount.present ? data.totalAmount.value : this.totalAmount,
+      paymentMethod: data.paymentMethod.present
+          ? data.paymentMethod.value
+          : this.paymentMethod,
+      isVoid: data.isVoid.present ? data.isVoid.value : this.isVoid,
+      voidedAt: data.voidedAt.present ? data.voidedAt.value : this.voidedAt,
+      orderId: data.orderId.present ? data.orderId.value : this.orderId,
+      data: data.data.present ? data.data.value : this.data,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedSaleRow(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('totalAmount: $totalAmount, ')
+          ..write('paymentMethod: $paymentMethod, ')
+          ..write('isVoid: $isVoid, ')
+          ..write('voidedAt: $voidedAt, ')
+          ..write('orderId: $orderId, ')
+          ..write('data: $data, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      localId,
+      cashierId,
+      totalAmount,
+      paymentMethod,
+      isVoid,
+      voidedAt,
+      orderId,
+      data,
+      isSynced,
+      createdAt,
+      updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedSaleRow &&
+          other.id == this.id &&
+          other.localId == this.localId &&
+          other.cashierId == this.cashierId &&
+          other.totalAmount == this.totalAmount &&
+          other.paymentMethod == this.paymentMethod &&
+          other.isVoid == this.isVoid &&
+          other.voidedAt == this.voidedAt &&
+          other.orderId == this.orderId &&
+          other.data == this.data &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CachedSalesCompanion extends UpdateCompanion<CachedSaleRow> {
+  final Value<String> id;
+  final Value<String?> localId;
+  final Value<String> cashierId;
+  final Value<double> totalAmount;
+  final Value<String> paymentMethod;
+  final Value<bool> isVoid;
+  final Value<DateTime?> voidedAt;
+  final Value<String?> orderId;
+  final Value<String> data;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const CachedSalesCompanion({
+    this.id = const Value.absent(),
+    this.localId = const Value.absent(),
+    this.cashierId = const Value.absent(),
+    this.totalAmount = const Value.absent(),
+    this.paymentMethod = const Value.absent(),
+    this.isVoid = const Value.absent(),
+    this.voidedAt = const Value.absent(),
+    this.orderId = const Value.absent(),
+    this.data = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CachedSalesCompanion.insert({
+    required String id,
+    this.localId = const Value.absent(),
+    required String cashierId,
+    required double totalAmount,
+    required String paymentMethod,
+    this.isVoid = const Value.absent(),
+    this.voidedAt = const Value.absent(),
+    this.orderId = const Value.absent(),
+    required String data,
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        cashierId = Value(cashierId),
+        totalAmount = Value(totalAmount),
+        paymentMethod = Value(paymentMethod),
+        data = Value(data);
+  static Insertable<CachedSaleRow> custom({
+    Expression<String>? id,
+    Expression<String>? localId,
+    Expression<String>? cashierId,
+    Expression<double>? totalAmount,
+    Expression<String>? paymentMethod,
+    Expression<bool>? isVoid,
+    Expression<DateTime>? voidedAt,
+    Expression<String>? orderId,
+    Expression<String>? data,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (localId != null) 'local_id': localId,
+      if (cashierId != null) 'cashier_id': cashierId,
+      if (totalAmount != null) 'total_amount': totalAmount,
+      if (paymentMethod != null) 'payment_method': paymentMethod,
+      if (isVoid != null) 'is_void': isVoid,
+      if (voidedAt != null) 'voided_at': voidedAt,
+      if (orderId != null) 'order_id': orderId,
+      if (data != null) 'data': data,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CachedSalesCompanion copyWith(
+      {Value<String>? id,
+      Value<String?>? localId,
+      Value<String>? cashierId,
+      Value<double>? totalAmount,
+      Value<String>? paymentMethod,
+      Value<bool>? isVoid,
+      Value<DateTime?>? voidedAt,
+      Value<String?>? orderId,
+      Value<String>? data,
+      Value<bool>? isSynced,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<int>? rowid}) {
+    return CachedSalesCompanion(
+      id: id ?? this.id,
+      localId: localId ?? this.localId,
+      cashierId: cashierId ?? this.cashierId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      isVoid: isVoid ?? this.isVoid,
+      voidedAt: voidedAt ?? this.voidedAt,
+      orderId: orderId ?? this.orderId,
+      data: data ?? this.data,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (localId.present) {
+      map['local_id'] = Variable<String>(localId.value);
+    }
+    if (cashierId.present) {
+      map['cashier_id'] = Variable<String>(cashierId.value);
+    }
+    if (totalAmount.present) {
+      map['total_amount'] = Variable<double>(totalAmount.value);
+    }
+    if (paymentMethod.present) {
+      map['payment_method'] = Variable<String>(paymentMethod.value);
+    }
+    if (isVoid.present) {
+      map['is_void'] = Variable<bool>(isVoid.value);
+    }
+    if (voidedAt.present) {
+      map['voided_at'] = Variable<DateTime>(voidedAt.value);
+    }
+    if (orderId.present) {
+      map['order_id'] = Variable<String>(orderId.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedSalesCompanion(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('totalAmount: $totalAmount, ')
+          ..write('paymentMethod: $paymentMethod, ')
+          ..write('isVoid: $isVoid, ')
+          ..write('voidedAt: $voidedAt, ')
+          ..write('orderId: $orderId, ')
+          ..write('data: $data, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PendingSaleSyncTable extends PendingSaleSync
+    with TableInfo<$PendingSaleSyncTable, PendingSaleSyncRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingSaleSyncTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _localSaleIdMeta =
+      const VerificationMeta('localSaleId');
+  @override
+  late final GeneratedColumn<String> localSaleId = GeneratedColumn<String>(
+      'local_sale_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _operationMeta =
+      const VerificationMeta('operation');
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+      'operation', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _payloadMeta =
+      const VerificationMeta('payload');
+  @override
+  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
+      'payload', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _attemptsMeta =
+      const VerificationMeta('attempts');
+  @override
+  late final GeneratedColumn<int> attempts = GeneratedColumn<int>(
+      'attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _lastErrorMeta =
+      const VerificationMeta('lastError');
+  @override
+  late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
+      'last_error', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _lastAttemptAtMeta =
+      const VerificationMeta('lastAttemptAt');
+  @override
+  late final GeneratedColumn<DateTime> lastAttemptAt =
+      GeneratedColumn<DateTime>('last_attempt_at', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        localSaleId,
+        operation,
+        payload,
+        attempts,
+        lastError,
+        createdAt,
+        lastAttemptAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_sale_sync';
+  @override
+  VerificationContext validateIntegrity(Insertable<PendingSaleSyncRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('local_sale_id')) {
+      context.handle(
+          _localSaleIdMeta,
+          localSaleId.isAcceptableOrUnknown(
+              data['local_sale_id']!, _localSaleIdMeta));
+    } else if (isInserting) {
+      context.missing(_localSaleIdMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(_operationMeta,
+          operation.isAcceptableOrUnknown(data['operation']!, _operationMeta));
+    } else if (isInserting) {
+      context.missing(_operationMeta);
+    }
+    if (data.containsKey('payload')) {
+      context.handle(_payloadMeta,
+          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
+    } else if (isInserting) {
+      context.missing(_payloadMeta);
+    }
+    if (data.containsKey('attempts')) {
+      context.handle(_attemptsMeta,
+          attempts.isAcceptableOrUnknown(data['attempts']!, _attemptsMeta));
+    }
+    if (data.containsKey('last_error')) {
+      context.handle(_lastErrorMeta,
+          lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('last_attempt_at')) {
+      context.handle(
+          _lastAttemptAtMeta,
+          lastAttemptAt.isAcceptableOrUnknown(
+              data['last_attempt_at']!, _lastAttemptAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingSaleSyncRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingSaleSyncRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      localSaleId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_sale_id'])!,
+      operation: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}operation'])!,
+      payload: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
+      attempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}attempts'])!,
+      lastError: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}last_error']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      lastAttemptAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_attempt_at']),
+    );
+  }
+
+  @override
+  $PendingSaleSyncTable createAlias(String alias) {
+    return $PendingSaleSyncTable(attachedDatabase, alias);
+  }
+}
+
+class PendingSaleSyncRow extends DataClass
+    implements Insertable<PendingSaleSyncRow> {
+  /// Auto-increment ID.
+  final int id;
+
+  /// The local sale ID.
+  final String localSaleId;
+
+  /// Operation type: 'create' or 'void'.
+  final String operation;
+
+  /// The sale data as JSON for creation.
+  final String payload;
+
+  /// Number of sync attempts.
+  final int attempts;
+
+  /// Last sync error message.
+  final String? lastError;
+
+  /// When the sync operation was queued.
+  final DateTime createdAt;
+
+  /// When the sync was last attempted.
+  final DateTime? lastAttemptAt;
+  const PendingSaleSyncRow(
+      {required this.id,
+      required this.localSaleId,
+      required this.operation,
+      required this.payload,
+      required this.attempts,
+      this.lastError,
+      required this.createdAt,
+      this.lastAttemptAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['local_sale_id'] = Variable<String>(localSaleId);
+    map['operation'] = Variable<String>(operation);
+    map['payload'] = Variable<String>(payload);
+    map['attempts'] = Variable<int>(attempts);
+    if (!nullToAbsent || lastError != null) {
+      map['last_error'] = Variable<String>(lastError);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastAttemptAt != null) {
+      map['last_attempt_at'] = Variable<DateTime>(lastAttemptAt);
+    }
+    return map;
+  }
+
+  PendingSaleSyncCompanion toCompanion(bool nullToAbsent) {
+    return PendingSaleSyncCompanion(
+      id: Value(id),
+      localSaleId: Value(localSaleId),
+      operation: Value(operation),
+      payload: Value(payload),
+      attempts: Value(attempts),
+      lastError: lastError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastError),
+      createdAt: Value(createdAt),
+      lastAttemptAt: lastAttemptAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastAttemptAt),
+    );
+  }
+
+  factory PendingSaleSyncRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingSaleSyncRow(
+      id: serializer.fromJson<int>(json['id']),
+      localSaleId: serializer.fromJson<String>(json['localSaleId']),
+      operation: serializer.fromJson<String>(json['operation']),
+      payload: serializer.fromJson<String>(json['payload']),
+      attempts: serializer.fromJson<int>(json['attempts']),
+      lastError: serializer.fromJson<String?>(json['lastError']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastAttemptAt: serializer.fromJson<DateTime?>(json['lastAttemptAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'localSaleId': serializer.toJson<String>(localSaleId),
+      'operation': serializer.toJson<String>(operation),
+      'payload': serializer.toJson<String>(payload),
+      'attempts': serializer.toJson<int>(attempts),
+      'lastError': serializer.toJson<String?>(lastError),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastAttemptAt': serializer.toJson<DateTime?>(lastAttemptAt),
+    };
+  }
+
+  PendingSaleSyncRow copyWith(
+          {int? id,
+          String? localSaleId,
+          String? operation,
+          String? payload,
+          int? attempts,
+          Value<String?> lastError = const Value.absent(),
+          DateTime? createdAt,
+          Value<DateTime?> lastAttemptAt = const Value.absent()}) =>
+      PendingSaleSyncRow(
+        id: id ?? this.id,
+        localSaleId: localSaleId ?? this.localSaleId,
+        operation: operation ?? this.operation,
+        payload: payload ?? this.payload,
+        attempts: attempts ?? this.attempts,
+        lastError: lastError.present ? lastError.value : this.lastError,
+        createdAt: createdAt ?? this.createdAt,
+        lastAttemptAt:
+            lastAttemptAt.present ? lastAttemptAt.value : this.lastAttemptAt,
+      );
+  PendingSaleSyncRow copyWithCompanion(PendingSaleSyncCompanion data) {
+    return PendingSaleSyncRow(
+      id: data.id.present ? data.id.value : this.id,
+      localSaleId:
+          data.localSaleId.present ? data.localSaleId.value : this.localSaleId,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      payload: data.payload.present ? data.payload.value : this.payload,
+      attempts: data.attempts.present ? data.attempts.value : this.attempts,
+      lastError: data.lastError.present ? data.lastError.value : this.lastError,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastAttemptAt: data.lastAttemptAt.present
+          ? data.lastAttemptAt.value
+          : this.lastAttemptAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSaleSyncRow(')
+          ..write('id: $id, ')
+          ..write('localSaleId: $localSaleId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('attempts: $attempts, ')
+          ..write('lastError: $lastError, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastAttemptAt: $lastAttemptAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, localSaleId, operation, payload, attempts,
+      lastError, createdAt, lastAttemptAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingSaleSyncRow &&
+          other.id == this.id &&
+          other.localSaleId == this.localSaleId &&
+          other.operation == this.operation &&
+          other.payload == this.payload &&
+          other.attempts == this.attempts &&
+          other.lastError == this.lastError &&
+          other.createdAt == this.createdAt &&
+          other.lastAttemptAt == this.lastAttemptAt);
+}
+
+class PendingSaleSyncCompanion extends UpdateCompanion<PendingSaleSyncRow> {
+  final Value<int> id;
+  final Value<String> localSaleId;
+  final Value<String> operation;
+  final Value<String> payload;
+  final Value<int> attempts;
+  final Value<String?> lastError;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastAttemptAt;
+  const PendingSaleSyncCompanion({
+    this.id = const Value.absent(),
+    this.localSaleId = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.attempts = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.lastAttemptAt = const Value.absent(),
+  });
+  PendingSaleSyncCompanion.insert({
+    this.id = const Value.absent(),
+    required String localSaleId,
+    required String operation,
+    required String payload,
+    this.attempts = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.lastAttemptAt = const Value.absent(),
+  })  : localSaleId = Value(localSaleId),
+        operation = Value(operation),
+        payload = Value(payload);
+  static Insertable<PendingSaleSyncRow> custom({
+    Expression<int>? id,
+    Expression<String>? localSaleId,
+    Expression<String>? operation,
+    Expression<String>? payload,
+    Expression<int>? attempts,
+    Expression<String>? lastError,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastAttemptAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (localSaleId != null) 'local_sale_id': localSaleId,
+      if (operation != null) 'operation': operation,
+      if (payload != null) 'payload': payload,
+      if (attempts != null) 'attempts': attempts,
+      if (lastError != null) 'last_error': lastError,
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastAttemptAt != null) 'last_attempt_at': lastAttemptAt,
+    });
+  }
+
+  PendingSaleSyncCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? localSaleId,
+      Value<String>? operation,
+      Value<String>? payload,
+      Value<int>? attempts,
+      Value<String?>? lastError,
+      Value<DateTime>? createdAt,
+      Value<DateTime?>? lastAttemptAt}) {
+    return PendingSaleSyncCompanion(
+      id: id ?? this.id,
+      localSaleId: localSaleId ?? this.localSaleId,
+      operation: operation ?? this.operation,
+      payload: payload ?? this.payload,
+      attempts: attempts ?? this.attempts,
+      lastError: lastError ?? this.lastError,
+      createdAt: createdAt ?? this.createdAt,
+      lastAttemptAt: lastAttemptAt ?? this.lastAttemptAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (localSaleId.present) {
+      map['local_sale_id'] = Variable<String>(localSaleId.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (attempts.present) {
+      map['attempts'] = Variable<int>(attempts.value);
+    }
+    if (lastError.present) {
+      map['last_error'] = Variable<String>(lastError.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastAttemptAt.present) {
+      map['last_attempt_at'] = Variable<DateTime>(lastAttemptAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSaleSyncCompanion(')
+          ..write('id: $id, ')
+          ..write('localSaleId: $localSaleId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('attempts: $attempts, ')
+          ..write('lastError: $lastError, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastAttemptAt: $lastAttemptAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalStockAdjustmentsTable extends LocalStockAdjustments
+    with TableInfo<$LocalStockAdjustmentsTable, LocalStockAdjustmentRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalStockAdjustmentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<String> productId = GeneratedColumn<String>(
+      'product_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _priceTypeMeta =
+      const VerificationMeta('priceType');
+  @override
+  late final GeneratedColumn<String> priceType = GeneratedColumn<String>(
+      'price_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _sackPriceIdMeta =
+      const VerificationMeta('sackPriceId');
+  @override
+  late final GeneratedColumn<String> sackPriceId = GeneratedColumn<String>(
+      'sack_price_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _perKiloPriceIdMeta =
+      const VerificationMeta('perKiloPriceId');
+  @override
+  late final GeneratedColumn<String> perKiloPriceId = GeneratedColumn<String>(
+      'per_kilo_price_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityChangeMeta =
+      const VerificationMeta('quantityChange');
+  @override
+  late final GeneratedColumn<double> quantityChange = GeneratedColumn<double>(
+      'quantity_change', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _saleIdMeta = const VerificationMeta('saleId');
+  @override
+  late final GeneratedColumn<String> saleId = GeneratedColumn<String>(
+      'sale_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncedMeta =
+      const VerificationMeta('isSynced');
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+      'is_synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        productId,
+        priceType,
+        sackPriceId,
+        perKiloPriceId,
+        quantityChange,
+        saleId,
+        isSynced,
+        createdAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_stock_adjustments';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<LocalStockAdjustmentRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    } else if (isInserting) {
+      context.missing(_productIdMeta);
+    }
+    if (data.containsKey('price_type')) {
+      context.handle(_priceTypeMeta,
+          priceType.isAcceptableOrUnknown(data['price_type']!, _priceTypeMeta));
+    } else if (isInserting) {
+      context.missing(_priceTypeMeta);
+    }
+    if (data.containsKey('sack_price_id')) {
+      context.handle(
+          _sackPriceIdMeta,
+          sackPriceId.isAcceptableOrUnknown(
+              data['sack_price_id']!, _sackPriceIdMeta));
+    }
+    if (data.containsKey('per_kilo_price_id')) {
+      context.handle(
+          _perKiloPriceIdMeta,
+          perKiloPriceId.isAcceptableOrUnknown(
+              data['per_kilo_price_id']!, _perKiloPriceIdMeta));
+    }
+    if (data.containsKey('quantity_change')) {
+      context.handle(
+          _quantityChangeMeta,
+          quantityChange.isAcceptableOrUnknown(
+              data['quantity_change']!, _quantityChangeMeta));
+    } else if (isInserting) {
+      context.missing(_quantityChangeMeta);
+    }
+    if (data.containsKey('sale_id')) {
+      context.handle(_saleIdMeta,
+          saleId.isAcceptableOrUnknown(data['sale_id']!, _saleIdMeta));
+    } else if (isInserting) {
+      context.missing(_saleIdMeta);
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(_isSyncedMeta,
+          isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalStockAdjustmentRow map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalStockAdjustmentRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_id'])!,
+      priceType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}price_type'])!,
+      sackPriceId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sack_price_id']),
+      perKiloPriceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}per_kilo_price_id']),
+      quantityChange: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}quantity_change'])!,
+      saleId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sale_id'])!,
+      isSynced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $LocalStockAdjustmentsTable createAlias(String alias) {
+    return $LocalStockAdjustmentsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalStockAdjustmentRow extends DataClass
+    implements Insertable<LocalStockAdjustmentRow> {
+  /// Auto-increment ID.
+  final int id;
+
+  /// Product ID.
+  final String productId;
+
+  /// Price type: 'perKilo' or 'sack'.
+  final String priceType;
+
+  /// Sack price ID if applicable.
+  final String? sackPriceId;
+
+  /// Per kilo price ID if applicable.
+  final String? perKiloPriceId;
+
+  /// Quantity change (negative for sales, positive for voids).
+  final double quantityChange;
+
+  /// Related sale ID.
+  final String saleId;
+
+  /// Whether this adjustment has been synced.
+  final bool isSynced;
+
+  /// When the adjustment was made.
+  final DateTime createdAt;
+  const LocalStockAdjustmentRow(
+      {required this.id,
+      required this.productId,
+      required this.priceType,
+      this.sackPriceId,
+      this.perKiloPriceId,
+      required this.quantityChange,
+      required this.saleId,
+      required this.isSynced,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['product_id'] = Variable<String>(productId);
+    map['price_type'] = Variable<String>(priceType);
+    if (!nullToAbsent || sackPriceId != null) {
+      map['sack_price_id'] = Variable<String>(sackPriceId);
+    }
+    if (!nullToAbsent || perKiloPriceId != null) {
+      map['per_kilo_price_id'] = Variable<String>(perKiloPriceId);
+    }
+    map['quantity_change'] = Variable<double>(quantityChange);
+    map['sale_id'] = Variable<String>(saleId);
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  LocalStockAdjustmentsCompanion toCompanion(bool nullToAbsent) {
+    return LocalStockAdjustmentsCompanion(
+      id: Value(id),
+      productId: Value(productId),
+      priceType: Value(priceType),
+      sackPriceId: sackPriceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sackPriceId),
+      perKiloPriceId: perKiloPriceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(perKiloPriceId),
+      quantityChange: Value(quantityChange),
+      saleId: Value(saleId),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory LocalStockAdjustmentRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalStockAdjustmentRow(
+      id: serializer.fromJson<int>(json['id']),
+      productId: serializer.fromJson<String>(json['productId']),
+      priceType: serializer.fromJson<String>(json['priceType']),
+      sackPriceId: serializer.fromJson<String?>(json['sackPriceId']),
+      perKiloPriceId: serializer.fromJson<String?>(json['perKiloPriceId']),
+      quantityChange: serializer.fromJson<double>(json['quantityChange']),
+      saleId: serializer.fromJson<String>(json['saleId']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'productId': serializer.toJson<String>(productId),
+      'priceType': serializer.toJson<String>(priceType),
+      'sackPriceId': serializer.toJson<String?>(sackPriceId),
+      'perKiloPriceId': serializer.toJson<String?>(perKiloPriceId),
+      'quantityChange': serializer.toJson<double>(quantityChange),
+      'saleId': serializer.toJson<String>(saleId),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  LocalStockAdjustmentRow copyWith(
+          {int? id,
+          String? productId,
+          String? priceType,
+          Value<String?> sackPriceId = const Value.absent(),
+          Value<String?> perKiloPriceId = const Value.absent(),
+          double? quantityChange,
+          String? saleId,
+          bool? isSynced,
+          DateTime? createdAt}) =>
+      LocalStockAdjustmentRow(
+        id: id ?? this.id,
+        productId: productId ?? this.productId,
+        priceType: priceType ?? this.priceType,
+        sackPriceId: sackPriceId.present ? sackPriceId.value : this.sackPriceId,
+        perKiloPriceId:
+            perKiloPriceId.present ? perKiloPriceId.value : this.perKiloPriceId,
+        quantityChange: quantityChange ?? this.quantityChange,
+        saleId: saleId ?? this.saleId,
+        isSynced: isSynced ?? this.isSynced,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  LocalStockAdjustmentRow copyWithCompanion(
+      LocalStockAdjustmentsCompanion data) {
+    return LocalStockAdjustmentRow(
+      id: data.id.present ? data.id.value : this.id,
+      productId: data.productId.present ? data.productId.value : this.productId,
+      priceType: data.priceType.present ? data.priceType.value : this.priceType,
+      sackPriceId:
+          data.sackPriceId.present ? data.sackPriceId.value : this.sackPriceId,
+      perKiloPriceId: data.perKiloPriceId.present
+          ? data.perKiloPriceId.value
+          : this.perKiloPriceId,
+      quantityChange: data.quantityChange.present
+          ? data.quantityChange.value
+          : this.quantityChange,
+      saleId: data.saleId.present ? data.saleId.value : this.saleId,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalStockAdjustmentRow(')
+          ..write('id: $id, ')
+          ..write('productId: $productId, ')
+          ..write('priceType: $priceType, ')
+          ..write('sackPriceId: $sackPriceId, ')
+          ..write('perKiloPriceId: $perKiloPriceId, ')
+          ..write('quantityChange: $quantityChange, ')
+          ..write('saleId: $saleId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, productId, priceType, sackPriceId,
+      perKiloPriceId, quantityChange, saleId, isSynced, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalStockAdjustmentRow &&
+          other.id == this.id &&
+          other.productId == this.productId &&
+          other.priceType == this.priceType &&
+          other.sackPriceId == this.sackPriceId &&
+          other.perKiloPriceId == this.perKiloPriceId &&
+          other.quantityChange == this.quantityChange &&
+          other.saleId == this.saleId &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt);
+}
+
+class LocalStockAdjustmentsCompanion
+    extends UpdateCompanion<LocalStockAdjustmentRow> {
+  final Value<int> id;
+  final Value<String> productId;
+  final Value<String> priceType;
+  final Value<String?> sackPriceId;
+  final Value<String?> perKiloPriceId;
+  final Value<double> quantityChange;
+  final Value<String> saleId;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  const LocalStockAdjustmentsCompanion({
+    this.id = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.priceType = const Value.absent(),
+    this.sackPriceId = const Value.absent(),
+    this.perKiloPriceId = const Value.absent(),
+    this.quantityChange = const Value.absent(),
+    this.saleId = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  LocalStockAdjustmentsCompanion.insert({
+    this.id = const Value.absent(),
+    required String productId,
+    required String priceType,
+    this.sackPriceId = const Value.absent(),
+    this.perKiloPriceId = const Value.absent(),
+    required double quantityChange,
+    required String saleId,
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  })  : productId = Value(productId),
+        priceType = Value(priceType),
+        quantityChange = Value(quantityChange),
+        saleId = Value(saleId);
+  static Insertable<LocalStockAdjustmentRow> custom({
+    Expression<int>? id,
+    Expression<String>? productId,
+    Expression<String>? priceType,
+    Expression<String>? sackPriceId,
+    Expression<String>? perKiloPriceId,
+    Expression<double>? quantityChange,
+    Expression<String>? saleId,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (productId != null) 'product_id': productId,
+      if (priceType != null) 'price_type': priceType,
+      if (sackPriceId != null) 'sack_price_id': sackPriceId,
+      if (perKiloPriceId != null) 'per_kilo_price_id': perKiloPriceId,
+      if (quantityChange != null) 'quantity_change': quantityChange,
+      if (saleId != null) 'sale_id': saleId,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  LocalStockAdjustmentsCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? productId,
+      Value<String>? priceType,
+      Value<String?>? sackPriceId,
+      Value<String?>? perKiloPriceId,
+      Value<double>? quantityChange,
+      Value<String>? saleId,
+      Value<bool>? isSynced,
+      Value<DateTime>? createdAt}) {
+    return LocalStockAdjustmentsCompanion(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      priceType: priceType ?? this.priceType,
+      sackPriceId: sackPriceId ?? this.sackPriceId,
+      perKiloPriceId: perKiloPriceId ?? this.perKiloPriceId,
+      quantityChange: quantityChange ?? this.quantityChange,
+      saleId: saleId ?? this.saleId,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<String>(productId.value);
+    }
+    if (priceType.present) {
+      map['price_type'] = Variable<String>(priceType.value);
+    }
+    if (sackPriceId.present) {
+      map['sack_price_id'] = Variable<String>(sackPriceId.value);
+    }
+    if (perKiloPriceId.present) {
+      map['per_kilo_price_id'] = Variable<String>(perKiloPriceId.value);
+    }
+    if (quantityChange.present) {
+      map['quantity_change'] = Variable<double>(quantityChange.value);
+    }
+    if (saleId.present) {
+      map['sale_id'] = Variable<String>(saleId.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalStockAdjustmentsCompanion(')
+          ..write('id: $id, ')
+          ..write('productId: $productId, ')
+          ..write('priceType: $priceType, ')
+          ..write('sackPriceId: $sackPriceId, ')
+          ..write('perKiloPriceId: $perKiloPriceId, ')
+          ..write('quantityChange: $quantityChange, ')
+          ..write('saleId: $saleId, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1155,12 +2713,23 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CachedProductsTable cachedProducts = $CachedProductsTable(this);
   late final $ProductCacheMetaTable productCacheMeta =
       $ProductCacheMetaTable(this);
+  late final $CachedSalesTable cachedSales = $CachedSalesTable(this);
+  late final $PendingSaleSyncTable pendingSaleSync =
+      $PendingSaleSyncTable(this);
+  late final $LocalStockAdjustmentsTable localStockAdjustments =
+      $LocalStockAdjustmentsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [syncQueue, cachedProducts, productCacheMeta];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        syncQueue,
+        cachedProducts,
+        productCacheMeta,
+        cachedSales,
+        pendingSaleSync,
+        localStockAdjustments
+      ];
   @override
   DriftDatabaseOptions get options =>
       const DriftDatabaseOptions(storeDateTimeAsText: true);
@@ -1755,6 +3324,737 @@ typedef $$ProductCacheMetaTableProcessedTableManager = ProcessedTableManager<
     ),
     ProductCacheMetaRow,
     PrefetchHooks Function()>;
+typedef $$CachedSalesTableCreateCompanionBuilder = CachedSalesCompanion
+    Function({
+  required String id,
+  Value<String?> localId,
+  required String cashierId,
+  required double totalAmount,
+  required String paymentMethod,
+  Value<bool> isVoid,
+  Value<DateTime?> voidedAt,
+  Value<String?> orderId,
+  required String data,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$CachedSalesTableUpdateCompanionBuilder = CachedSalesCompanion
+    Function({
+  Value<String> id,
+  Value<String?> localId,
+  Value<String> cashierId,
+  Value<double> totalAmount,
+  Value<String> paymentMethod,
+  Value<bool> isVoid,
+  Value<DateTime?> voidedAt,
+  Value<String?> orderId,
+  Value<String> data,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$CachedSalesTableFilterComposer
+    extends Composer<_$AppDatabase, $CachedSalesTable> {
+  $$CachedSalesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get totalAmount => $composableBuilder(
+      column: $table.totalAmount, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get paymentMethod => $composableBuilder(
+      column: $table.paymentMethod, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isVoid => $composableBuilder(
+      column: $table.isVoid, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get voidedAt => $composableBuilder(
+      column: $table.voidedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get orderId => $composableBuilder(
+      column: $table.orderId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get data => $composableBuilder(
+      column: $table.data, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$CachedSalesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CachedSalesTable> {
+  $$CachedSalesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get totalAmount => $composableBuilder(
+      column: $table.totalAmount, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get paymentMethod => $composableBuilder(
+      column: $table.paymentMethod,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isVoid => $composableBuilder(
+      column: $table.isVoid, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get voidedAt => $composableBuilder(
+      column: $table.voidedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get orderId => $composableBuilder(
+      column: $table.orderId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get data => $composableBuilder(
+      column: $table.data, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CachedSalesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CachedSalesTable> {
+  $$CachedSalesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get cashierId =>
+      $composableBuilder(column: $table.cashierId, builder: (column) => column);
+
+  GeneratedColumn<double> get totalAmount => $composableBuilder(
+      column: $table.totalAmount, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentMethod => $composableBuilder(
+      column: $table.paymentMethod, builder: (column) => column);
+
+  GeneratedColumn<bool> get isVoid =>
+      $composableBuilder(column: $table.isVoid, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get voidedAt =>
+      $composableBuilder(column: $table.voidedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get orderId =>
+      $composableBuilder(column: $table.orderId, builder: (column) => column);
+
+  GeneratedColumn<String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CachedSalesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CachedSalesTable,
+    CachedSaleRow,
+    $$CachedSalesTableFilterComposer,
+    $$CachedSalesTableOrderingComposer,
+    $$CachedSalesTableAnnotationComposer,
+    $$CachedSalesTableCreateCompanionBuilder,
+    $$CachedSalesTableUpdateCompanionBuilder,
+    (
+      CachedSaleRow,
+      BaseReferences<_$AppDatabase, $CachedSalesTable, CachedSaleRow>
+    ),
+    CachedSaleRow,
+    PrefetchHooks Function()> {
+  $$CachedSalesTableTableManager(_$AppDatabase db, $CachedSalesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CachedSalesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CachedSalesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CachedSalesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> localId = const Value.absent(),
+            Value<String> cashierId = const Value.absent(),
+            Value<double> totalAmount = const Value.absent(),
+            Value<String> paymentMethod = const Value.absent(),
+            Value<bool> isVoid = const Value.absent(),
+            Value<DateTime?> voidedAt = const Value.absent(),
+            Value<String?> orderId = const Value.absent(),
+            Value<String> data = const Value.absent(),
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CachedSalesCompanion(
+            id: id,
+            localId: localId,
+            cashierId: cashierId,
+            totalAmount: totalAmount,
+            paymentMethod: paymentMethod,
+            isVoid: isVoid,
+            voidedAt: voidedAt,
+            orderId: orderId,
+            data: data,
+            isSynced: isSynced,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            Value<String?> localId = const Value.absent(),
+            required String cashierId,
+            required double totalAmount,
+            required String paymentMethod,
+            Value<bool> isVoid = const Value.absent(),
+            Value<DateTime?> voidedAt = const Value.absent(),
+            Value<String?> orderId = const Value.absent(),
+            required String data,
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CachedSalesCompanion.insert(
+            id: id,
+            localId: localId,
+            cashierId: cashierId,
+            totalAmount: totalAmount,
+            paymentMethod: paymentMethod,
+            isVoid: isVoid,
+            voidedAt: voidedAt,
+            orderId: orderId,
+            data: data,
+            isSynced: isSynced,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$CachedSalesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CachedSalesTable,
+    CachedSaleRow,
+    $$CachedSalesTableFilterComposer,
+    $$CachedSalesTableOrderingComposer,
+    $$CachedSalesTableAnnotationComposer,
+    $$CachedSalesTableCreateCompanionBuilder,
+    $$CachedSalesTableUpdateCompanionBuilder,
+    (
+      CachedSaleRow,
+      BaseReferences<_$AppDatabase, $CachedSalesTable, CachedSaleRow>
+    ),
+    CachedSaleRow,
+    PrefetchHooks Function()>;
+typedef $$PendingSaleSyncTableCreateCompanionBuilder = PendingSaleSyncCompanion
+    Function({
+  Value<int> id,
+  required String localSaleId,
+  required String operation,
+  required String payload,
+  Value<int> attempts,
+  Value<String?> lastError,
+  Value<DateTime> createdAt,
+  Value<DateTime?> lastAttemptAt,
+});
+typedef $$PendingSaleSyncTableUpdateCompanionBuilder = PendingSaleSyncCompanion
+    Function({
+  Value<int> id,
+  Value<String> localSaleId,
+  Value<String> operation,
+  Value<String> payload,
+  Value<int> attempts,
+  Value<String?> lastError,
+  Value<DateTime> createdAt,
+  Value<DateTime?> lastAttemptAt,
+});
+
+class $$PendingSaleSyncTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingSaleSyncTable> {
+  $$PendingSaleSyncTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localSaleId => $composableBuilder(
+      column: $table.localSaleId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get attempts => $composableBuilder(
+      column: $table.attempts, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get lastError => $composableBuilder(
+      column: $table.lastError, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastAttemptAt => $composableBuilder(
+      column: $table.lastAttemptAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$PendingSaleSyncTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingSaleSyncTable> {
+  $$PendingSaleSyncTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localSaleId => $composableBuilder(
+      column: $table.localSaleId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get attempts => $composableBuilder(
+      column: $table.attempts, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get lastError => $composableBuilder(
+      column: $table.lastError, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastAttemptAt => $composableBuilder(
+      column: $table.lastAttemptAt,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$PendingSaleSyncTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingSaleSyncTable> {
+  $$PendingSaleSyncTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get localSaleId => $composableBuilder(
+      column: $table.localSaleId, builder: (column) => column);
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<String> get payload =>
+      $composableBuilder(column: $table.payload, builder: (column) => column);
+
+  GeneratedColumn<int> get attempts =>
+      $composableBuilder(column: $table.attempts, builder: (column) => column);
+
+  GeneratedColumn<String> get lastError =>
+      $composableBuilder(column: $table.lastError, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastAttemptAt => $composableBuilder(
+      column: $table.lastAttemptAt, builder: (column) => column);
+}
+
+class $$PendingSaleSyncTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PendingSaleSyncTable,
+    PendingSaleSyncRow,
+    $$PendingSaleSyncTableFilterComposer,
+    $$PendingSaleSyncTableOrderingComposer,
+    $$PendingSaleSyncTableAnnotationComposer,
+    $$PendingSaleSyncTableCreateCompanionBuilder,
+    $$PendingSaleSyncTableUpdateCompanionBuilder,
+    (
+      PendingSaleSyncRow,
+      BaseReferences<_$AppDatabase, $PendingSaleSyncTable, PendingSaleSyncRow>
+    ),
+    PendingSaleSyncRow,
+    PrefetchHooks Function()> {
+  $$PendingSaleSyncTableTableManager(
+      _$AppDatabase db, $PendingSaleSyncTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingSaleSyncTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PendingSaleSyncTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PendingSaleSyncTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> localSaleId = const Value.absent(),
+            Value<String> operation = const Value.absent(),
+            Value<String> payload = const Value.absent(),
+            Value<int> attempts = const Value.absent(),
+            Value<String?> lastError = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime?> lastAttemptAt = const Value.absent(),
+          }) =>
+              PendingSaleSyncCompanion(
+            id: id,
+            localSaleId: localSaleId,
+            operation: operation,
+            payload: payload,
+            attempts: attempts,
+            lastError: lastError,
+            createdAt: createdAt,
+            lastAttemptAt: lastAttemptAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String localSaleId,
+            required String operation,
+            required String payload,
+            Value<int> attempts = const Value.absent(),
+            Value<String?> lastError = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime?> lastAttemptAt = const Value.absent(),
+          }) =>
+              PendingSaleSyncCompanion.insert(
+            id: id,
+            localSaleId: localSaleId,
+            operation: operation,
+            payload: payload,
+            attempts: attempts,
+            lastError: lastError,
+            createdAt: createdAt,
+            lastAttemptAt: lastAttemptAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PendingSaleSyncTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PendingSaleSyncTable,
+    PendingSaleSyncRow,
+    $$PendingSaleSyncTableFilterComposer,
+    $$PendingSaleSyncTableOrderingComposer,
+    $$PendingSaleSyncTableAnnotationComposer,
+    $$PendingSaleSyncTableCreateCompanionBuilder,
+    $$PendingSaleSyncTableUpdateCompanionBuilder,
+    (
+      PendingSaleSyncRow,
+      BaseReferences<_$AppDatabase, $PendingSaleSyncTable, PendingSaleSyncRow>
+    ),
+    PendingSaleSyncRow,
+    PrefetchHooks Function()>;
+typedef $$LocalStockAdjustmentsTableCreateCompanionBuilder
+    = LocalStockAdjustmentsCompanion Function({
+  Value<int> id,
+  required String productId,
+  required String priceType,
+  Value<String?> sackPriceId,
+  Value<String?> perKiloPriceId,
+  required double quantityChange,
+  required String saleId,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+});
+typedef $$LocalStockAdjustmentsTableUpdateCompanionBuilder
+    = LocalStockAdjustmentsCompanion Function({
+  Value<int> id,
+  Value<String> productId,
+  Value<String> priceType,
+  Value<String?> sackPriceId,
+  Value<String?> perKiloPriceId,
+  Value<double> quantityChange,
+  Value<String> saleId,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+});
+
+class $$LocalStockAdjustmentsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalStockAdjustmentsTable> {
+  $$LocalStockAdjustmentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get productId => $composableBuilder(
+      column: $table.productId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get priceType => $composableBuilder(
+      column: $table.priceType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get sackPriceId => $composableBuilder(
+      column: $table.sackPriceId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get perKiloPriceId => $composableBuilder(
+      column: $table.perKiloPriceId,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get quantityChange => $composableBuilder(
+      column: $table.quantityChange,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get saleId => $composableBuilder(
+      column: $table.saleId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$LocalStockAdjustmentsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalStockAdjustmentsTable> {
+  $$LocalStockAdjustmentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get productId => $composableBuilder(
+      column: $table.productId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get priceType => $composableBuilder(
+      column: $table.priceType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get sackPriceId => $composableBuilder(
+      column: $table.sackPriceId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get perKiloPriceId => $composableBuilder(
+      column: $table.perKiloPriceId,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get quantityChange => $composableBuilder(
+      column: $table.quantityChange,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get saleId => $composableBuilder(
+      column: $table.saleId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$LocalStockAdjustmentsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalStockAdjustmentsTable> {
+  $$LocalStockAdjustmentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get productId =>
+      $composableBuilder(column: $table.productId, builder: (column) => column);
+
+  GeneratedColumn<String> get priceType =>
+      $composableBuilder(column: $table.priceType, builder: (column) => column);
+
+  GeneratedColumn<String> get sackPriceId => $composableBuilder(
+      column: $table.sackPriceId, builder: (column) => column);
+
+  GeneratedColumn<String> get perKiloPriceId => $composableBuilder(
+      column: $table.perKiloPriceId, builder: (column) => column);
+
+  GeneratedColumn<double> get quantityChange => $composableBuilder(
+      column: $table.quantityChange, builder: (column) => column);
+
+  GeneratedColumn<String> get saleId =>
+      $composableBuilder(column: $table.saleId, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$LocalStockAdjustmentsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $LocalStockAdjustmentsTable,
+    LocalStockAdjustmentRow,
+    $$LocalStockAdjustmentsTableFilterComposer,
+    $$LocalStockAdjustmentsTableOrderingComposer,
+    $$LocalStockAdjustmentsTableAnnotationComposer,
+    $$LocalStockAdjustmentsTableCreateCompanionBuilder,
+    $$LocalStockAdjustmentsTableUpdateCompanionBuilder,
+    (
+      LocalStockAdjustmentRow,
+      BaseReferences<_$AppDatabase, $LocalStockAdjustmentsTable,
+          LocalStockAdjustmentRow>
+    ),
+    LocalStockAdjustmentRow,
+    PrefetchHooks Function()> {
+  $$LocalStockAdjustmentsTableTableManager(
+      _$AppDatabase db, $LocalStockAdjustmentsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalStockAdjustmentsTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalStockAdjustmentsTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalStockAdjustmentsTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> productId = const Value.absent(),
+            Value<String> priceType = const Value.absent(),
+            Value<String?> sackPriceId = const Value.absent(),
+            Value<String?> perKiloPriceId = const Value.absent(),
+            Value<double> quantityChange = const Value.absent(),
+            Value<String> saleId = const Value.absent(),
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              LocalStockAdjustmentsCompanion(
+            id: id,
+            productId: productId,
+            priceType: priceType,
+            sackPriceId: sackPriceId,
+            perKiloPriceId: perKiloPriceId,
+            quantityChange: quantityChange,
+            saleId: saleId,
+            isSynced: isSynced,
+            createdAt: createdAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String productId,
+            required String priceType,
+            Value<String?> sackPriceId = const Value.absent(),
+            Value<String?> perKiloPriceId = const Value.absent(),
+            required double quantityChange,
+            required String saleId,
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              LocalStockAdjustmentsCompanion.insert(
+            id: id,
+            productId: productId,
+            priceType: priceType,
+            sackPriceId: sackPriceId,
+            perKiloPriceId: perKiloPriceId,
+            quantityChange: quantityChange,
+            saleId: saleId,
+            isSynced: isSynced,
+            createdAt: createdAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$LocalStockAdjustmentsTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $LocalStockAdjustmentsTable,
+        LocalStockAdjustmentRow,
+        $$LocalStockAdjustmentsTableFilterComposer,
+        $$LocalStockAdjustmentsTableOrderingComposer,
+        $$LocalStockAdjustmentsTableAnnotationComposer,
+        $$LocalStockAdjustmentsTableCreateCompanionBuilder,
+        $$LocalStockAdjustmentsTableUpdateCompanionBuilder,
+        (
+          LocalStockAdjustmentRow,
+          BaseReferences<_$AppDatabase, $LocalStockAdjustmentsTable,
+              LocalStockAdjustmentRow>
+        ),
+        LocalStockAdjustmentRow,
+        PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1765,6 +4065,12 @@ class $AppDatabaseManager {
       $$CachedProductsTableTableManager(_db, _db.cachedProducts);
   $$ProductCacheMetaTableTableManager get productCacheMeta =>
       $$ProductCacheMetaTableTableManager(_db, _db.productCacheMeta);
+  $$CachedSalesTableTableManager get cachedSales =>
+      $$CachedSalesTableTableManager(_db, _db.cachedSales);
+  $$PendingSaleSyncTableTableManager get pendingSaleSync =>
+      $$PendingSaleSyncTableTableManager(_db, _db.pendingSaleSync);
+  $$LocalStockAdjustmentsTableTableManager get localStockAdjustments =>
+      $$LocalStockAdjustmentsTableTableManager(_db, _db.localStockAdjustments);
 }
 
 // **************************************************************************
