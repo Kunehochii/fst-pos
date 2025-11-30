@@ -41,6 +41,9 @@ dependencies:
   # Offline Auth Cache
   shared_preferences: ^2.3.4
 
+  # Internationalization
+  intl: ^0.20.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

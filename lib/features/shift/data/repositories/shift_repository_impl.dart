@@ -45,14 +45,14 @@ class ShiftRepositoryImpl implements ShiftRepository {
     try {
       final models = await _remoteDataSource.getEmployees();
       final employees = models.map((m) => m.toEntity()).toList();
-      
+
       // Cache for offline access
       await _localDataSource.cacheEmployees(employees);
-      
+
       return (null, employees);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to get employees from server', e, stackTrace);
-      
+
       // Try to return cached employees if network error
       if (e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout) {
@@ -61,9 +61,15 @@ class ShiftRepositoryImpl implements ShiftRepository {
           AppLogger.info('Returning cached employees (offline mode)');
           return (null, cachedEmployees);
         }
+        return (const Failure.network(), null);
       }
-      
-      return (e.toFailure(), null);
+
+      final message =
+          e.response?.data?['message'] as String? ?? 'Failed to get employees';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error getting employees', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);
@@ -76,22 +82,22 @@ class ShiftRepositoryImpl implements ShiftRepository {
       final shifts = await _remoteDataSource.getShifts();
       // Find the first shift that has no endTime (active shift)
       final activeShiftList = shifts.where((s) => s.endTime == null).toList();
-      
+
       if (activeShiftList.isEmpty) {
         // No active shift - clear cache
         await _localDataSource.clearCachedActiveShift();
         return (null, null);
       }
-      
+
       final activeShift = activeShiftList.first.toEntity();
-      
+
       // Cache for offline access
       await _localDataSource.cacheActiveShift(activeShift);
-      
+
       return (null, activeShift);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to get active shift from server', e, stackTrace);
-      
+
       // Try to return cached shift if network error
       if (e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout) {
@@ -103,8 +109,13 @@ class ShiftRepositoryImpl implements ShiftRepository {
         // No cached shift means no active shift (which is okay)
         return (null, null);
       }
-      
-      return (e.toFailure(), null);
+
+      final message = e.response?.data?['message'] as String? ??
+          'Failed to get active shift';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error getting active shift', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);
@@ -119,7 +130,16 @@ class ShiftRepositoryImpl implements ShiftRepository {
       return (null, shifts);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to get shifts', e, stackTrace);
-      return (e.toFailure(), null);
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout) {
+        return (const Failure.network(), null);
+      }
+      final message =
+          e.response?.data?['message'] as String? ?? 'Failed to get shifts';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error getting shifts', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);
@@ -131,16 +151,16 @@ class ShiftRepositoryImpl implements ShiftRepository {
     try {
       final model = await _remoteDataSource.getShift(id);
       final shift = model.toEntity();
-      
+
       // Cache if active
       if (shift.isActive) {
         await _localDataSource.cacheActiveShift(shift);
       }
-      
+
       return (null, shift);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to get shift', e, stackTrace);
-      
+
       // Try cached if network error and looking for active shift
       if (e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout) {
@@ -148,9 +168,15 @@ class ShiftRepositoryImpl implements ShiftRepository {
         if (cachedShift != null && cachedShift.id == id) {
           return (null, cachedShift);
         }
+        return (const Failure.network(), null);
       }
-      
-      return (e.toFailure(), null);
+
+      final message =
+          e.response?.data?['message'] as String? ?? 'Failed to get shift';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error getting shift', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);
@@ -162,14 +188,23 @@ class ShiftRepositoryImpl implements ShiftRepository {
     try {
       final model = await _remoteDataSource.createShift(employeeIds);
       final shift = model.toEntity();
-      
+
       // Cache the new active shift
       await _localDataSource.cacheActiveShift(shift);
-      
+
       return (null, shift);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to create shift', e, stackTrace);
-      return (e.toFailure(), null);
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout) {
+        return (const Failure.network(), null);
+      }
+      final message =
+          e.response?.data?['message'] as String? ?? 'Failed to create shift';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error creating shift', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);
@@ -182,16 +217,25 @@ class ShiftRepositoryImpl implements ShiftRepository {
     try {
       final model = await _remoteDataSource.updateShift(id, employeeIds);
       final shift = model.toEntity();
-      
+
       // Update cache
       if (shift.isActive) {
         await _localDataSource.cacheActiveShift(shift);
       }
-      
+
       return (null, shift);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to update shift', e, stackTrace);
-      return (e.toFailure(), null);
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout) {
+        return (const Failure.network(), null);
+      }
+      final message =
+          e.response?.data?['message'] as String? ?? 'Failed to update shift';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error updating shift', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);
@@ -203,14 +247,23 @@ class ShiftRepositoryImpl implements ShiftRepository {
     try {
       final model = await _remoteDataSource.endShift(id);
       final shift = model.toEntity();
-      
+
       // Clear cached active shift since it's now ended
       await _localDataSource.clearCachedActiveShift();
-      
+
       return (null, shift);
     } on DioException catch (e, stackTrace) {
       AppLogger.error('Failed to end shift', e, stackTrace);
-      return (e.toFailure(), null);
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout) {
+        return (const Failure.network(), null);
+      }
+      final message =
+          e.response?.data?['message'] as String? ?? 'Failed to end shift';
+      return (
+        Failure.server(message: message, statusCode: e.response?.statusCode),
+        null
+      );
     } catch (e, stackTrace) {
       AppLogger.error('Unexpected error ending shift', e, stackTrace);
       return (Failure.unknown(message: e.toString()), null);

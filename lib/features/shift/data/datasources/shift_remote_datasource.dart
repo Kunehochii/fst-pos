@@ -13,7 +13,7 @@ class ShiftRemoteDataSource {
 
   /// Fetches all employees for the current cashier's branch.
   Future<List<EmployeeModel>> getEmployees() async {
-    AppLogger.api('Fetching employees');
+    AppLogger.info('Fetching employees');
 
     final response = await _dio.get(ApiEndpoints.employees.list);
 
@@ -23,13 +23,13 @@ class ShiftRemoteDataSource {
         .map((json) => EmployeeModel.fromJson(json as Map<String, dynamic>))
         .toList();
 
-    AppLogger.api('Parsed ${employees.length} employees');
+    AppLogger.info('Parsed ${employees.length} employees');
     return employees;
   }
 
   /// Fetches all shifts for the current cashier.
   Future<List<ShiftModel>> getShifts() async {
-    AppLogger.api('Fetching shifts');
+    AppLogger.info('Fetching shifts');
 
     final response = await _dio.get(ApiEndpoints.shifts.list);
 
@@ -39,13 +39,13 @@ class ShiftRemoteDataSource {
         .map((json) => ShiftModel.fromJson(json as Map<String, dynamic>))
         .toList();
 
-    AppLogger.api('Parsed ${shifts.length} shifts');
+    AppLogger.info('Parsed ${shifts.length} shifts');
     return shifts;
   }
 
   /// Fetches a specific shift by ID.
   Future<ShiftModel> getShift(String id) async {
-    AppLogger.api('Fetching shift', {'id': id});
+    AppLogger.info('Fetching shift', {'id': id});
 
     final response = await _dio.get(ApiEndpoints.shifts.byId(id));
 
@@ -55,7 +55,7 @@ class ShiftRemoteDataSource {
 
   /// Creates a new shift (time in).
   Future<ShiftModel> createShift(List<String> employeeIds) async {
-    AppLogger.api('Creating shift', {'employeeIds': employeeIds});
+    AppLogger.info('Creating shift', {'employeeIds': employeeIds});
 
     final response = await _dio.post(
       ApiEndpoints.shifts.list,
@@ -68,7 +68,7 @@ class ShiftRemoteDataSource {
 
   /// Updates the employees assigned to a shift.
   Future<ShiftModel> updateShift(String id, List<String> employeeIds) async {
-    AppLogger.api('Updating shift', {'id': id, 'employeeIds': employeeIds});
+    AppLogger.info('Updating shift', {'id': id, 'employeeIds': employeeIds});
 
     final response = await _dio.patch(
       ApiEndpoints.shifts.byId(id),
@@ -81,7 +81,7 @@ class ShiftRemoteDataSource {
 
   /// Ends a shift (time out).
   Future<ShiftModel> endShift(String id) async {
-    AppLogger.api('Ending shift', {'id': id});
+    AppLogger.info('Ending shift', {'id': id});
 
     final response = await _dio.patch(ApiEndpoints.shifts.end(id));
 
