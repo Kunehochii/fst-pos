@@ -230,6 +230,15 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       title: 'Shift',
     ));
 
+    // Settings - open to all cashiers
+    items.add(_buildMenuItem(
+      context: context,
+      currentPath: currentPath,
+      route: AppRoutes.settings,
+      icon: Icons.settings,
+      title: 'Settings',
+    ));
+
     return items;
   }
 

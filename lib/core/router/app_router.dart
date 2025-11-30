@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/auth.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/settings/settings.dart';
 import '../../features/shift/shift.dart';
 import '../../shared/widgets/main_layout.dart';
 
@@ -74,11 +75,11 @@ GoRouter appRouter(Ref ref) {
           // Don't apply shift guard on the shift page itself
           // Users need to access it to time in
           final isShiftPage = state.matchedLocation == AppRoutes.shift;
-          
+
           if (isShiftPage) {
             return MainLayout(child: child);
           }
-          
+
           // Wrap with ShiftGuard to require time-in before accessing features
           return MainLayout(
             child: ShiftGuard(child: child),
@@ -97,6 +98,13 @@ GoRouter appRouter(Ref ref) {
             name: 'shift',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: ShiftPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/settings',
+            name: 'settings',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SettingsPage(),
             ),
           ),
           // Add more routes here following this pattern:
@@ -153,4 +161,5 @@ abstract class AppRoutes {
 
   // Open to all cashiers
   static const shift = '/shift';
+  static const settings = '/settings';
 }

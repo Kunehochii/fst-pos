@@ -7,5 +7,7 @@
 
 export 'auth/auth.dart';
 export 'home/home.dart';
+export 'printer/printer.dart';
 export 'product/product.dart';
+export 'settings/settings.dart';
 export 'shift/shift.dart';

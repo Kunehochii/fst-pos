@@ -17,6 +17,8 @@
 | **HTTP Client**      | Dio with interceptors                      |
 | **Local Database**   | Drift (SQLite)                             |
 | **Secure Storage**   | flutter_secure_storage (JWT tokens)        |
+| **Printing**         | flutter_thermal_printer (ESC/POS)          |
+| **Kiosk Mode**       | kiosk_mode                                 |
 | **Code Generation**  | freezed, json_serializable, drift_dev      |
 | **Environment**      | flutter_dotenv (.env files)                |
 
@@ -1354,6 +1356,314 @@ The `AuthInterceptor` automatically:
 
 ---
 
+## Printer Service
+
+The printer service provides **unified POS printing** capabilities for thermal printers via USB, Bluetooth, and BLE connections.
+
+### Architecture Overview
+
+```
+lib/features/printer/
+├── printer.dart                          # Barrel export
+├── data/
+│   ├── datasources/
+│   │   └── printer_datasource.dart       # flutter_thermal_printer wrapper
+│   └── repositories/
+│       └── printer_repository_impl.dart  # Repository implementation
+├── domain/
+│   ├── entities/
+│   │   ├── printer_device.dart           # PrinterDevice + PrinterConnectionType
+│   │   └── receipt_line.dart             # ReceiptLine, Receipt, ReceiptBuilder
+│   └── repositories/
+│       └── printer_repository.dart       # Repository interface
+└── presentation/
+    └── providers/
+        └── printer_provider.dart         # Riverpod providers for printing
+```
+
+### Paper Size Configuration
+
+| Size  | Characters/Line | Dots/Line | Usage                    |
+| ----- | --------------- | --------- | ------------------------ |
+| 57mm  | 32              | 384       | Narrow thermal receipts  |
+| 80mm  | 48              | 576       | Standard thermal receipts|
+
+### Receipt Formatting
+
+The `ReceiptLine` and `ReceiptBuilder` provide a fluent API for creating formatted receipts:
+
+```dart
+import 'package:fst_pos/features/printer/printer.dart';
+
+// Build a formatted receipt
+final receipt = ReceiptBuilder()
+    .paperSize(PaperSize.mm80)
+    .header('STORE NAME')            // Double-height centered
+    .separator()                     // ------------------------------------------------
+    .text('Date: 2025-11-30')        // Left-aligned (default)
+    .center('Receipt #12345')        // Centered
+    .empty()                         // Empty line
+    .row('RICE 25KG', '3 PC')        // Left + Right on same line
+    .row('10 pesos', '200 pesos')    // Left + Right on same line
+    .separator(char: '=')            // ================================================
+    .row('TOTAL', '200.00', bold: true)
+    .emptyLines(3)                   // Feed paper
+    .build();
+```
+
+### Receipt Line Types
+
+| Type       | Description                              | Example Output (80mm)                              |
+| ---------- | ---------------------------------------- | -------------------------------------------------- |
+| `text`     | Single line with alignment               | `Hello World                                    `  |
+| `center`   | Centered text                            | `          Hello World          `                  |
+| `right`    | Right-aligned text                       | `                                    Hello World`  |
+| `row`      | Two-column (left + right)                | `ITEM NAME                               50.00`    |
+| `header`   | Double-height, usually centered          | **STORE NAME** (larger font)                       |
+| `separator`| Horizontal line                          | `------------------------------------------------` |
+| `empty`    | Blank line for spacing                   | ` `                                                |
+
+### Key Providers
+
+| Provider                    | Type                              | Description                           |
+| --------------------------- | --------------------------------- | ------------------------------------- |
+| `printerListNotifierProvider` | `Notifier<PrinterListState>`   | Printer discovery and list            |
+| `printerNotifierProvider`   | `Notifier<PrintingState>`         | Print operations                      |
+| `printerRepositoryProvider` | `PrinterRepository`               | Repository for DI                     |
+| `bluetoothOnProvider`       | `Future<bool>`                    | Check Bluetooth state                 |
+
+### PrinterListState
+
+```dart
+sealed class PrinterListState {}
+
+class PrinterListInitial extends PrinterListState {}
+class PrinterListScanning extends PrinterListState {
+  final List<PrinterDevice> printers;
+}
+class PrinterListReady extends PrinterListState {
+  final List<PrinterDevice> printers;
+}
+class PrinterListError extends PrinterListState {
+  final String message;
+}
+```
+
+### PrintingState
+
+```dart
+sealed class PrintingState {}
+
+class PrintingIdle extends PrintingState {}
+class PrintingInProgress extends PrintingState {}
+class PrintingSuccess extends PrintingState {}
+class PrintingError extends PrintingState {
+  final String message;
+}
+```
+
+### Usage Examples
+
+#### 1. Discover Printers
+
+```dart
+class PrinterListWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final printerListState = ref.watch(printerListNotifierProvider);
+
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            ref.read(printerListNotifierProvider.notifier).startScan();
+          },
+          child: const Text('Scan for Printers'),
+        ),
+        if (printerListState is PrinterListScanning)
+          ...printerListState.printers.map((printer) => ListTile(
+            title: Text(printer.name),
+            subtitle: Text(printer.connectionTypeDisplay),
+            onTap: () => _selectPrinter(ref, printer),
+          )),
+      ],
+    );
+  }
+}
+```
+
+#### 2. Print a Receipt
+
+```dart
+Future<void> printReceipt(WidgetRef ref, PrinterDevice printer) async {
+  final receipt = ReceiptBuilder()
+      .paperSize(PaperSize.mm80)
+      .header('MY STORE')
+      .separator()
+      .row('Item 1', '\$10.00')
+      .row('Item 2', '\$15.00')
+      .separator(char: '=')
+      .row('TOTAL', '\$25.00', bold: true)
+      .emptyLines(3)
+      .build();
+
+  await ref.read(printerNotifierProvider.notifier).printReceipt(
+    printer,
+    receipt,
+    cut: true,
+  );
+}
+```
+
+#### 3. Print Test Page
+
+```dart
+await ref.read(printerNotifierProvider.notifier).printTestPage(
+  selectedPrinter,
+  PaperSize.mm80,
+);
+```
+
+### Supported Connection Types
+
+| Type       | Android | Web | Description                |
+| ---------- | :-----: | :-: | -------------------------- |
+| USB        | ✅      | ❌  | Direct USB connection      |
+| Bluetooth  | ✅      | ❌  | Classic Bluetooth          |
+| BLE        | ✅      | ✅  | Bluetooth Low Energy       |
+| Network    | ✅      | ✅  | WiFi/Ethernet (IP:port)    |
+
+---
+
+## Settings Service
+
+The settings service provides **persistent app configuration** stored locally using SharedPreferences.
+
+### Architecture Overview
+
+```
+lib/features/settings/
+├── settings.dart                           # Barrel export
+├── data/
+│   ├── datasources/
+│   │   └── settings_local_datasource.dart  # SharedPreferences storage
+│   └── repositories/
+│       └── settings_repository_impl.dart   # Repository implementation
+├── domain/
+│   ├── entities/
+│   │   └── app_settings.dart               # AppSettings entity
+│   └── repositories/
+│       └── settings_repository.dart        # Repository interface
+└── presentation/
+    ├── pages/
+    │   └── settings_page.dart              # Settings UI
+    └── providers/
+        └── settings_provider.dart          # Riverpod providers
+```
+
+### AppSettings Entity
+
+```dart
+@freezed
+class AppSettings with _$AppSettings {
+  const factory AppSettings({
+    @Default(PaperSize.mm80) PaperSize paperSize,
+    String? selectedPrinterId,
+    String? selectedPrinterName,
+    PrinterConnectionType? selectedPrinterConnectionType,
+    @Default(false) bool kioskModeEnabled,
+    String? networkPrinterIp,
+    @Default(9100) int networkPrinterPort,
+  }) = _AppSettings;
+}
+```
+
+### Key Providers
+
+| Provider                     | Type                            | Description                    |
+| ---------------------------- | ------------------------------- | ------------------------------ |
+| `settingsNotifierProvider`   | `AsyncNotifier<AppSettings>`    | Main settings state            |
+| `currentPaperSizeProvider`   | `PaperSize`                     | Current paper size             |
+| `selectedPrinterInfoProvider`| Record with printer info        | Selected printer details       |
+| `isKioskModeEnabledProvider` | `bool`                          | Kiosk mode state               |
+
+### Usage Examples
+
+#### 1. Read Settings
+
+```dart
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paperSize = ref.watch(currentPaperSizeProvider);
+    final printerInfo = ref.watch(selectedPrinterInfoProvider);
+    final isKiosk = ref.watch(isKioskModeEnabledProvider);
+
+    return Column(
+      children: [
+        Text('Paper Size: ${paperSize.charsPerLine} chars'),
+        if (printerInfo.name != null)
+          Text('Printer: ${printerInfo.name}'),
+        Text('Kiosk Mode: $isKiosk'),
+      ],
+    );
+  }
+}
+```
+
+#### 2. Update Settings
+
+```dart
+// Change paper size
+ref.read(settingsNotifierProvider.notifier).setPaperSize(PaperSize.mm57);
+
+// Select a printer
+ref.read(settingsNotifierProvider.notifier).setSelectedPrinter(printer);
+
+// Clear selected printer
+ref.read(settingsNotifierProvider.notifier).clearSelectedPrinter();
+
+// Toggle kiosk mode
+ref.read(settingsNotifierProvider.notifier).setKioskMode(true);
+```
+
+### Settings Page Features
+
+The built-in `SettingsPage` provides:
+
+1. **Paper Size Selection** - Toggle between 57mm and 80mm
+2. **Printer Selection** - Scan and select USB/Bluetooth printers
+3. **Test Print** - Print a test receipt to verify configuration
+4. **Kiosk Mode** - Lock app to full-screen mode
+
+### Storage Keys
+
+Settings are persisted in SharedPreferences:
+
+| Key                                  | Type    | Description                |
+| ------------------------------------ | ------- | -------------------------- |
+| `app_settings`                       | String  | Full JSON settings         |
+| `paper_size`                         | String  | Paper size enum name       |
+| `selected_printer_id`                | String  | Printer identifier         |
+| `selected_printer_name`              | String  | Printer display name       |
+| `selected_printer_connection_type`   | String  | Connection type enum name  |
+| `kiosk_mode`                         | bool    | Kiosk mode enabled         |
+| `network_printer_ip`                 | String  | Network printer IP         |
+| `network_printer_port`               | int     | Network printer port       |
+
+### File Locations Reference (Printer & Settings)
+
+| Need                       | Location                                                                |
+| -------------------------- | ----------------------------------------------------------------------- |
+| Receipt formatting         | `lib/features/printer/domain/entities/receipt_line.dart`                |
+| Printer device entity      | `lib/features/printer/domain/entities/printer_device.dart`              |
+| Printer providers          | `lib/features/printer/presentation/providers/printer_provider.dart`     |
+| Settings entity            | `lib/features/settings/domain/entities/app_settings.dart`               |
+| Settings providers         | `lib/features/settings/presentation/providers/settings_provider.dart`   |
+| Settings page              | `lib/features/settings/presentation/pages/settings_page.dart`           |
+
+---
+
 ## Best Practices
 
 1. **Always use providers** for dependency injection
@@ -1383,6 +1693,10 @@ The `AuthInterceptor` automatically:
 | Auth providers      | `lib/features/auth/presentation/providers/auth_provider.dart`   |
 | Auth repository     | `lib/features/auth/data/repositories/auth_repository_impl.dart` |
 | Login page          | `lib/features/auth/presentation/pages/login_page.dart`          |
+| Printer providers   | `lib/features/printer/presentation/providers/printer_provider.dart` |
+| Receipt formatting  | `lib/features/printer/domain/entities/receipt_line.dart`        |
+| Settings providers  | `lib/features/settings/presentation/providers/settings_provider.dart` |
+| Settings page       | `lib/features/settings/presentation/pages/settings_page.dart`   |
 
 ---
 

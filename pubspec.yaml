@@ -43,7 +43,8 @@ dependencies:
 
   # Internationalization
   intl: ^0.20.2
-
+  flutter_thermal_printer: ^1.2.4
+  kiosk_mode: ^0.7.0+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
