@@ -7,6 +7,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/product/data/datasources/product_tables.dart';
+
 part 'app_database.g.dart';
 
 /// Provides the application database instance.
@@ -43,12 +45,12 @@ class SyncQueue extends Table {
 ///
 /// For offline sync, use the SyncQueue table to queue changes
 /// and sync them when the device is online.
-@DriftDatabase(tables: [SyncQueue])
+@DriftDatabase(tables: [SyncQueue, CachedProducts, ProductCacheMeta])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration {
@@ -58,10 +60,11 @@ class AppDatabase extends _$AppDatabase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         // Handle migrations here
-        // Example:
-        // if (from < 2) {
-        //   await m.addColumn(table, column);
-        // }
+        if (from < 2) {
+          // Add product caching tables
+          await m.createTable(cachedProducts);
+          await m.createTable(productCacheMeta);
+        }
       },
       beforeOpen: (details) async {
         // Run any initialization logic here

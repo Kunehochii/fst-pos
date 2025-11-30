@@ -14,6 +14,7 @@ class ApiEndpoints {
   static const users = _UserEndpoints();
   static const employees = _EmployeeEndpoints();
   static const shifts = _ShiftEndpoints();
+  static const products = _ProductEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -53,4 +54,12 @@ class _ShiftEndpoints {
   String get list => '/shifts';
   String byId(String id) => '/shifts/$id';
   String end(String id) => '/shifts/$id/end';
+}
+
+class _ProductEndpoints {
+  const _ProductEndpoints();
+
+  /// Cashier endpoints - uses authenticated cashier's token
+  String get myProducts => '/products/cashier/my-products';
+  String myProductById(String id) => '/products/cashier/my-products/$id';
 }

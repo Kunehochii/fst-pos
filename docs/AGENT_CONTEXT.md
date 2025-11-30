@@ -1014,6 +1014,328 @@ Future<List<Order>> orders(Ref ref) async {
 
 ---
 
+## Product Feature (Offline-First)
+
+The product system provides **offline-first** product management for cashiers. Products are cached per cashier to support multi-login scenarios.
+
+### Architecture Overview
+
+```
+lib/features/product/
+├── product.dart                         # Barrel export
+├── data/
+│   ├── datasources/
+│   │   ├── product_tables.dart          # Drift tables (CachedProducts, ProductCacheMeta)
+│   │   ├── product_remote_datasource.dart  # API calls
+│   │   └── product_local_datasource.dart   # SQLite cache operations
+│   ├── models/
+│   │   └── product_model.dart           # API DTOs with nested pricing models
+│   └── repositories/
+│       └── product_repository_impl.dart # Offline-first implementation
+├── domain/
+│   ├── entities/
+│   │   └── product.dart                 # Product entity + enums + filter
+│   └── repositories/
+│       └── product_repository.dart      # Repository interface
+└── presentation/
+    └── providers/
+        └── product_provider.dart        # Riverpod state management
+```
+
+### Domain Entities
+
+```dart
+/// Product categories
+enum ProductCategory { normal, asin, plastic }
+
+/// Sack sizes for bulk pricing
+enum SackType { fiftyKg, twentyFiveKg, fiveKg }
+
+/// Main product entity
+@freezed
+class Product with _$Product {
+  const factory Product({
+    required String id,
+    required String name,
+    required String picture,
+    required ProductCategory category,
+    required String cashierId,
+    required List<SackPrice> sackPrices,
+    PerKiloPrice? perKiloPrice,
+    ProductCashier? cashier,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _Product;
+
+  // Computed properties
+  double? get lowestPrice;   // Minimum price across all options
+  double get totalStock;     // Sum of all stock
+  bool get hasStock;         // totalStock > 0
+}
+
+/// Filter for product queries
+@freezed
+class ProductFilter with _$ProductFilter {
+  const factory ProductFilter({
+    ProductCategory? category,
+    String? searchQuery,
+  }) = _ProductFilter;
+}
+```
+
+### Pricing Structure
+
+Products have flexible pricing:
+
+```dart
+/// Bulk sack pricing (50kg, 25kg, 5kg)
+@freezed
+class SackPrice with _$SackPrice {
+  const factory SackPrice({
+    required String id,
+    required double price,
+    required double stock,
+    required SackType type,
+    double? profit,
+    SpecialPrice? specialPrice,  // Bulk discount
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _SackPrice;
+}
+
+/// Per-kilo pricing option
+@freezed
+class PerKiloPrice with _$PerKiloPrice {
+  const factory PerKiloPrice({
+    required String id,
+    required double price,
+    required double stock,
+    double? profit,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _PerKiloPrice;
+}
+
+/// Special bulk discount
+@freezed
+class SpecialPrice with _$SpecialPrice {
+  const factory SpecialPrice({
+    required String id,
+    required double price,
+    required double minimumQty,
+    double? profit,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _SpecialPrice;
+}
+```
+
+### Key Providers
+
+| Provider                      | Type                              | Description                          |
+| ----------------------------- | --------------------------------- | ------------------------------------ |
+| `productListNotifierProvider` | `AsyncNotifier<ProductListState>` | Main product list with filter/search |
+| `productByIdProvider`         | `Future<Product?>`                | Get single product by ID             |
+| `productsByCategoryProvider`  | `Future<List<Product>>`           | Products filtered by category        |
+| `productSearchNotifierProvider` | `AsyncNotifier<List<Product>>`  | Search-as-you-type results           |
+| `productRepositoryProvider`   | `ProductRepository`               | Repository (requires auth)           |
+
+### ProductListState
+
+```dart
+sealed class ProductListState {}
+
+class ProductListLoading extends ProductListState {}
+
+class ProductListLoaded extends ProductListState {
+  final List<Product> products;
+  final bool isRefreshing;
+}
+
+class ProductListError extends ProductListState {
+  final Failure failure;
+  final List<Product>? cachedProducts;  // Fallback data
+}
+```
+
+### Usage Examples
+
+#### 1. Display Product List
+
+```dart
+class ProductListWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productState = ref.watch(productListNotifierProvider);
+
+    return productState.when(
+      data: (state) {
+        if (state is ProductListLoading) {
+          return const CircularProgressIndicator();
+        }
+        if (state is ProductListLoaded) {
+          return ListView.builder(
+            itemCount: state.products.length,
+            itemBuilder: (_, i) {
+              final product = state.products[i];
+              return ListTile(
+                title: Text(product.name),
+                subtitle: Text('Stock: ${product.totalStock}'),
+                trailing: Text('₱${product.lowestPrice?.toStringAsFixed(2)}'),
+              );
+            },
+          );
+        }
+        if (state is ProductListError) {
+          return Text('Error: ${state.failure}');
+        }
+        return const SizedBox();
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (e, _) => Text('Error: $e'),
+    );
+  }
+}
+```
+
+#### 2. Filter by Category
+
+```dart
+// Set category filter
+ref.read(productListNotifierProvider.notifier)
+    .setCategory(ProductCategory.asin);
+
+// Clear category filter
+ref.read(productListNotifierProvider.notifier)
+    .setCategory(null);
+```
+
+#### 3. Search Products
+
+```dart
+// Set search query
+ref.read(productListNotifierProvider.notifier)
+    .setSearchQuery('jasmine');
+
+// Clear search
+ref.read(productListNotifierProvider.notifier)
+    .setSearchQuery(null);
+
+// Clear all filters
+ref.read(productListNotifierProvider.notifier)
+    .clearFilters();
+```
+
+#### 4. Force Refresh from Server
+
+```dart
+await ref.read(productListNotifierProvider.notifier).refresh();
+```
+
+#### 5. Get Single Product
+
+```dart
+final product = await ref.read(productByIdProvider('product-id').future);
+if (product != null) {
+  print('Product: ${product.name}');
+}
+```
+
+#### 6. Get Products by Category
+
+```dart
+final asinProducts = await ref.read(
+  productsByCategoryProvider(ProductCategory.asin).future,
+);
+```
+
+### Offline-First Strategy
+
+The product repository follows this caching strategy:
+
+1. **Has Cache + Not Stale** → Return cached data immediately
+2. **Has Cache + Stale (>15 min)** → Return cache, refresh in background
+3. **No Cache / Force Refresh** → Fetch from server, cache results
+4. **Network Error** → Fall back to cached data if available
+
+```dart
+// Cache staleness threshold (default 15 minutes)
+Future<bool> isCacheStale(String cashierId, {
+  Duration staleDuration = const Duration(minutes: 15),
+});
+```
+
+### Multi-Cashier Cache Isolation
+
+Products are cached per cashier ID:
+
+```dart
+// Each cashier has isolated cache
+await localDataSource.cacheProducts(cashierId, products);
+await localDataSource.getCachedProducts(cashierId);
+await localDataSource.clearCache(cashierId);
+```
+
+When a different cashier logs in:
+- Their products are fetched fresh
+- Cached in separate storage partition
+- Previous cashier's cache remains intact
+
+### Database Tables
+
+```dart
+/// Cached products (in app_database.dart)
+@DataClassName('CachedProductRow')
+class CachedProducts extends Table {
+  TextColumn get id => text()();           // Product ID
+  TextColumn get cashierId => text()();    // Owner cashier
+  TextColumn get name => text()();         // For search
+  TextColumn get picture => text()();
+  TextColumn get category => text()();     // For filter
+  TextColumn get data => text()();         // Full JSON
+  DateTimeColumn get cachedAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Cache metadata
+@DataClassName('ProductCacheMetaRow')
+class ProductCacheMeta extends Table {
+  TextColumn get cashierId => text()();
+  DateTimeColumn get lastSyncedAt => dateTime()();
+  BoolColumn get isSyncing => boolean()();
+  TextColumn get lastError => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {cashierId};
+}
+```
+
+### API Endpoints
+
+| Endpoint                          | Method | Description                    |
+| --------------------------------- | ------ | ------------------------------ |
+| `/products/cashier/my-products`   | GET    | Get cashier's products         |
+| `/products/cashier/my-products/:id` | GET  | Get single product by ID       |
+
+**Query Parameters:**
+- `category` - Filter by ProductCategory (NORMAL, ASIN, PLASTIC)
+- `productSearch` - Search by product name (case-insensitive)
+
+### File Locations Reference (Product)
+
+| Need                     | Location                                                              |
+| ------------------------ | --------------------------------------------------------------------- |
+| Product entity           | `lib/features/product/domain/entities/product.dart`                   |
+| Product providers        | `lib/features/product/presentation/providers/product_provider.dart`   |
+| Product repository       | `lib/features/product/data/repositories/product_repository_impl.dart` |
+| Product cache tables     | `lib/features/product/data/datasources/product_tables.dart`           |
+| API endpoints            | `lib/core/network/api_endpoints.dart` (products section)              |
+
+---
+
 ## Failure Types
 
 ```dart
@@ -1064,4 +1386,4 @@ The `AuthInterceptor` automatically:
 
 ---
 
-_Last updated: November 28, 2025_
+_Last updated: November 30, 2025_
