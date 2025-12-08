@@ -16,6 +16,7 @@ class ApiEndpoints {
   static const shifts = _ShiftEndpoints();
   static const products = _ProductEndpoints();
   static const sales = _SalesEndpoints();
+  static const delivery = _DeliveryEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -82,4 +83,17 @@ class _SalesEndpoints {
 
   /// Void a sale (POST /sales/:id/void)
   String void_(String id) => '/sales/$id/void';
+}
+
+class _DeliveryEndpoints {
+  const _DeliveryEndpoints();
+
+  /// Create a delivery (POST /delivery)
+  String get create => '/delivery';
+
+  /// Get cashier's deliveries (GET /delivery/cashier)
+  String get cashier => '/delivery/cashier';
+
+  /// Get a specific delivery by ID (GET /delivery/:id)
+  String byId(String id) => '/delivery/$id';
 }

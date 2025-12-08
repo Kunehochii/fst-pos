@@ -6,6 +6,7 @@
 /// - presentation/ - Pages, widgets, state management (providers)
 
 export 'auth/auth.dart';
+export 'delivery/delivery.dart';
 export 'home/home.dart';
 export 'printer/printer.dart';
 export 'product/product.dart';
