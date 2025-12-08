@@ -21,6 +21,7 @@ class ApiEndpoints {
   static const profit = _ProfitEndpoints();
   static const stock = _StockEndpoints();
   static const transfer = _TransferEndpoints();
+  static const expenses = _ExpenseEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -143,4 +144,20 @@ class _TransferEndpoints {
 
   /// Get a specific transfer by ID (GET /transfer/:id)
   String byId(String id) => '/transfer/$id';
+}
+
+class _ExpenseEndpoints {
+  const _ExpenseEndpoints();
+
+  /// Create expense for cashier (POST /expenses/cashier/create)
+  String get cashierCreate => '/expenses/cashier/create';
+
+  /// Update cashier expense (PUT /expenses/cashier/update/:id)
+  String cashierUpdate(String id) => '/expenses/cashier/update/$id';
+
+  /// Get cashier expense by date (GET /expenses/cashier/by-date)
+  String get cashierByDate => '/expenses/cashier/by-date';
+
+  /// Delete cashier expense (DELETE /expenses/cashier/:id)
+  String cashierDelete(String id) => '/expenses/cashier/$id';
 }
