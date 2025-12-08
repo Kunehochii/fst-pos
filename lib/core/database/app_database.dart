@@ -10,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/delivery/data/datasources/delivery_tables.dart';
 import '../../features/product/data/datasources/product_tables.dart';
 import '../../features/sales/data/datasources/sales_tables.dart';
+import '../../features/stock/data/datasources/stock_tables.dart';
 
 part 'app_database.g.dart';
 
@@ -59,12 +60,17 @@ class SyncQueue extends Table {
   DeliveryCacheMeta,
   PendingDeliverySync,
   DeliveryStockAdjustments,
+  // Stock/Transfer tables
+  CachedTransfers,
+  TransferCacheMeta,
+  PendingTransferSync,
+  TransferStockAdjustments,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
@@ -91,6 +97,13 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(deliveryCacheMeta);
           await m.createTable(pendingDeliverySync);
           await m.createTable(deliveryStockAdjustments);
+        }
+        if (from < 5) {
+          // Add transfer caching tables
+          await m.createTable(cachedTransfers);
+          await m.createTable(transferCacheMeta);
+          await m.createTable(pendingTransferSync);
+          await m.createTable(transferStockAdjustments);
         }
       },
       beforeOpen: (details) async {

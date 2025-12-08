@@ -11,6 +11,7 @@ import '../../features/sales/presentation/pages/sales_page.dart';
 import '../../features/sales_check/presentation/pages/sales_check_page.dart';
 import '../../features/settings/settings.dart';
 import '../../features/shift/shift.dart';
+import '../../features/stock/presentation/pages/stock_page.dart';
 import '../../shared/widgets/main_layout.dart';
 
 part 'app_router.g.dart';
@@ -137,6 +138,13 @@ GoRouter appRouter(Ref ref) {
             name: 'profit',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: ProfitPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/stocks',
+            name: 'stocks',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: StockPage(),
             ),
           ),
           // Add more routes here following this pattern:

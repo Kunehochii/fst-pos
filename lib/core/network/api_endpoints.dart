@@ -19,6 +19,8 @@ class ApiEndpoints {
   static const salesCheck = _SalesCheckEndpoints();
   static const delivery = _DeliveryEndpoints();
   static const profit = _ProfitEndpoints();
+  static const stock = _StockEndpoints();
+  static const transfer = _TransferEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -118,4 +120,27 @@ class _ProfitEndpoints {
 
   /// Get total profit summary for cashier (GET /profit/cashier/total)
   String get cashierTotal => '/profit/cashier/total';
+}
+
+class _StockEndpoints {
+  const _StockEndpoints();
+
+  /// Get stock statistics for cashier (GET /stock/statistics/cashier)
+  String get cashierStatistics => '/stock/statistics/cashier';
+}
+
+class _TransferEndpoints {
+  const _TransferEndpoints();
+
+  /// Create a transfer (POST /transfer)
+  String get create => '/transfer';
+
+  /// Get cashier's transfers (GET /transfer/cashier)
+  String get cashier => '/transfer/cashier';
+
+  /// Get transfers by date (GET /transfer/cashier/date)
+  String get cashierByDate => '/transfer/cashier/date';
+
+  /// Get a specific transfer by ID (GET /transfer/:id)
+  String byId(String id) => '/transfer/$id';
 }
