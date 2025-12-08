@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/bill_count/data/datasources/bill_count_tables.dart';
 import '../../features/delivery/data/datasources/delivery_tables.dart';
 import '../../features/product/data/datasources/product_tables.dart';
 import '../../features/sales/data/datasources/sales_tables.dart';
@@ -65,12 +66,16 @@ class SyncQueue extends Table {
   TransferCacheMeta,
   PendingTransferSync,
   TransferStockAdjustments,
+  // Bill count tables
+  CachedBillCounts,
+  PendingBillCountSync,
+  BillCountCacheMeta,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {
@@ -104,6 +109,12 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(transferCacheMeta);
           await m.createTable(pendingTransferSync);
           await m.createTable(transferStockAdjustments);
+        }
+        if (from < 6) {
+          // Add bill count caching tables
+          await m.createTable(cachedBillCounts);
+          await m.createTable(pendingBillCountSync);
+          await m.createTable(billCountCacheMeta);
         }
       },
       beforeOpen: (details) async {

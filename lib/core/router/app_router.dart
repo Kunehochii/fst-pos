@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/auth.dart';
+import '../../features/bill_count/presentation/pages/bill_count_page.dart';
 import '../../features/delivery/presentation/pages/deliveries_page.dart';
 import '../../features/expense/presentation/pages/expense_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -153,6 +154,13 @@ GoRouter appRouter(Ref ref) {
             name: 'expenses',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: ExpensePage(),
+            ),
+          ),
+          GoRoute(
+            path: '/bills',
+            name: 'bills',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: BillCountPage(),
             ),
           ),
           // Add more routes here following this pattern:

@@ -22,6 +22,7 @@ class ApiEndpoints {
   static const stock = _StockEndpoints();
   static const transfer = _TransferEndpoints();
   static const expenses = _ExpenseEndpoints();
+  static const bills = _BillEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -160,4 +161,17 @@ class _ExpenseEndpoints {
 
   /// Delete cashier expense (DELETE /expenses/cashier/:id)
   String cashierDelete(String id) => '/expenses/cashier/$id';
+}
+
+class _BillEndpoints {
+  const _BillEndpoints();
+
+  /// Create or update bill count for cashier (POST /bills)
+  String get cashierCreate => '/bills';
+
+  /// Get cashier bill count by date (GET /bills)
+  String get cashierByDate => '/bills';
+
+  /// Get bill count by ID (GET /bills/:id)
+  String byId(String id) => '/bills/$id';
 }

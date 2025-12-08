@@ -6506,6 +6506,1374 @@ class TransferStockAdjustmentsCompanion
   }
 }
 
+class $CachedBillCountsTable extends CachedBillCounts
+    with TableInfo<$CachedBillCountsTable, CachedBillCountRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedBillCountsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _localIdMeta =
+      const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<String> localId = GeneratedColumn<String>(
+      'local_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _cashierIdMeta =
+      const VerificationMeta('cashierId');
+  @override
+  late final GeneratedColumn<String> cashierId = GeneratedColumn<String>(
+      'cashier_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cashierUsernameMeta =
+      const VerificationMeta('cashierUsername');
+  @override
+  late final GeneratedColumn<String> cashierUsername = GeneratedColumn<String>(
+      'cashier_username', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cashierBranchNameMeta =
+      const VerificationMeta('cashierBranchName');
+  @override
+  late final GeneratedColumn<String> cashierBranchName =
+      GeneratedColumn<String>('cashier_branch_name', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _beginningBalanceMeta =
+      const VerificationMeta('beginningBalance');
+  @override
+  late final GeneratedColumn<double> beginningBalance = GeneratedColumn<double>(
+      'beginning_balance', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _showBeginningBalanceMeta =
+      const VerificationMeta('showBeginningBalance');
+  @override
+  late final GeneratedColumn<bool> showBeginningBalance = GeneratedColumn<bool>(
+      'show_beginning_balance', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("show_beginning_balance" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncedMeta =
+      const VerificationMeta('isSynced');
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+      'is_synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        localId,
+        cashierId,
+        cashierUsername,
+        cashierBranchName,
+        beginningBalance,
+        showBeginningBalance,
+        date,
+        data,
+        isSynced,
+        createdAt,
+        updatedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cached_bill_counts';
+  @override
+  VerificationContext validateIntegrity(Insertable<CachedBillCountRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    }
+    if (data.containsKey('cashier_id')) {
+      context.handle(_cashierIdMeta,
+          cashierId.isAcceptableOrUnknown(data['cashier_id']!, _cashierIdMeta));
+    } else if (isInserting) {
+      context.missing(_cashierIdMeta);
+    }
+    if (data.containsKey('cashier_username')) {
+      context.handle(
+          _cashierUsernameMeta,
+          cashierUsername.isAcceptableOrUnknown(
+              data['cashier_username']!, _cashierUsernameMeta));
+    } else if (isInserting) {
+      context.missing(_cashierUsernameMeta);
+    }
+    if (data.containsKey('cashier_branch_name')) {
+      context.handle(
+          _cashierBranchNameMeta,
+          cashierBranchName.isAcceptableOrUnknown(
+              data['cashier_branch_name']!, _cashierBranchNameMeta));
+    } else if (isInserting) {
+      context.missing(_cashierBranchNameMeta);
+    }
+    if (data.containsKey('beginning_balance')) {
+      context.handle(
+          _beginningBalanceMeta,
+          beginningBalance.isAcceptableOrUnknown(
+              data['beginning_balance']!, _beginningBalanceMeta));
+    }
+    if (data.containsKey('show_beginning_balance')) {
+      context.handle(
+          _showBeginningBalanceMeta,
+          showBeginningBalance.isAcceptableOrUnknown(
+              data['show_beginning_balance']!, _showBeginningBalanceMeta));
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(_isSyncedMeta,
+          isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CachedBillCountRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CachedBillCountRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      localId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_id']),
+      cashierId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cashier_id'])!,
+      cashierUsername: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}cashier_username'])!,
+      cashierBranchName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}cashier_branch_name'])!,
+      beginningBalance: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}beginning_balance'])!,
+      showBeginningBalance: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}show_beginning_balance'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      isSynced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $CachedBillCountsTable createAlias(String alias) {
+    return $CachedBillCountsTable(attachedDatabase, alias);
+  }
+}
+
+class CachedBillCountRow extends DataClass
+    implements Insertable<CachedBillCountRow> {
+  /// Bill count ID from the server (or local UUID if not synced).
+  final String id;
+
+  /// Local UUID for tracking before server sync.
+  final String? localId;
+
+  /// Cashier ID who created the bill count.
+  final String cashierId;
+
+  /// Username of the cashier.
+  final String cashierUsername;
+
+  /// Branch name of the cashier.
+  final String cashierBranchName;
+
+  /// Beginning balance amount.
+  final double beginningBalance;
+
+  /// Whether to show beginning balance.
+  final bool showBeginningBalance;
+
+  /// The date this bill count is for (stored as start of day in UTC).
+  final DateTime date;
+
+  /// Complete bill count data as JSON (includes bills, calculated fields, etc.).
+  final String data;
+
+  /// Whether this bill count has been synced to the server.
+  final bool isSynced;
+
+  /// When the bill count was created.
+  final DateTime createdAt;
+
+  /// When the bill count was last updated.
+  final DateTime updatedAt;
+  const CachedBillCountRow(
+      {required this.id,
+      this.localId,
+      required this.cashierId,
+      required this.cashierUsername,
+      required this.cashierBranchName,
+      required this.beginningBalance,
+      required this.showBeginningBalance,
+      required this.date,
+      required this.data,
+      required this.isSynced,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || localId != null) {
+      map['local_id'] = Variable<String>(localId);
+    }
+    map['cashier_id'] = Variable<String>(cashierId);
+    map['cashier_username'] = Variable<String>(cashierUsername);
+    map['cashier_branch_name'] = Variable<String>(cashierBranchName);
+    map['beginning_balance'] = Variable<double>(beginningBalance);
+    map['show_beginning_balance'] = Variable<bool>(showBeginningBalance);
+    map['date'] = Variable<DateTime>(date);
+    map['data'] = Variable<String>(data);
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CachedBillCountsCompanion toCompanion(bool nullToAbsent) {
+    return CachedBillCountsCompanion(
+      id: Value(id),
+      localId: localId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localId),
+      cashierId: Value(cashierId),
+      cashierUsername: Value(cashierUsername),
+      cashierBranchName: Value(cashierBranchName),
+      beginningBalance: Value(beginningBalance),
+      showBeginningBalance: Value(showBeginningBalance),
+      date: Value(date),
+      data: Value(data),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CachedBillCountRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedBillCountRow(
+      id: serializer.fromJson<String>(json['id']),
+      localId: serializer.fromJson<String?>(json['localId']),
+      cashierId: serializer.fromJson<String>(json['cashierId']),
+      cashierUsername: serializer.fromJson<String>(json['cashierUsername']),
+      cashierBranchName: serializer.fromJson<String>(json['cashierBranchName']),
+      beginningBalance: serializer.fromJson<double>(json['beginningBalance']),
+      showBeginningBalance:
+          serializer.fromJson<bool>(json['showBeginningBalance']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      data: serializer.fromJson<String>(json['data']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'localId': serializer.toJson<String?>(localId),
+      'cashierId': serializer.toJson<String>(cashierId),
+      'cashierUsername': serializer.toJson<String>(cashierUsername),
+      'cashierBranchName': serializer.toJson<String>(cashierBranchName),
+      'beginningBalance': serializer.toJson<double>(beginningBalance),
+      'showBeginningBalance': serializer.toJson<bool>(showBeginningBalance),
+      'date': serializer.toJson<DateTime>(date),
+      'data': serializer.toJson<String>(data),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CachedBillCountRow copyWith(
+          {String? id,
+          Value<String?> localId = const Value.absent(),
+          String? cashierId,
+          String? cashierUsername,
+          String? cashierBranchName,
+          double? beginningBalance,
+          bool? showBeginningBalance,
+          DateTime? date,
+          String? data,
+          bool? isSynced,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      CachedBillCountRow(
+        id: id ?? this.id,
+        localId: localId.present ? localId.value : this.localId,
+        cashierId: cashierId ?? this.cashierId,
+        cashierUsername: cashierUsername ?? this.cashierUsername,
+        cashierBranchName: cashierBranchName ?? this.cashierBranchName,
+        beginningBalance: beginningBalance ?? this.beginningBalance,
+        showBeginningBalance: showBeginningBalance ?? this.showBeginningBalance,
+        date: date ?? this.date,
+        data: data ?? this.data,
+        isSynced: isSynced ?? this.isSynced,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  CachedBillCountRow copyWithCompanion(CachedBillCountsCompanion data) {
+    return CachedBillCountRow(
+      id: data.id.present ? data.id.value : this.id,
+      localId: data.localId.present ? data.localId.value : this.localId,
+      cashierId: data.cashierId.present ? data.cashierId.value : this.cashierId,
+      cashierUsername: data.cashierUsername.present
+          ? data.cashierUsername.value
+          : this.cashierUsername,
+      cashierBranchName: data.cashierBranchName.present
+          ? data.cashierBranchName.value
+          : this.cashierBranchName,
+      beginningBalance: data.beginningBalance.present
+          ? data.beginningBalance.value
+          : this.beginningBalance,
+      showBeginningBalance: data.showBeginningBalance.present
+          ? data.showBeginningBalance.value
+          : this.showBeginningBalance,
+      date: data.date.present ? data.date.value : this.date,
+      data: data.data.present ? data.data.value : this.data,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedBillCountRow(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('cashierUsername: $cashierUsername, ')
+          ..write('cashierBranchName: $cashierBranchName, ')
+          ..write('beginningBalance: $beginningBalance, ')
+          ..write('showBeginningBalance: $showBeginningBalance, ')
+          ..write('date: $date, ')
+          ..write('data: $data, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      localId,
+      cashierId,
+      cashierUsername,
+      cashierBranchName,
+      beginningBalance,
+      showBeginningBalance,
+      date,
+      data,
+      isSynced,
+      createdAt,
+      updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedBillCountRow &&
+          other.id == this.id &&
+          other.localId == this.localId &&
+          other.cashierId == this.cashierId &&
+          other.cashierUsername == this.cashierUsername &&
+          other.cashierBranchName == this.cashierBranchName &&
+          other.beginningBalance == this.beginningBalance &&
+          other.showBeginningBalance == this.showBeginningBalance &&
+          other.date == this.date &&
+          other.data == this.data &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CachedBillCountsCompanion extends UpdateCompanion<CachedBillCountRow> {
+  final Value<String> id;
+  final Value<String?> localId;
+  final Value<String> cashierId;
+  final Value<String> cashierUsername;
+  final Value<String> cashierBranchName;
+  final Value<double> beginningBalance;
+  final Value<bool> showBeginningBalance;
+  final Value<DateTime> date;
+  final Value<String> data;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const CachedBillCountsCompanion({
+    this.id = const Value.absent(),
+    this.localId = const Value.absent(),
+    this.cashierId = const Value.absent(),
+    this.cashierUsername = const Value.absent(),
+    this.cashierBranchName = const Value.absent(),
+    this.beginningBalance = const Value.absent(),
+    this.showBeginningBalance = const Value.absent(),
+    this.date = const Value.absent(),
+    this.data = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CachedBillCountsCompanion.insert({
+    required String id,
+    this.localId = const Value.absent(),
+    required String cashierId,
+    required String cashierUsername,
+    required String cashierBranchName,
+    this.beginningBalance = const Value.absent(),
+    this.showBeginningBalance = const Value.absent(),
+    required DateTime date,
+    required String data,
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        cashierId = Value(cashierId),
+        cashierUsername = Value(cashierUsername),
+        cashierBranchName = Value(cashierBranchName),
+        date = Value(date),
+        data = Value(data);
+  static Insertable<CachedBillCountRow> custom({
+    Expression<String>? id,
+    Expression<String>? localId,
+    Expression<String>? cashierId,
+    Expression<String>? cashierUsername,
+    Expression<String>? cashierBranchName,
+    Expression<double>? beginningBalance,
+    Expression<bool>? showBeginningBalance,
+    Expression<DateTime>? date,
+    Expression<String>? data,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (localId != null) 'local_id': localId,
+      if (cashierId != null) 'cashier_id': cashierId,
+      if (cashierUsername != null) 'cashier_username': cashierUsername,
+      if (cashierBranchName != null) 'cashier_branch_name': cashierBranchName,
+      if (beginningBalance != null) 'beginning_balance': beginningBalance,
+      if (showBeginningBalance != null)
+        'show_beginning_balance': showBeginningBalance,
+      if (date != null) 'date': date,
+      if (data != null) 'data': data,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CachedBillCountsCompanion copyWith(
+      {Value<String>? id,
+      Value<String?>? localId,
+      Value<String>? cashierId,
+      Value<String>? cashierUsername,
+      Value<String>? cashierBranchName,
+      Value<double>? beginningBalance,
+      Value<bool>? showBeginningBalance,
+      Value<DateTime>? date,
+      Value<String>? data,
+      Value<bool>? isSynced,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<int>? rowid}) {
+    return CachedBillCountsCompanion(
+      id: id ?? this.id,
+      localId: localId ?? this.localId,
+      cashierId: cashierId ?? this.cashierId,
+      cashierUsername: cashierUsername ?? this.cashierUsername,
+      cashierBranchName: cashierBranchName ?? this.cashierBranchName,
+      beginningBalance: beginningBalance ?? this.beginningBalance,
+      showBeginningBalance: showBeginningBalance ?? this.showBeginningBalance,
+      date: date ?? this.date,
+      data: data ?? this.data,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (localId.present) {
+      map['local_id'] = Variable<String>(localId.value);
+    }
+    if (cashierId.present) {
+      map['cashier_id'] = Variable<String>(cashierId.value);
+    }
+    if (cashierUsername.present) {
+      map['cashier_username'] = Variable<String>(cashierUsername.value);
+    }
+    if (cashierBranchName.present) {
+      map['cashier_branch_name'] = Variable<String>(cashierBranchName.value);
+    }
+    if (beginningBalance.present) {
+      map['beginning_balance'] = Variable<double>(beginningBalance.value);
+    }
+    if (showBeginningBalance.present) {
+      map['show_beginning_balance'] =
+          Variable<bool>(showBeginningBalance.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedBillCountsCompanion(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('cashierUsername: $cashierUsername, ')
+          ..write('cashierBranchName: $cashierBranchName, ')
+          ..write('beginningBalance: $beginningBalance, ')
+          ..write('showBeginningBalance: $showBeginningBalance, ')
+          ..write('date: $date, ')
+          ..write('data: $data, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PendingBillCountSyncTable extends PendingBillCountSync
+    with TableInfo<$PendingBillCountSyncTable, PendingBillCountSyncRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingBillCountSyncTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _localBillCountIdMeta =
+      const VerificationMeta('localBillCountId');
+  @override
+  late final GeneratedColumn<String> localBillCountId = GeneratedColumn<String>(
+      'local_bill_count_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _operationMeta =
+      const VerificationMeta('operation');
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+      'operation', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _payloadMeta =
+      const VerificationMeta('payload');
+  @override
+  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
+      'payload', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _dateFilterMeta =
+      const VerificationMeta('dateFilter');
+  @override
+  late final GeneratedColumn<String> dateFilter = GeneratedColumn<String>(
+      'date_filter', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _attemptsMeta =
+      const VerificationMeta('attempts');
+  @override
+  late final GeneratedColumn<int> attempts = GeneratedColumn<int>(
+      'attempts', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _lastErrorMeta =
+      const VerificationMeta('lastError');
+  @override
+  late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
+      'last_error', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _lastAttemptAtMeta =
+      const VerificationMeta('lastAttemptAt');
+  @override
+  late final GeneratedColumn<DateTime> lastAttemptAt =
+      GeneratedColumn<DateTime>('last_attempt_at', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        localBillCountId,
+        operation,
+        payload,
+        dateFilter,
+        attempts,
+        lastError,
+        createdAt,
+        lastAttemptAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_bill_count_sync';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PendingBillCountSyncRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('local_bill_count_id')) {
+      context.handle(
+          _localBillCountIdMeta,
+          localBillCountId.isAcceptableOrUnknown(
+              data['local_bill_count_id']!, _localBillCountIdMeta));
+    } else if (isInserting) {
+      context.missing(_localBillCountIdMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(_operationMeta,
+          operation.isAcceptableOrUnknown(data['operation']!, _operationMeta));
+    } else if (isInserting) {
+      context.missing(_operationMeta);
+    }
+    if (data.containsKey('payload')) {
+      context.handle(_payloadMeta,
+          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
+    } else if (isInserting) {
+      context.missing(_payloadMeta);
+    }
+    if (data.containsKey('date_filter')) {
+      context.handle(
+          _dateFilterMeta,
+          dateFilter.isAcceptableOrUnknown(
+              data['date_filter']!, _dateFilterMeta));
+    } else if (isInserting) {
+      context.missing(_dateFilterMeta);
+    }
+    if (data.containsKey('attempts')) {
+      context.handle(_attemptsMeta,
+          attempts.isAcceptableOrUnknown(data['attempts']!, _attemptsMeta));
+    }
+    if (data.containsKey('last_error')) {
+      context.handle(_lastErrorMeta,
+          lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('last_attempt_at')) {
+      context.handle(
+          _lastAttemptAtMeta,
+          lastAttemptAt.isAcceptableOrUnknown(
+              data['last_attempt_at']!, _lastAttemptAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingBillCountSyncRow map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingBillCountSyncRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      localBillCountId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}local_bill_count_id'])!,
+      operation: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}operation'])!,
+      payload: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
+      dateFilter: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}date_filter'])!,
+      attempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}attempts'])!,
+      lastError: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}last_error']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      lastAttemptAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_attempt_at']),
+    );
+  }
+
+  @override
+  $PendingBillCountSyncTable createAlias(String alias) {
+    return $PendingBillCountSyncTable(attachedDatabase, alias);
+  }
+}
+
+class PendingBillCountSyncRow extends DataClass
+    implements Insertable<PendingBillCountSyncRow> {
+  /// Auto-increment ID.
+  final int id;
+
+  /// The local bill count ID.
+  final String localBillCountId;
+
+  /// Operation type: 'create' or 'update'.
+  final String operation;
+
+  /// The bill count data as JSON for syncing.
+  final String payload;
+
+  /// The date filter for syncing (ISO 8601 UTC).
+  final String dateFilter;
+
+  /// Number of sync attempts.
+  final int attempts;
+
+  /// Last sync error message.
+  final String? lastError;
+
+  /// When the sync operation was queued.
+  final DateTime createdAt;
+
+  /// When the sync was last attempted.
+  final DateTime? lastAttemptAt;
+  const PendingBillCountSyncRow(
+      {required this.id,
+      required this.localBillCountId,
+      required this.operation,
+      required this.payload,
+      required this.dateFilter,
+      required this.attempts,
+      this.lastError,
+      required this.createdAt,
+      this.lastAttemptAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['local_bill_count_id'] = Variable<String>(localBillCountId);
+    map['operation'] = Variable<String>(operation);
+    map['payload'] = Variable<String>(payload);
+    map['date_filter'] = Variable<String>(dateFilter);
+    map['attempts'] = Variable<int>(attempts);
+    if (!nullToAbsent || lastError != null) {
+      map['last_error'] = Variable<String>(lastError);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || lastAttemptAt != null) {
+      map['last_attempt_at'] = Variable<DateTime>(lastAttemptAt);
+    }
+    return map;
+  }
+
+  PendingBillCountSyncCompanion toCompanion(bool nullToAbsent) {
+    return PendingBillCountSyncCompanion(
+      id: Value(id),
+      localBillCountId: Value(localBillCountId),
+      operation: Value(operation),
+      payload: Value(payload),
+      dateFilter: Value(dateFilter),
+      attempts: Value(attempts),
+      lastError: lastError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastError),
+      createdAt: Value(createdAt),
+      lastAttemptAt: lastAttemptAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastAttemptAt),
+    );
+  }
+
+  factory PendingBillCountSyncRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingBillCountSyncRow(
+      id: serializer.fromJson<int>(json['id']),
+      localBillCountId: serializer.fromJson<String>(json['localBillCountId']),
+      operation: serializer.fromJson<String>(json['operation']),
+      payload: serializer.fromJson<String>(json['payload']),
+      dateFilter: serializer.fromJson<String>(json['dateFilter']),
+      attempts: serializer.fromJson<int>(json['attempts']),
+      lastError: serializer.fromJson<String?>(json['lastError']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      lastAttemptAt: serializer.fromJson<DateTime?>(json['lastAttemptAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'localBillCountId': serializer.toJson<String>(localBillCountId),
+      'operation': serializer.toJson<String>(operation),
+      'payload': serializer.toJson<String>(payload),
+      'dateFilter': serializer.toJson<String>(dateFilter),
+      'attempts': serializer.toJson<int>(attempts),
+      'lastError': serializer.toJson<String?>(lastError),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'lastAttemptAt': serializer.toJson<DateTime?>(lastAttemptAt),
+    };
+  }
+
+  PendingBillCountSyncRow copyWith(
+          {int? id,
+          String? localBillCountId,
+          String? operation,
+          String? payload,
+          String? dateFilter,
+          int? attempts,
+          Value<String?> lastError = const Value.absent(),
+          DateTime? createdAt,
+          Value<DateTime?> lastAttemptAt = const Value.absent()}) =>
+      PendingBillCountSyncRow(
+        id: id ?? this.id,
+        localBillCountId: localBillCountId ?? this.localBillCountId,
+        operation: operation ?? this.operation,
+        payload: payload ?? this.payload,
+        dateFilter: dateFilter ?? this.dateFilter,
+        attempts: attempts ?? this.attempts,
+        lastError: lastError.present ? lastError.value : this.lastError,
+        createdAt: createdAt ?? this.createdAt,
+        lastAttemptAt:
+            lastAttemptAt.present ? lastAttemptAt.value : this.lastAttemptAt,
+      );
+  PendingBillCountSyncRow copyWithCompanion(
+      PendingBillCountSyncCompanion data) {
+    return PendingBillCountSyncRow(
+      id: data.id.present ? data.id.value : this.id,
+      localBillCountId: data.localBillCountId.present
+          ? data.localBillCountId.value
+          : this.localBillCountId,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      payload: data.payload.present ? data.payload.value : this.payload,
+      dateFilter:
+          data.dateFilter.present ? data.dateFilter.value : this.dateFilter,
+      attempts: data.attempts.present ? data.attempts.value : this.attempts,
+      lastError: data.lastError.present ? data.lastError.value : this.lastError,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      lastAttemptAt: data.lastAttemptAt.present
+          ? data.lastAttemptAt.value
+          : this.lastAttemptAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingBillCountSyncRow(')
+          ..write('id: $id, ')
+          ..write('localBillCountId: $localBillCountId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('dateFilter: $dateFilter, ')
+          ..write('attempts: $attempts, ')
+          ..write('lastError: $lastError, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastAttemptAt: $lastAttemptAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, localBillCountId, operation, payload,
+      dateFilter, attempts, lastError, createdAt, lastAttemptAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingBillCountSyncRow &&
+          other.id == this.id &&
+          other.localBillCountId == this.localBillCountId &&
+          other.operation == this.operation &&
+          other.payload == this.payload &&
+          other.dateFilter == this.dateFilter &&
+          other.attempts == this.attempts &&
+          other.lastError == this.lastError &&
+          other.createdAt == this.createdAt &&
+          other.lastAttemptAt == this.lastAttemptAt);
+}
+
+class PendingBillCountSyncCompanion
+    extends UpdateCompanion<PendingBillCountSyncRow> {
+  final Value<int> id;
+  final Value<String> localBillCountId;
+  final Value<String> operation;
+  final Value<String> payload;
+  final Value<String> dateFilter;
+  final Value<int> attempts;
+  final Value<String?> lastError;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> lastAttemptAt;
+  const PendingBillCountSyncCompanion({
+    this.id = const Value.absent(),
+    this.localBillCountId = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.dateFilter = const Value.absent(),
+    this.attempts = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.lastAttemptAt = const Value.absent(),
+  });
+  PendingBillCountSyncCompanion.insert({
+    this.id = const Value.absent(),
+    required String localBillCountId,
+    required String operation,
+    required String payload,
+    required String dateFilter,
+    this.attempts = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.lastAttemptAt = const Value.absent(),
+  })  : localBillCountId = Value(localBillCountId),
+        operation = Value(operation),
+        payload = Value(payload),
+        dateFilter = Value(dateFilter);
+  static Insertable<PendingBillCountSyncRow> custom({
+    Expression<int>? id,
+    Expression<String>? localBillCountId,
+    Expression<String>? operation,
+    Expression<String>? payload,
+    Expression<String>? dateFilter,
+    Expression<int>? attempts,
+    Expression<String>? lastError,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? lastAttemptAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (localBillCountId != null) 'local_bill_count_id': localBillCountId,
+      if (operation != null) 'operation': operation,
+      if (payload != null) 'payload': payload,
+      if (dateFilter != null) 'date_filter': dateFilter,
+      if (attempts != null) 'attempts': attempts,
+      if (lastError != null) 'last_error': lastError,
+      if (createdAt != null) 'created_at': createdAt,
+      if (lastAttemptAt != null) 'last_attempt_at': lastAttemptAt,
+    });
+  }
+
+  PendingBillCountSyncCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? localBillCountId,
+      Value<String>? operation,
+      Value<String>? payload,
+      Value<String>? dateFilter,
+      Value<int>? attempts,
+      Value<String?>? lastError,
+      Value<DateTime>? createdAt,
+      Value<DateTime?>? lastAttemptAt}) {
+    return PendingBillCountSyncCompanion(
+      id: id ?? this.id,
+      localBillCountId: localBillCountId ?? this.localBillCountId,
+      operation: operation ?? this.operation,
+      payload: payload ?? this.payload,
+      dateFilter: dateFilter ?? this.dateFilter,
+      attempts: attempts ?? this.attempts,
+      lastError: lastError ?? this.lastError,
+      createdAt: createdAt ?? this.createdAt,
+      lastAttemptAt: lastAttemptAt ?? this.lastAttemptAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (localBillCountId.present) {
+      map['local_bill_count_id'] = Variable<String>(localBillCountId.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (dateFilter.present) {
+      map['date_filter'] = Variable<String>(dateFilter.value);
+    }
+    if (attempts.present) {
+      map['attempts'] = Variable<int>(attempts.value);
+    }
+    if (lastError.present) {
+      map['last_error'] = Variable<String>(lastError.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (lastAttemptAt.present) {
+      map['last_attempt_at'] = Variable<DateTime>(lastAttemptAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingBillCountSyncCompanion(')
+          ..write('id: $id, ')
+          ..write('localBillCountId: $localBillCountId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('dateFilter: $dateFilter, ')
+          ..write('attempts: $attempts, ')
+          ..write('lastError: $lastError, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('lastAttemptAt: $lastAttemptAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BillCountCacheMetaTable extends BillCountCacheMeta
+    with TableInfo<$BillCountCacheMetaTable, BillCountCacheMetaRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BillCountCacheMetaTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+      'key', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _lastSyncAtMeta =
+      const VerificationMeta('lastSyncAt');
+  @override
+  late final GeneratedColumn<DateTime> lastSyncAt = GeneratedColumn<DateTime>(
+      'last_sync_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [key, lastSyncAt, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'bill_count_cache_meta';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<BillCountCacheMetaRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+          _keyMeta, key.isAcceptableOrUnknown(data['key']!, _keyMeta));
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('last_sync_at')) {
+      context.handle(
+          _lastSyncAtMeta,
+          lastSyncAt.isAcceptableOrUnknown(
+              data['last_sync_at']!, _lastSyncAtMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  BillCountCacheMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BillCountCacheMetaRow(
+      key: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}key'])!,
+      lastSyncAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_sync_at']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $BillCountCacheMetaTable createAlias(String alias) {
+    return $BillCountCacheMetaTable(attachedDatabase, alias);
+  }
+}
+
+class BillCountCacheMetaRow extends DataClass
+    implements Insertable<BillCountCacheMetaRow> {
+  /// Unique key for the cache entry (e.g., 'cashier_<id>_<date>').
+  final String key;
+
+  /// When the cache was last synced from server.
+  final DateTime? lastSyncAt;
+
+  /// When the cache entry was created.
+  final DateTime createdAt;
+  const BillCountCacheMetaRow(
+      {required this.key, this.lastSyncAt, required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    if (!nullToAbsent || lastSyncAt != null) {
+      map['last_sync_at'] = Variable<DateTime>(lastSyncAt);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  BillCountCacheMetaCompanion toCompanion(bool nullToAbsent) {
+    return BillCountCacheMetaCompanion(
+      key: Value(key),
+      lastSyncAt: lastSyncAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncAt),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory BillCountCacheMetaRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BillCountCacheMetaRow(
+      key: serializer.fromJson<String>(json['key']),
+      lastSyncAt: serializer.fromJson<DateTime?>(json['lastSyncAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'lastSyncAt': serializer.toJson<DateTime?>(lastSyncAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  BillCountCacheMetaRow copyWith(
+          {String? key,
+          Value<DateTime?> lastSyncAt = const Value.absent(),
+          DateTime? createdAt}) =>
+      BillCountCacheMetaRow(
+        key: key ?? this.key,
+        lastSyncAt: lastSyncAt.present ? lastSyncAt.value : this.lastSyncAt,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  BillCountCacheMetaRow copyWithCompanion(BillCountCacheMetaCompanion data) {
+    return BillCountCacheMetaRow(
+      key: data.key.present ? data.key.value : this.key,
+      lastSyncAt:
+          data.lastSyncAt.present ? data.lastSyncAt.value : this.lastSyncAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BillCountCacheMetaRow(')
+          ..write('key: $key, ')
+          ..write('lastSyncAt: $lastSyncAt, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, lastSyncAt, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BillCountCacheMetaRow &&
+          other.key == this.key &&
+          other.lastSyncAt == this.lastSyncAt &&
+          other.createdAt == this.createdAt);
+}
+
+class BillCountCacheMetaCompanion
+    extends UpdateCompanion<BillCountCacheMetaRow> {
+  final Value<String> key;
+  final Value<DateTime?> lastSyncAt;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const BillCountCacheMetaCompanion({
+    this.key = const Value.absent(),
+    this.lastSyncAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BillCountCacheMetaCompanion.insert({
+    required String key,
+    this.lastSyncAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : key = Value(key);
+  static Insertable<BillCountCacheMetaRow> custom({
+    Expression<String>? key,
+    Expression<DateTime>? lastSyncAt,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (lastSyncAt != null) 'last_sync_at': lastSyncAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BillCountCacheMetaCompanion copyWith(
+      {Value<String>? key,
+      Value<DateTime?>? lastSyncAt,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return BillCountCacheMetaCompanion(
+      key: key ?? this.key,
+      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (lastSyncAt.present) {
+      map['last_sync_at'] = Variable<DateTime>(lastSyncAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BillCountCacheMetaCompanion(')
+          ..write('key: $key, ')
+          ..write('lastSyncAt: $lastSyncAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6534,6 +7902,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $PendingTransferSyncTable(this);
   late final $TransferStockAdjustmentsTable transferStockAdjustments =
       $TransferStockAdjustmentsTable(this);
+  late final $CachedBillCountsTable cachedBillCounts =
+      $CachedBillCountsTable(this);
+  late final $PendingBillCountSyncTable pendingBillCountSync =
+      $PendingBillCountSyncTable(this);
+  late final $BillCountCacheMetaTable billCountCacheMeta =
+      $BillCountCacheMetaTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6552,7 +7926,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         cachedTransfers,
         transferCacheMeta,
         pendingTransferSync,
-        transferStockAdjustments
+        transferStockAdjustments,
+        cachedBillCounts,
+        pendingBillCountSync,
+        billCountCacheMeta
       ];
   @override
   DriftDatabaseOptions get options =>
@@ -9717,6 +11094,676 @@ typedef $$TransferStockAdjustmentsTableProcessedTableManager
         ),
         TransferStockAdjustmentRow,
         PrefetchHooks Function()>;
+typedef $$CachedBillCountsTableCreateCompanionBuilder
+    = CachedBillCountsCompanion Function({
+  required String id,
+  Value<String?> localId,
+  required String cashierId,
+  required String cashierUsername,
+  required String cashierBranchName,
+  Value<double> beginningBalance,
+  Value<bool> showBeginningBalance,
+  required DateTime date,
+  required String data,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$CachedBillCountsTableUpdateCompanionBuilder
+    = CachedBillCountsCompanion Function({
+  Value<String> id,
+  Value<String?> localId,
+  Value<String> cashierId,
+  Value<String> cashierUsername,
+  Value<String> cashierBranchName,
+  Value<double> beginningBalance,
+  Value<bool> showBeginningBalance,
+  Value<DateTime> date,
+  Value<String> data,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$CachedBillCountsTableFilterComposer
+    extends Composer<_$AppDatabase, $CachedBillCountsTable> {
+  $$CachedBillCountsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cashierUsername => $composableBuilder(
+      column: $table.cashierUsername,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cashierBranchName => $composableBuilder(
+      column: $table.cashierBranchName,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get beginningBalance => $composableBuilder(
+      column: $table.beginningBalance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get showBeginningBalance => $composableBuilder(
+      column: $table.showBeginningBalance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get data => $composableBuilder(
+      column: $table.data, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$CachedBillCountsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CachedBillCountsTable> {
+  $$CachedBillCountsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cashierUsername => $composableBuilder(
+      column: $table.cashierUsername,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cashierBranchName => $composableBuilder(
+      column: $table.cashierBranchName,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get beginningBalance => $composableBuilder(
+      column: $table.beginningBalance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get showBeginningBalance => $composableBuilder(
+      column: $table.showBeginningBalance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get data => $composableBuilder(
+      column: $table.data, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CachedBillCountsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CachedBillCountsTable> {
+  $$CachedBillCountsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get cashierId =>
+      $composableBuilder(column: $table.cashierId, builder: (column) => column);
+
+  GeneratedColumn<String> get cashierUsername => $composableBuilder(
+      column: $table.cashierUsername, builder: (column) => column);
+
+  GeneratedColumn<String> get cashierBranchName => $composableBuilder(
+      column: $table.cashierBranchName, builder: (column) => column);
+
+  GeneratedColumn<double> get beginningBalance => $composableBuilder(
+      column: $table.beginningBalance, builder: (column) => column);
+
+  GeneratedColumn<bool> get showBeginningBalance => $composableBuilder(
+      column: $table.showBeginningBalance, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CachedBillCountsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CachedBillCountsTable,
+    CachedBillCountRow,
+    $$CachedBillCountsTableFilterComposer,
+    $$CachedBillCountsTableOrderingComposer,
+    $$CachedBillCountsTableAnnotationComposer,
+    $$CachedBillCountsTableCreateCompanionBuilder,
+    $$CachedBillCountsTableUpdateCompanionBuilder,
+    (
+      CachedBillCountRow,
+      BaseReferences<_$AppDatabase, $CachedBillCountsTable, CachedBillCountRow>
+    ),
+    CachedBillCountRow,
+    PrefetchHooks Function()> {
+  $$CachedBillCountsTableTableManager(
+      _$AppDatabase db, $CachedBillCountsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CachedBillCountsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CachedBillCountsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CachedBillCountsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> localId = const Value.absent(),
+            Value<String> cashierId = const Value.absent(),
+            Value<String> cashierUsername = const Value.absent(),
+            Value<String> cashierBranchName = const Value.absent(),
+            Value<double> beginningBalance = const Value.absent(),
+            Value<bool> showBeginningBalance = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
+            Value<String> data = const Value.absent(),
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CachedBillCountsCompanion(
+            id: id,
+            localId: localId,
+            cashierId: cashierId,
+            cashierUsername: cashierUsername,
+            cashierBranchName: cashierBranchName,
+            beginningBalance: beginningBalance,
+            showBeginningBalance: showBeginningBalance,
+            date: date,
+            data: data,
+            isSynced: isSynced,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            Value<String?> localId = const Value.absent(),
+            required String cashierId,
+            required String cashierUsername,
+            required String cashierBranchName,
+            Value<double> beginningBalance = const Value.absent(),
+            Value<bool> showBeginningBalance = const Value.absent(),
+            required DateTime date,
+            required String data,
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CachedBillCountsCompanion.insert(
+            id: id,
+            localId: localId,
+            cashierId: cashierId,
+            cashierUsername: cashierUsername,
+            cashierBranchName: cashierBranchName,
+            beginningBalance: beginningBalance,
+            showBeginningBalance: showBeginningBalance,
+            date: date,
+            data: data,
+            isSynced: isSynced,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$CachedBillCountsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CachedBillCountsTable,
+    CachedBillCountRow,
+    $$CachedBillCountsTableFilterComposer,
+    $$CachedBillCountsTableOrderingComposer,
+    $$CachedBillCountsTableAnnotationComposer,
+    $$CachedBillCountsTableCreateCompanionBuilder,
+    $$CachedBillCountsTableUpdateCompanionBuilder,
+    (
+      CachedBillCountRow,
+      BaseReferences<_$AppDatabase, $CachedBillCountsTable, CachedBillCountRow>
+    ),
+    CachedBillCountRow,
+    PrefetchHooks Function()>;
+typedef $$PendingBillCountSyncTableCreateCompanionBuilder
+    = PendingBillCountSyncCompanion Function({
+  Value<int> id,
+  required String localBillCountId,
+  required String operation,
+  required String payload,
+  required String dateFilter,
+  Value<int> attempts,
+  Value<String?> lastError,
+  Value<DateTime> createdAt,
+  Value<DateTime?> lastAttemptAt,
+});
+typedef $$PendingBillCountSyncTableUpdateCompanionBuilder
+    = PendingBillCountSyncCompanion Function({
+  Value<int> id,
+  Value<String> localBillCountId,
+  Value<String> operation,
+  Value<String> payload,
+  Value<String> dateFilter,
+  Value<int> attempts,
+  Value<String?> lastError,
+  Value<DateTime> createdAt,
+  Value<DateTime?> lastAttemptAt,
+});
+
+class $$PendingBillCountSyncTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingBillCountSyncTable> {
+  $$PendingBillCountSyncTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localBillCountId => $composableBuilder(
+      column: $table.localBillCountId,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get dateFilter => $composableBuilder(
+      column: $table.dateFilter, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get attempts => $composableBuilder(
+      column: $table.attempts, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get lastError => $composableBuilder(
+      column: $table.lastError, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastAttemptAt => $composableBuilder(
+      column: $table.lastAttemptAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$PendingBillCountSyncTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingBillCountSyncTable> {
+  $$PendingBillCountSyncTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localBillCountId => $composableBuilder(
+      column: $table.localBillCountId,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get dateFilter => $composableBuilder(
+      column: $table.dateFilter, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get attempts => $composableBuilder(
+      column: $table.attempts, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get lastError => $composableBuilder(
+      column: $table.lastError, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastAttemptAt => $composableBuilder(
+      column: $table.lastAttemptAt,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$PendingBillCountSyncTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingBillCountSyncTable> {
+  $$PendingBillCountSyncTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get localBillCountId => $composableBuilder(
+      column: $table.localBillCountId, builder: (column) => column);
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<String> get payload =>
+      $composableBuilder(column: $table.payload, builder: (column) => column);
+
+  GeneratedColumn<String> get dateFilter => $composableBuilder(
+      column: $table.dateFilter, builder: (column) => column);
+
+  GeneratedColumn<int> get attempts =>
+      $composableBuilder(column: $table.attempts, builder: (column) => column);
+
+  GeneratedColumn<String> get lastError =>
+      $composableBuilder(column: $table.lastError, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastAttemptAt => $composableBuilder(
+      column: $table.lastAttemptAt, builder: (column) => column);
+}
+
+class $$PendingBillCountSyncTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PendingBillCountSyncTable,
+    PendingBillCountSyncRow,
+    $$PendingBillCountSyncTableFilterComposer,
+    $$PendingBillCountSyncTableOrderingComposer,
+    $$PendingBillCountSyncTableAnnotationComposer,
+    $$PendingBillCountSyncTableCreateCompanionBuilder,
+    $$PendingBillCountSyncTableUpdateCompanionBuilder,
+    (
+      PendingBillCountSyncRow,
+      BaseReferences<_$AppDatabase, $PendingBillCountSyncTable,
+          PendingBillCountSyncRow>
+    ),
+    PendingBillCountSyncRow,
+    PrefetchHooks Function()> {
+  $$PendingBillCountSyncTableTableManager(
+      _$AppDatabase db, $PendingBillCountSyncTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingBillCountSyncTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PendingBillCountSyncTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PendingBillCountSyncTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> localBillCountId = const Value.absent(),
+            Value<String> operation = const Value.absent(),
+            Value<String> payload = const Value.absent(),
+            Value<String> dateFilter = const Value.absent(),
+            Value<int> attempts = const Value.absent(),
+            Value<String?> lastError = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime?> lastAttemptAt = const Value.absent(),
+          }) =>
+              PendingBillCountSyncCompanion(
+            id: id,
+            localBillCountId: localBillCountId,
+            operation: operation,
+            payload: payload,
+            dateFilter: dateFilter,
+            attempts: attempts,
+            lastError: lastError,
+            createdAt: createdAt,
+            lastAttemptAt: lastAttemptAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String localBillCountId,
+            required String operation,
+            required String payload,
+            required String dateFilter,
+            Value<int> attempts = const Value.absent(),
+            Value<String?> lastError = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime?> lastAttemptAt = const Value.absent(),
+          }) =>
+              PendingBillCountSyncCompanion.insert(
+            id: id,
+            localBillCountId: localBillCountId,
+            operation: operation,
+            payload: payload,
+            dateFilter: dateFilter,
+            attempts: attempts,
+            lastError: lastError,
+            createdAt: createdAt,
+            lastAttemptAt: lastAttemptAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PendingBillCountSyncTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $PendingBillCountSyncTable,
+        PendingBillCountSyncRow,
+        $$PendingBillCountSyncTableFilterComposer,
+        $$PendingBillCountSyncTableOrderingComposer,
+        $$PendingBillCountSyncTableAnnotationComposer,
+        $$PendingBillCountSyncTableCreateCompanionBuilder,
+        $$PendingBillCountSyncTableUpdateCompanionBuilder,
+        (
+          PendingBillCountSyncRow,
+          BaseReferences<_$AppDatabase, $PendingBillCountSyncTable,
+              PendingBillCountSyncRow>
+        ),
+        PendingBillCountSyncRow,
+        PrefetchHooks Function()>;
+typedef $$BillCountCacheMetaTableCreateCompanionBuilder
+    = BillCountCacheMetaCompanion Function({
+  required String key,
+  Value<DateTime?> lastSyncAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$BillCountCacheMetaTableUpdateCompanionBuilder
+    = BillCountCacheMetaCompanion Function({
+  Value<String> key,
+  Value<DateTime?> lastSyncAt,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+class $$BillCountCacheMetaTableFilterComposer
+    extends Composer<_$AppDatabase, $BillCountCacheMetaTable> {
+  $$BillCountCacheMetaTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+      column: $table.key, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastSyncAt => $composableBuilder(
+      column: $table.lastSyncAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$BillCountCacheMetaTableOrderingComposer
+    extends Composer<_$AppDatabase, $BillCountCacheMetaTable> {
+  $$BillCountCacheMetaTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+      column: $table.key, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastSyncAt => $composableBuilder(
+      column: $table.lastSyncAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$BillCountCacheMetaTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BillCountCacheMetaTable> {
+  $$BillCountCacheMetaTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSyncAt => $composableBuilder(
+      column: $table.lastSyncAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$BillCountCacheMetaTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $BillCountCacheMetaTable,
+    BillCountCacheMetaRow,
+    $$BillCountCacheMetaTableFilterComposer,
+    $$BillCountCacheMetaTableOrderingComposer,
+    $$BillCountCacheMetaTableAnnotationComposer,
+    $$BillCountCacheMetaTableCreateCompanionBuilder,
+    $$BillCountCacheMetaTableUpdateCompanionBuilder,
+    (
+      BillCountCacheMetaRow,
+      BaseReferences<_$AppDatabase, $BillCountCacheMetaTable,
+          BillCountCacheMetaRow>
+    ),
+    BillCountCacheMetaRow,
+    PrefetchHooks Function()> {
+  $$BillCountCacheMetaTableTableManager(
+      _$AppDatabase db, $BillCountCacheMetaTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BillCountCacheMetaTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BillCountCacheMetaTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BillCountCacheMetaTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> key = const Value.absent(),
+            Value<DateTime?> lastSyncAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              BillCountCacheMetaCompanion(
+            key: key,
+            lastSyncAt: lastSyncAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String key,
+            Value<DateTime?> lastSyncAt = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              BillCountCacheMetaCompanion.insert(
+            key: key,
+            lastSyncAt: lastSyncAt,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$BillCountCacheMetaTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $BillCountCacheMetaTable,
+    BillCountCacheMetaRow,
+    $$BillCountCacheMetaTableFilterComposer,
+    $$BillCountCacheMetaTableOrderingComposer,
+    $$BillCountCacheMetaTableAnnotationComposer,
+    $$BillCountCacheMetaTableCreateCompanionBuilder,
+    $$BillCountCacheMetaTableUpdateCompanionBuilder,
+    (
+      BillCountCacheMetaRow,
+      BaseReferences<_$AppDatabase, $BillCountCacheMetaTable,
+          BillCountCacheMetaRow>
+    ),
+    BillCountCacheMetaRow,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -9751,6 +11798,12 @@ class $AppDatabaseManager {
   $$TransferStockAdjustmentsTableTableManager get transferStockAdjustments =>
       $$TransferStockAdjustmentsTableTableManager(
           _db, _db.transferStockAdjustments);
+  $$CachedBillCountsTableTableManager get cachedBillCounts =>
+      $$CachedBillCountsTableTableManager(_db, _db.cachedBillCounts);
+  $$PendingBillCountSyncTableTableManager get pendingBillCountSync =>
+      $$PendingBillCountSyncTableTableManager(_db, _db.pendingBillCountSync);
+  $$BillCountCacheMetaTableTableManager get billCountCacheMeta =>
+      $$BillCountCacheMetaTableTableManager(_db, _db.billCountCacheMeta);
 }
 
 // **************************************************************************

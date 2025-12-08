@@ -6,6 +6,7 @@
 /// - presentation/ - Pages, widgets, state management (providers)
 
 export 'auth/auth.dart';
+export 'bill_count/bill_count.dart';
 export 'delivery/delivery.dart';
 export 'expense/expense.dart';
 export 'home/home.dart';
