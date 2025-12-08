@@ -7,6 +7,7 @@ import '../../features/auth/auth.dart';
 import '../../features/delivery/presentation/pages/deliveries_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/sales/presentation/pages/sales_page.dart';
+import '../../features/sales_check/presentation/pages/sales_check_page.dart';
 import '../../features/settings/settings.dart';
 import '../../features/shift/shift.dart';
 import '../../shared/widgets/main_layout.dart';
@@ -123,6 +124,13 @@ GoRouter appRouter(Ref ref) {
               child: DeliveriesPage(),
             ),
           ),
+          GoRoute(
+            path: '/sales-check',
+            name: 'salesCheck',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SalesCheckPage(),
+            ),
+          ),
           // Add more routes here following this pattern:
           // GoRoute(
           //   path: '/products',
@@ -166,6 +174,7 @@ abstract class AppRoutes {
 
   // Permission-based routes
   static const sales = '/sales';
+  static const salesCheck = '/sales-check';
   static const deliveries = '/deliveries';
   static const stocks = '/stocks';
   static const kahon = '/kahon';

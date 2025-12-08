@@ -10,5 +10,7 @@ export 'delivery/delivery.dart';
 export 'home/home.dart';
 export 'printer/printer.dart';
 export 'product/product.dart';
+export 'sales/sales.dart';
+export 'sales_check/sales_check.dart';
 export 'settings/settings.dart';
 export 'shift/shift.dart';

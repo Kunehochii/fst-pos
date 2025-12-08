@@ -16,6 +16,7 @@ class ApiEndpoints {
   static const shifts = _ShiftEndpoints();
   static const products = _ProductEndpoints();
   static const sales = _SalesEndpoints();
+  static const salesCheck = _SalesCheckEndpoints();
   static const delivery = _DeliveryEndpoints();
   // Add more endpoint groups as needed
 }
@@ -96,4 +97,14 @@ class _DeliveryEndpoints {
 
   /// Get a specific delivery by ID (GET /delivery/:id)
   String byId(String id) => '/delivery/$id';
+}
+
+class _SalesCheckEndpoints {
+  const _SalesCheckEndpoints();
+
+  /// Get grouped sales for cashier (GET /sales-check/cashier)
+  String get cashier => '/sales-check/cashier';
+
+  /// Get total sales summary for cashier (GET /sales-check/cashier/total)
+  String get cashierTotal => '/sales-check/cashier/total';
 }
