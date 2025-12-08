@@ -18,6 +18,7 @@ class ApiEndpoints {
   static const sales = _SalesEndpoints();
   static const salesCheck = _SalesCheckEndpoints();
   static const delivery = _DeliveryEndpoints();
+  static const profit = _ProfitEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -107,4 +108,14 @@ class _SalesCheckEndpoints {
 
   /// Get total sales summary for cashier (GET /sales-check/cashier/total)
   String get cashierTotal => '/sales-check/cashier/total';
+}
+
+class _ProfitEndpoints {
+  const _ProfitEndpoints();
+
+  /// Get grouped profits for cashier (GET /profit/cashier)
+  String get cashier => '/profit/cashier';
+
+  /// Get total profit summary for cashier (GET /profit/cashier/total)
+  String get cashierTotal => '/profit/cashier/total';
 }

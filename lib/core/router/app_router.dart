@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/auth/auth.dart';
 import '../../features/delivery/presentation/pages/deliveries_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/profit/presentation/pages/profit_page.dart';
 import '../../features/sales/presentation/pages/sales_page.dart';
 import '../../features/sales_check/presentation/pages/sales_check_page.dart';
 import '../../features/settings/settings.dart';
@@ -129,6 +130,13 @@ GoRouter appRouter(Ref ref) {
             name: 'salesCheck',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: SalesCheckPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/profit',
+            name: 'profit',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ProfitPage(),
             ),
           ),
           // Add more routes here following this pattern:
