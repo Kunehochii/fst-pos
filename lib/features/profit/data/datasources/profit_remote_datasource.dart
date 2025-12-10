@@ -25,7 +25,10 @@ class ProfitRemoteDataSource {
         queryParameters: filter.toQueryParams(),
       );
 
-      final profits = (response.data as List)
+      // Server returns { items: [...], totalProfit: "...", rawItems: [...] }
+      // We need to parse the items field
+      final data = response.data as Map<String, dynamic>;
+      final profits = (data['items'] as List)
           .map((json) =>
               GroupedProfitModel.fromJson(json as Map<String, dynamic>))
           .toList();
@@ -52,7 +55,10 @@ class ProfitRemoteDataSource {
       );
 
       AppLogger.debug('Fetched total profit summary');
-      return ProfitSummaryModel.fromJson(response.data as Map<String, dynamic>);
+      // Server returns { summary: {...} } wrapper
+      final data = response.data as Map<String, dynamic>;
+      return ProfitSummaryModel.fromJson(
+          data['summary'] as Map<String, dynamic>);
     } on DioException catch (e) {
       AppLogger.error('Failed to fetch total profit', e);
       throw e.toAppException();

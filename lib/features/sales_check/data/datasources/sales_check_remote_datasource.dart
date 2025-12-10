@@ -52,7 +52,11 @@ class SalesCheckRemoteDataSource {
       );
 
       AppLogger.debug('Fetched total sales summary');
-      return SalesSummaryModel.fromJson(response.data as Map<String, dynamic>);
+      // Server returns { items: [...], summary: {...} }
+      // We need to parse the summary field
+      final data = response.data as Map<String, dynamic>;
+      return SalesSummaryModel.fromJson(
+          data['summary'] as Map<String, dynamic>);
     } on DioException catch (e) {
       AppLogger.error('Failed to fetch total sales', e);
       throw e.toAppException();
