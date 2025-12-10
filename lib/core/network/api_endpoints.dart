@@ -24,6 +24,7 @@ class ApiEndpoints {
   static const expenses = _ExpenseEndpoints();
   static const bills = _BillEndpoints();
   static const sheet = _SheetEndpoints();
+  static const upload = _UploadEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -218,4 +219,22 @@ class _SheetEndpoints {
 
   /// Update/Delete cell (PATCH/DELETE /sheet/cell/:id)
   String cellById(String id) => '/sheet/cell/$id';
+}
+
+class _UploadEndpoints {
+  const _UploadEndpoints();
+
+  /// Upload attachment as cashier (POST /upload/cashier)
+  /// Form Data: file (required), type (required), path (optional)
+  String get cashier => '/upload/cashier';
+
+  /// Get cashier attachments (GET /upload/cashier)
+  /// Query params: type, startDate, endDate (all optional)
+  String get cashierList => '/upload/cashier';
+
+  /// Get cashier attachment by ID (GET /upload/cashier/:id)
+  String cashierById(String id) => '/upload/cashier/$id';
+
+  /// Delete cashier attachment (DELETE /upload/cashier/:id)
+  String cashierDelete(String id) => '/upload/cashier/$id';
 }

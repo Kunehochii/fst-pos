@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/attachment/presentation/pages/attachment_page.dart';
 import '../../features/auth/auth.dart';
 import '../../features/bill_count/presentation/pages/bill_count_page.dart';
 import '../../features/delivery/presentation/pages/deliveries_page.dart';
@@ -176,6 +177,13 @@ GoRouter appRouter(Ref ref) {
             name: 'inventory',
             pageBuilder: (context, state) => NoTransitionPage(
               child: SheetPage(sheetType: SheetType.inventory),
+            ),
+          ),
+          GoRoute(
+            path: '/attachments',
+            name: 'attachments',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: AttachmentPage(),
             ),
           ),
           // Add more routes here following this pattern:

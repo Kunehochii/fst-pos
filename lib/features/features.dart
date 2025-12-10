@@ -5,6 +5,7 @@
 /// - domain/     - Entities, repository interfaces, use cases
 /// - presentation/ - Pages, widgets, state management (providers)
 
+export 'attachment/attachment.dart';
 export 'auth/auth.dart';
 export 'bill_count/bill_count.dart';
 export 'delivery/delivery.dart';
