@@ -18,13 +18,23 @@ part 'app_database.g.dart';
 
 /// Provides the application database instance.
 ///
+/// This provider is kept alive to prevent multiple database instances
+/// from being created when the provider is disposed and re-watched.
+///
 /// Usage:
 /// ```dart
 /// final database = ref.watch(appDatabaseProvider);
 /// ```
-@riverpod
+@Riverpod(keepAlive: true)
 AppDatabase appDatabase(Ref ref) {
-  return AppDatabase();
+  final db = AppDatabase();
+
+  // Close database when app is terminated
+  ref.onDispose(() {
+    db.close();
+  });
+
+  return db;
 }
 
 /// Example table - replace with your actual tables

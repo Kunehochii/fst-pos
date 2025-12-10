@@ -38,9 +38,33 @@ class _SalesPageState extends ConsumerState<SalesPage>
 
   @override
   Widget build(BuildContext context) {
+    final pendingSyncCount = ref.watch(pendingSalesCountProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sales'),
+        actions: [
+          // Show pending sync count and sync button
+          pendingSyncCount.when(
+            data: (count) => count > 0
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Center(
+                      child: IconButton(
+                        icon: Badge(
+                          label: Text('$count'),
+                          child: const Icon(Icons.sync),
+                        ),
+                        onPressed: () => _showSyncDialog(context),
+                        tooltip: 'Sync $count pending sales',
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -289,6 +313,13 @@ class _SalesPageState extends ConsumerState<SalesPage>
     );
   }
 
+  void _showSyncDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const _SyncPendingSalesDialog(),
+    );
+  }
+
   void _showAddToCartScreen(Product product) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -300,5 +331,84 @@ class _SalesPageState extends ConsumerState<SalesPage>
 
   Widget _buildSalesHistoryTab() {
     return const SalesHistoryWidget();
+  }
+}
+
+/// Dialog for syncing pending sales.
+class _SyncPendingSalesDialog extends ConsumerStatefulWidget {
+  const _SyncPendingSalesDialog();
+
+  @override
+  ConsumerState<_SyncPendingSalesDialog> createState() =>
+      _SyncPendingSalesDialogState();
+}
+
+class _SyncPendingSalesDialogState
+    extends ConsumerState<_SyncPendingSalesDialog> {
+  @override
+  void initState() {
+    super.initState();
+    // Start sync automatically when dialog opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(syncSalesNotifierProvider.notifier).syncPendingSales();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final syncState = ref.watch(syncSalesNotifierProvider);
+
+    return AlertDialog(
+      title: const Text('Sync Pending Sales'),
+      content: syncState is SyncSalesSyncing
+          ? const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Syncing pending sales...'),
+              ],
+            )
+          : syncState is SyncSalesSuccess
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.check_circle,
+                        color: Colors.green, size: 48),
+                    const SizedBox(height: 16),
+                    Text('Successfully synced ${syncState.count} sales'),
+                  ],
+                )
+              : syncState is SyncSalesError
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error, color: Colors.red, size: 48),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Failed to sync: ${syncState.failure.message}',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+      actions: [
+        if (syncState is SyncSalesSuccess || syncState is SyncSalesError)
+          TextButton(
+            onPressed: () {
+              ref.read(syncSalesNotifierProvider.notifier).reset();
+              Navigator.pop(context);
+            },
+            child: const Text('Close'),
+          ),
+        if (syncState is SyncSalesError)
+          ElevatedButton(
+            onPressed: () {
+              ref.read(syncSalesNotifierProvider.notifier).syncPendingSales();
+            },
+            child: const Text('Retry'),
+          ),
+      ],
+    );
   }
 }

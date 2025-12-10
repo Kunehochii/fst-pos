@@ -16,17 +16,17 @@ _$SaleItemModelImpl _$$SaleItemModelImplFromJson(Map<String, dynamic> json) =>
           quantity: $checkedConvert('quantity', (v) => v as String),
           price: $checkedConvert('price', (v) => v as String),
           discountedPrice:
-              $checkedConvert('discounted_price', (v) => v as String?),
+              $checkedConvert('discountedPrice', (v) => v as String?),
           isDiscounted:
-              $checkedConvert('is_discounted', (v) => v as bool? ?? false),
-          isGantang: $checkedConvert('is_gantang', (v) => v as bool? ?? false),
+              $checkedConvert('isDiscounted', (v) => v as bool? ?? false),
+          isGantang: $checkedConvert('isGantang', (v) => v as bool? ?? false),
           isSpecialPrice:
-              $checkedConvert('is_special_price', (v) => v as bool? ?? false),
+              $checkedConvert('isSpecialPrice', (v) => v as bool? ?? false),
           productId: $checkedConvert('productId', (v) => v as String),
-          sackPriceId: $checkedConvert('sack_price_id', (v) => v as String?),
-          sackType: $checkedConvert('sack_type', (v) => v as String?),
+          sackPriceId: $checkedConvert('sackPriceId', (v) => v as String?),
+          sackType: $checkedConvert('sackType', (v) => v as String?),
           perKiloPriceId:
-              $checkedConvert('per_kilo_price_id', (v) => v as String?),
+              $checkedConvert('perKiloPriceId', (v) => v as String?),
           createdAt:
               $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
           updatedAt:
@@ -37,28 +37,17 @@ _$SaleItemModelImpl _$$SaleItemModelImplFromJson(Map<String, dynamic> json) =>
                   ? null
                   : ProductModel.fromJson(v as Map<String, dynamic>)),
           sackPrice: $checkedConvert(
-              'sack_price',
+              'sackPrice',
               (v) => v == null
                   ? null
                   : SackPriceModel.fromJson(v as Map<String, dynamic>)),
           perKiloPrice: $checkedConvert(
-              'per_kilo_price',
+              'perKiloPrice',
               (v) => v == null
                   ? null
                   : PerKiloPriceModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'discountedPrice': 'discounted_price',
-        'isDiscounted': 'is_discounted',
-        'isGantang': 'is_gantang',
-        'isSpecialPrice': 'is_special_price',
-        'sackPriceId': 'sack_price_id',
-        'sackType': 'sack_type',
-        'perKiloPriceId': 'per_kilo_price_id',
-        'sackPrice': 'sack_price',
-        'perKiloPrice': 'per_kilo_price'
       },
     );
 
@@ -67,20 +56,20 @@ Map<String, dynamic> _$$SaleItemModelImplToJson(_$SaleItemModelImpl instance) =>
       'id': instance.id,
       'quantity': instance.quantity,
       'price': instance.price,
-      if (instance.discountedPrice case final value?) 'discounted_price': value,
-      'is_discounted': instance.isDiscounted,
-      'is_gantang': instance.isGantang,
-      'is_special_price': instance.isSpecialPrice,
+      if (instance.discountedPrice case final value?) 'discountedPrice': value,
+      'isDiscounted': instance.isDiscounted,
+      'isGantang': instance.isGantang,
+      'isSpecialPrice': instance.isSpecialPrice,
       'productId': instance.productId,
-      if (instance.sackPriceId case final value?) 'sack_price_id': value,
-      if (instance.sackType case final value?) 'sack_type': value,
-      if (instance.perKiloPriceId case final value?) 'per_kilo_price_id': value,
+      if (instance.sackPriceId case final value?) 'sackPriceId': value,
+      if (instance.sackType case final value?) 'sackType': value,
+      if (instance.perKiloPriceId case final value?) 'perKiloPriceId': value,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       if (instance.product?.toJson() case final value?) 'product': value,
-      if (instance.sackPrice?.toJson() case final value?) 'sack_price': value,
+      if (instance.sackPrice?.toJson() case final value?) 'sackPrice': value,
       if (instance.perKiloPrice?.toJson() case final value?)
-        'per_kilo_price': value,
+        'perKiloPrice': value,
     };
 
 _$SaleModelImpl _$$SaleModelImplFromJson(Map<String, dynamic> json) =>
@@ -92,13 +81,13 @@ _$SaleModelImpl _$$SaleModelImplFromJson(Map<String, dynamic> json) =>
           id: $checkedConvert('id', (v) => v as String),
           totalAmount: $checkedConvert('totalAmount', (v) => v as String),
           paymentMethod: $checkedConvert('paymentMethod', (v) => v as String),
-          isVoid: $checkedConvert('is_void', (v) => v as bool? ?? false),
-          voidedAt: $checkedConvert('voided_at',
+          isVoid: $checkedConvert('isVoid', (v) => v as bool? ?? false),
+          voidedAt: $checkedConvert('voidedAt',
               (v) => v == null ? null : DateTime.parse(v as String)),
           cashierId: $checkedConvert('cashierId', (v) => v as String),
-          orderId: $checkedConvert('order_id', (v) => v as String?),
+          orderId: $checkedConvert('orderId', (v) => v as String?),
           saleItems: $checkedConvert(
-              'sale_items',
+              'saleItems',
               (v) =>
                   (v as List<dynamic>?)
                       ?.map((e) =>
@@ -114,12 +103,6 @@ _$SaleModelImpl _$$SaleModelImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
-      fieldKeyMap: const {
-        'isVoid': 'is_void',
-        'voidedAt': 'voided_at',
-        'orderId': 'order_id',
-        'saleItems': 'sale_items'
-      },
     );
 
 Map<String, dynamic> _$$SaleModelImplToJson(_$SaleModelImpl instance) =>
@@ -127,12 +110,12 @@ Map<String, dynamic> _$$SaleModelImplToJson(_$SaleModelImpl instance) =>
       'id': instance.id,
       'totalAmount': instance.totalAmount,
       'paymentMethod': instance.paymentMethod,
-      'is_void': instance.isVoid,
+      'isVoid': instance.isVoid,
       if (instance.voidedAt?.toIso8601String() case final value?)
-        'voided_at': value,
+        'voidedAt': value,
       'cashierId': instance.cashierId,
-      if (instance.orderId case final value?) 'order_id': value,
-      'sale_items': instance.saleItems.map((e) => e.toJson()).toList(),
+      if (instance.orderId case final value?) 'orderId': value,
+      'saleItems': instance.saleItems.map((e) => e.toJson()).toList(),
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       if (instance.metadata case final value?) 'metadata': value,
@@ -145,11 +128,11 @@ _$CreateSaleRequestImpl _$$CreateSaleRequestImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$CreateSaleRequestImpl(
-          totalAmount: $checkedConvert('total_amount', (v) => v as String),
-          paymentMethod: $checkedConvert('payment_method', (v) => v as String),
-          orderId: $checkedConvert('order_id', (v) => v as String?),
+          totalAmount: $checkedConvert('totalAmount', (v) => v as String),
+          paymentMethod: $checkedConvert('paymentMethod', (v) => v as String),
+          orderId: $checkedConvert('orderId', (v) => v as String?),
           saleItem: $checkedConvert(
-              'sale_item',
+              'saleItem',
               (v) => (v as List<dynamic>)
                   .map((e) =>
                       CreateSaleItemRequest.fromJson(e as Map<String, dynamic>))
@@ -159,21 +142,15 @@ _$CreateSaleRequestImpl _$$CreateSaleRequestImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {
-        'totalAmount': 'total_amount',
-        'paymentMethod': 'payment_method',
-        'orderId': 'order_id',
-        'saleItem': 'sale_item'
-      },
     );
 
 Map<String, dynamic> _$$CreateSaleRequestImplToJson(
         _$CreateSaleRequestImpl instance) =>
     <String, dynamic>{
-      'total_amount': instance.totalAmount,
-      'payment_method': instance.paymentMethod,
-      if (instance.orderId case final value?) 'order_id': value,
-      'sale_item': instance.saleItem.map((e) => e.toJson()).toList(),
+      'totalAmount': instance.totalAmount,
+      'paymentMethod': instance.paymentMethod,
+      if (instance.orderId case final value?) 'orderId': value,
+      'saleItem': instance.saleItem.map((e) => e.toJson()).toList(),
       if (instance.metadata case final value?) 'metadata': value,
     };
 
@@ -187,32 +164,24 @@ _$CreateSaleItemRequestImpl _$$CreateSaleItemRequestImplFromJson(
           id: $checkedConvert('id', (v) => v as String),
           price: $checkedConvert('price', (v) => v as String?),
           discountedPrice:
-              $checkedConvert('discounted_price', (v) => v as String?),
+              $checkedConvert('discountedPrice', (v) => v as String?),
           isDiscounted:
-              $checkedConvert('is_discounted', (v) => v as bool? ?? false),
-          isGantang: $checkedConvert('is_gantang', (v) => v as bool? ?? false),
+              $checkedConvert('isDiscounted', (v) => v as bool? ?? false),
+          isGantang: $checkedConvert('isGantang', (v) => v as bool? ?? false),
           isSpecialPrice:
-              $checkedConvert('is_special_price', (v) => v as bool? ?? false),
+              $checkedConvert('isSpecialPrice', (v) => v as bool? ?? false),
           perKiloPrice: $checkedConvert(
-              'per_kilo_price',
+              'perKiloPrice',
               (v) => v == null
                   ? null
                   : PerKiloPriceRequest.fromJson(v as Map<String, dynamic>)),
           sackPrice: $checkedConvert(
-              'sack_price',
+              'sackPrice',
               (v) => v == null
                   ? null
                   : SackPriceRequest.fromJson(v as Map<String, dynamic>)),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'discountedPrice': 'discounted_price',
-        'isDiscounted': 'is_discounted',
-        'isGantang': 'is_gantang',
-        'isSpecialPrice': 'is_special_price',
-        'perKiloPrice': 'per_kilo_price',
-        'sackPrice': 'sack_price'
       },
     );
 
@@ -221,13 +190,13 @@ Map<String, dynamic> _$$CreateSaleItemRequestImplToJson(
     <String, dynamic>{
       'id': instance.id,
       if (instance.price case final value?) 'price': value,
-      if (instance.discountedPrice case final value?) 'discounted_price': value,
-      'is_discounted': instance.isDiscounted,
-      'is_gantang': instance.isGantang,
-      'is_special_price': instance.isSpecialPrice,
+      if (instance.discountedPrice case final value?) 'discountedPrice': value,
+      'isDiscounted': instance.isDiscounted,
+      'isGantang': instance.isGantang,
+      'isSpecialPrice': instance.isSpecialPrice,
       if (instance.perKiloPrice?.toJson() case final value?)
-        'per_kilo_price': value,
-      if (instance.sackPrice?.toJson() case final value?) 'sack_price': value,
+        'perKiloPrice': value,
+      if (instance.sackPrice?.toJson() case final value?) 'sackPrice': value,
     };
 
 _$PerKiloPriceRequestImpl _$$PerKiloPriceRequestImplFromJson(

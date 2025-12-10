@@ -66,9 +66,12 @@ class SalesRemoteDataSource {
         metadata: metadata,
       );
 
+      final requestJson = request.toJson();
+      AppLogger.debug('Request JSON', requestJson);
+
       final response = await _dio.post(
         ApiEndpoints.sales.create,
-        data: request.toJson(),
+        data: requestJson,
       );
 
       AppLogger.debug('Sale created successfully');

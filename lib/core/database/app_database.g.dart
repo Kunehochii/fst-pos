@@ -15352,9 +15352,12 @@ class $AppDatabaseManager {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'18ce5c8c4d8ddbfe5a7d819d8fb7d5aca76bf416';
+String _$appDatabaseHash() => r'67f06207fff3a55949c4c4b67200f868a9b6acc8';
 
 /// Provides the application database instance.
+///
+/// This provider is kept alive to prevent multiple database instances
+/// from being created when the provider is disposed and re-watched.
 ///
 /// Usage:
 /// ```dart
@@ -15363,7 +15366,7 @@ String _$appDatabaseHash() => r'18ce5c8c4d8ddbfe5a7d819d8fb7d5aca76bf416';
 ///
 /// Copied from [appDatabase].
 @ProviderFor(appDatabase)
-final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
+final appDatabaseProvider = Provider<AppDatabase>.internal(
   appDatabase,
   name: r'appDatabaseProvider',
   debugGetCreateSourceHash:
@@ -15374,6 +15377,6 @@ final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
+typedef AppDatabaseRef = ProviderRef<AppDatabase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

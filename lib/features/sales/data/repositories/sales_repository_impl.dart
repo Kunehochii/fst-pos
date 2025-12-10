@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/cart_item.dart';
 import '../../domain/entities/payment_method.dart';
 import '../../domain/entities/sale.dart';
@@ -121,9 +122,28 @@ class SalesRepositoryImpl implements SalesRepository {
 
   /// Convert sale items to cart items for API request.
   List<CartItem> _convertSaleItemsToCartItems(List<SaleItem> items) {
-    // This is a simplified conversion - in real scenario you'd need product data
-    // The remote data source handles the actual conversion
-    return [];
+    return items.map((item) {
+      // Determine if this is a per kilo or sack item
+      final isPerKilo = item.perKiloPriceId != null;
+
+      if (item.product == null) {
+        throw StateError('Product data missing in sale item ${item.id}');
+      }
+
+      return CartItem(
+        cartItemId: item.id.isEmpty ? CartItem.generateId() : item.id,
+        product: item.product!,
+        priceType: isPerKilo ? CartPriceType.perKilo : CartPriceType.sack,
+        sackType: item.sackType,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        discountedPrice: item.discountedPrice,
+        isDiscounted: item.isDiscounted,
+        isGantang: item.isGantang,
+        sackPriceId: item.sackPriceId,
+        perKiloPriceId: item.perKiloPriceId,
+      );
+    }).toList();
   }
 
   @override
@@ -319,11 +339,53 @@ class SalesRepositoryImpl implements SalesRepository {
             final payload = jsonDecode(op.payload) as Map<String, dynamic>;
             final saleModel = SaleModel.fromJson(payload);
 
-            // Convert to cart items and create
+            // Convert sale items to cart items for API request
+            final cartItems = saleModel.saleItems.map((item) {
+              final product = item.product;
+              if (product == null) {
+                throw StateError(
+                    'Product data missing in sale item ${item.id}');
+              }
+
+              if (item.perKiloPriceId != null) {
+                return CartItem(
+                  cartItemId: item.id,
+                  product: product.toEntity(),
+                  priceType: CartPriceType.perKilo,
+                  quantity: double.parse(item.quantity),
+                  unitPrice: double.parse(item.price),
+                  discountedPrice: item.discountedPrice != null
+                      ? double.parse(item.discountedPrice!)
+                      : null,
+                  isDiscounted: item.isDiscounted,
+                  isGantang: item.isGantang,
+                  perKiloPriceId: item.perKiloPriceId,
+                );
+              } else {
+                return CartItem(
+                  cartItemId: item.id,
+                  product: product.toEntity(),
+                  priceType: CartPriceType.sack,
+                  sackType: item.sackType != null
+                      ? SackType.fromString(item.sackType!)
+                      : null,
+                  quantity: double.parse(item.quantity),
+                  unitPrice: double.parse(item.price),
+                  discountedPrice: item.discountedPrice != null
+                      ? double.parse(item.discountedPrice!)
+                      : null,
+                  isDiscounted: item.isDiscounted,
+                  sackPriceId: item.sackPriceId,
+                );
+              }
+            }).toList();
+
+            // Create sale on server
             final remoteSale = await _remoteDataSource.createSale(
               totalAmount: double.parse(saleModel.totalAmount),
               paymentMethod: PaymentMethod.fromString(saleModel.paymentMethod),
-              items: [], // Empty - the payload should have all data
+              items: cartItems,
+              orderId: saleModel.orderId,
               metadata: saleModel.metadata,
             );
 

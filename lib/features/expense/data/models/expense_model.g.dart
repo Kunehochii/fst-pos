@@ -46,7 +46,7 @@ _$ExpenseListModelImpl _$$ExpenseListModelImplFromJson(
           cashierId: $checkedConvert('cashierId', (v) => v as String),
           businessId: $checkedConvert('businessId', (v) => v as String),
           expenseItems: $checkedConvert(
-              'expense_items',
+              'expenseItems',
               (v) =>
                   (v as List<dynamic>?)
                       ?.map((e) =>
@@ -60,7 +60,6 @@ _$ExpenseListModelImpl _$$ExpenseListModelImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {'expenseItems': 'expense_items'},
     );
 
 Map<String, dynamic> _$$ExpenseListModelImplToJson(
@@ -69,7 +68,7 @@ Map<String, dynamic> _$$ExpenseListModelImplToJson(
       'id': instance.id,
       'cashierId': instance.cashierId,
       'businessId': instance.businessId,
-      'expense_items': instance.expenseItems.map((e) => e.toJson()).toList(),
+      'expenseItems': instance.expenseItems.map((e) => e.toJson()).toList(),
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
@@ -83,7 +82,7 @@ _$CreateExpenseRequestImpl _$$CreateExpenseRequestImplFromJson(
         final val = _$CreateExpenseRequestImpl(
           date: $checkedConvert('date', (v) => v as String?),
           expenseItems: $checkedConvert(
-              'expense_items',
+              'expenseItems',
               (v) => (v as List<dynamic>)
                   .map((e) =>
                       ExpenseItemRequest.fromJson(e as Map<String, dynamic>))
@@ -91,14 +90,13 @@ _$CreateExpenseRequestImpl _$$CreateExpenseRequestImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {'expenseItems': 'expense_items'},
     );
 
 Map<String, dynamic> _$$CreateExpenseRequestImplToJson(
         _$CreateExpenseRequestImpl instance) =>
     <String, dynamic>{
       if (instance.date case final value?) 'date': value,
-      'expense_items': instance.expenseItems.map((e) => e.toJson()).toList(),
+      'expenseItems': instance.expenseItems.map((e) => e.toJson()).toList(),
     };
 
 _$ExpenseItemRequestImpl _$$ExpenseItemRequestImplFromJson(

@@ -54,12 +54,12 @@ _$TransferModelImpl _$$TransferModelImplFromJson(Map<String, dynamic> json) =>
                   ? null
                   : ProductModel.fromJson(v as Map<String, dynamic>)),
           sackPrice: $checkedConvert(
-              'sack_price',
+              'sackPrice',
               (v) => v == null
                   ? null
                   : SackPriceModel.fromJson(v as Map<String, dynamic>)),
           perKiloPrice: $checkedConvert(
-              'per_kilo_price',
+              'perKiloPrice',
               (v) => v == null
                   ? null
                   : PerKiloPriceModel.fromJson(v as Map<String, dynamic>)),
@@ -70,10 +70,6 @@ _$TransferModelImpl _$$TransferModelImplFromJson(Map<String, dynamic> json) =>
                   : TransferCashierModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'sackPrice': 'sack_price',
-        'perKiloPrice': 'per_kilo_price'
       },
     );
 
@@ -90,9 +86,9 @@ Map<String, dynamic> _$$TransferModelImplToJson(_$TransferModelImpl instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       if (instance.product?.toJson() case final value?) 'product': value,
-      if (instance.sackPrice?.toJson() case final value?) 'sack_price': value,
+      if (instance.sackPrice?.toJson() case final value?) 'sackPrice': value,
       if (instance.perKiloPrice?.toJson() case final value?)
-        'per_kilo_price': value,
+        'perKiloPrice': value,
       if (instance.cashier?.toJson() case final value?) 'cashier': value,
     };
 
@@ -103,30 +99,24 @@ _$CreateTransferSackModelImpl _$$CreateTransferSackModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$CreateTransferSackModelImpl(
-          productId: $checkedConvert('product_id', (v) => v as String),
-          sackPriceId: $checkedConvert('sack_price_id', (v) => v as String),
-          sackType: $checkedConvert('sack_type', (v) => v as String),
+          productId: $checkedConvert('productId', (v) => v as String),
+          sackPriceId: $checkedConvert('sackPriceId', (v) => v as String),
+          sackType: $checkedConvert('sackType', (v) => v as String),
           quantity: $checkedConvert('quantity', (v) => (v as num).toDouble()),
-          transferType: $checkedConvert('transfer_type', (v) => v as String),
+          transferType: $checkedConvert('transferType', (v) => v as String),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'productId': 'product_id',
-        'sackPriceId': 'sack_price_id',
-        'sackType': 'sack_type',
-        'transferType': 'transfer_type'
       },
     );
 
 Map<String, dynamic> _$$CreateTransferSackModelImplToJson(
         _$CreateTransferSackModelImpl instance) =>
     <String, dynamic>{
-      'product_id': instance.productId,
-      'sack_price_id': instance.sackPriceId,
-      'sack_type': instance.sackType,
+      'productId': instance.productId,
+      'sackPriceId': instance.sackPriceId,
+      'sackType': instance.sackType,
       'quantity': instance.quantity,
-      'transfer_type': instance.transferType,
+      'transferType': instance.transferType,
     };
 
 _$CreateTransferPerKiloModelImpl _$$CreateTransferPerKiloModelImplFromJson(
@@ -136,26 +126,20 @@ _$CreateTransferPerKiloModelImpl _$$CreateTransferPerKiloModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$CreateTransferPerKiloModelImpl(
-          productId: $checkedConvert('product_id', (v) => v as String),
-          perKiloPriceId:
-              $checkedConvert('per_kilo_price_id', (v) => v as String),
+          productId: $checkedConvert('productId', (v) => v as String),
+          perKiloPriceId: $checkedConvert('perKiloPriceId', (v) => v as String),
           quantity: $checkedConvert('quantity', (v) => (v as num).toDouble()),
-          transferType: $checkedConvert('transfer_type', (v) => v as String),
+          transferType: $checkedConvert('transferType', (v) => v as String),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'productId': 'product_id',
-        'perKiloPriceId': 'per_kilo_price_id',
-        'transferType': 'transfer_type'
       },
     );
 
 Map<String, dynamic> _$$CreateTransferPerKiloModelImplToJson(
         _$CreateTransferPerKiloModelImpl instance) =>
     <String, dynamic>{
-      'product_id': instance.productId,
-      'per_kilo_price_id': instance.perKiloPriceId,
+      'productId': instance.productId,
+      'perKiloPriceId': instance.perKiloPriceId,
       'quantity': instance.quantity,
-      'transfer_type': instance.transferType,
+      'transferType': instance.transferType,
     };

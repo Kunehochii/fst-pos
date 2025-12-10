@@ -44,11 +44,10 @@ _$BillCountCashierModelImpl _$$BillCountCashierModelImplFromJson(
         final val = _$BillCountCashierModelImpl(
           id: $checkedConvert('id', (v) => v as String),
           username: $checkedConvert('username', (v) => v as String),
-          branchName: $checkedConvert('branch_name', (v) => v as String),
+          branchName: $checkedConvert('branchName', (v) => v as String),
         );
         return val;
       },
-      fieldKeyMap: const {'branchName': 'branch_name'},
     );
 
 Map<String, dynamic> _$$BillCountCashierModelImplToJson(
@@ -56,7 +55,7 @@ Map<String, dynamic> _$$BillCountCashierModelImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
-      'branch_name': instance.branchName,
+      'branchName': instance.branchName,
     };
 
 _$BillCountModelImpl _$$BillCountModelImplFromJson(Map<String, dynamic> json) =>
@@ -70,41 +69,29 @@ _$BillCountModelImpl _$$BillCountModelImplFromJson(Map<String, dynamic> json) =>
           updatedAt: $checkedConvert('updatedAt', (v) => v as String),
           cashier: $checkedConvert('cashier',
               (v) => BillCountCashierModel.fromJson(v as Map<String, dynamic>)),
-          beginningBalance: $checkedConvert(
-              'beginning_balance', (v) => (v as num).toDouble()),
+          beginningBalance:
+              $checkedConvert('beginningBalance', (v) => (v as num).toDouble()),
           showBeginningBalance:
-              $checkedConvert('show_beginning_balance', (v) => v as bool),
-          totalCash:
-              $checkedConvert('total_cash', (v) => (v as num).toDouble()),
+              $checkedConvert('showBeginningBalance', (v) => v as bool),
+          totalCash: $checkedConvert('totalCash', (v) => (v as num).toDouble()),
           totalExpenses:
-              $checkedConvert('total_expenses', (v) => (v as num).toDouble()),
-          netCash: $checkedConvert('net_cash', (v) => (v as num).toDouble()),
+              $checkedConvert('totalExpenses', (v) => (v as num).toDouble()),
+          netCash: $checkedConvert('netCash', (v) => (v as num).toDouble()),
           bills: $checkedConvert(
               'bills',
               (v) => (v as List<dynamic>)
                   .map((e) => BillItemModel.fromJson(e as Map<String, dynamic>))
                   .toList()),
           billsByType: $checkedConvert(
-              'bills_by_type', (v) => Map<String, int>.from(v as Map)),
+              'billsByType', (v) => Map<String, int>.from(v as Map)),
           billsTotal:
-              $checkedConvert('bills_total', (v) => (v as num).toDouble()),
+              $checkedConvert('billsTotal', (v) => (v as num).toDouble()),
           summaryStep1:
-              $checkedConvert('summary_step1', (v) => (v as num).toDouble()),
+              $checkedConvert('summaryStep1', (v) => (v as num).toDouble()),
           summaryFinal:
-              $checkedConvert('summary_final', (v) => (v as num).toDouble()),
+              $checkedConvert('summaryFinal', (v) => (v as num).toDouble()),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'beginningBalance': 'beginning_balance',
-        'showBeginningBalance': 'show_beginning_balance',
-        'totalCash': 'total_cash',
-        'totalExpenses': 'total_expenses',
-        'netCash': 'net_cash',
-        'billsByType': 'bills_by_type',
-        'billsTotal': 'bills_total',
-        'summaryStep1': 'summary_step1',
-        'summaryFinal': 'summary_final'
       },
     );
 
@@ -115,16 +102,16 @@ Map<String, dynamic> _$$BillCountModelImplToJson(
       'date': instance.date,
       'updatedAt': instance.updatedAt,
       'cashier': instance.cashier.toJson(),
-      'beginning_balance': instance.beginningBalance,
-      'show_beginning_balance': instance.showBeginningBalance,
-      'total_cash': instance.totalCash,
-      'total_expenses': instance.totalExpenses,
-      'net_cash': instance.netCash,
+      'beginningBalance': instance.beginningBalance,
+      'showBeginningBalance': instance.showBeginningBalance,
+      'totalCash': instance.totalCash,
+      'totalExpenses': instance.totalExpenses,
+      'netCash': instance.netCash,
       'bills': instance.bills.map((e) => e.toJson()).toList(),
-      'bills_by_type': instance.billsByType,
-      'bills_total': instance.billsTotal,
-      'summary_step1': instance.summaryStep1,
-      'summary_final': instance.summaryFinal,
+      'billsByType': instance.billsByType,
+      'billsTotal': instance.billsTotal,
+      'summaryStep1': instance.summaryStep1,
+      'summaryFinal': instance.summaryFinal,
     };
 
 _$CreateBillCountRequestImpl _$$CreateBillCountRequestImplFromJson(
@@ -135,9 +122,9 @@ _$CreateBillCountRequestImpl _$$CreateBillCountRequestImplFromJson(
       ($checkedConvert) {
         final val = _$CreateBillCountRequestImpl(
           beginningBalance: $checkedConvert(
-              'beginning_balance', (v) => (v as num?)?.toDouble() ?? 0),
+              'beginningBalance', (v) => (v as num?)?.toDouble() ?? 0),
           showBeginningBalance: $checkedConvert(
-              'show_beginning_balance', (v) => v as bool? ?? false),
+              'showBeginningBalance', (v) => v as bool? ?? false),
           bills: $checkedConvert(
               'bills',
               (v) => (v as List<dynamic>?)
@@ -147,17 +134,13 @@ _$CreateBillCountRequestImpl _$$CreateBillCountRequestImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {
-        'beginningBalance': 'beginning_balance',
-        'showBeginningBalance': 'show_beginning_balance'
-      },
     );
 
 Map<String, dynamic> _$$CreateBillCountRequestImplToJson(
         _$CreateBillCountRequestImpl instance) =>
     <String, dynamic>{
-      'beginning_balance': instance.beginningBalance,
-      'show_beginning_balance': instance.showBeginningBalance,
+      'beginningBalance': instance.beginningBalance,
+      'showBeginningBalance': instance.showBeginningBalance,
       if (instance.bills?.map((e) => e.toJson()).toList() case final value?)
         'bills': value,
     };

@@ -295,6 +295,7 @@ mixin _$SackPriceModel {
   String get stock => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   String? get profit => throw _privateConstructorUsedError;
+  @JsonKey(name: 'specialPrice')
   SpecialPriceModel? get specialPrice => throw _privateConstructorUsedError;
   @JsonKey(name: 'createdAt')
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -323,7 +324,7 @@ abstract class $SackPriceModelCopyWith<$Res> {
       String stock,
       String type,
       String? profit,
-      SpecialPriceModel? specialPrice,
+      @JsonKey(name: 'specialPrice') SpecialPriceModel? specialPrice,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
 
@@ -419,7 +420,7 @@ abstract class _$$SackPriceModelImplCopyWith<$Res>
       String stock,
       String type,
       String? profit,
-      SpecialPriceModel? specialPrice,
+      @JsonKey(name: 'specialPrice') SpecialPriceModel? specialPrice,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
 
@@ -495,7 +496,7 @@ class _$SackPriceModelImpl extends _SackPriceModel {
       required this.stock,
       required this.type,
       this.profit,
-      this.specialPrice,
+      @JsonKey(name: 'specialPrice') this.specialPrice,
       @JsonKey(name: 'createdAt') required this.createdAt,
       @JsonKey(name: 'updatedAt') required this.updatedAt})
       : super._();
@@ -514,6 +515,7 @@ class _$SackPriceModelImpl extends _SackPriceModel {
   @override
   final String? profit;
   @override
+  @JsonKey(name: 'specialPrice')
   final SpecialPriceModel? specialPrice;
   @override
   @JsonKey(name: 'createdAt')
@@ -574,7 +576,7 @@ abstract class _SackPriceModel extends SackPriceModel {
           required final String stock,
           required final String type,
           final String? profit,
-          final SpecialPriceModel? specialPrice,
+          @JsonKey(name: 'specialPrice') final SpecialPriceModel? specialPrice,
           @JsonKey(name: 'createdAt') required final DateTime createdAt,
           @JsonKey(name: 'updatedAt') required final DateTime updatedAt}) =
       _$SackPriceModelImpl;
@@ -594,6 +596,7 @@ abstract class _SackPriceModel extends SackPriceModel {
   @override
   String? get profit;
   @override
+  @JsonKey(name: 'specialPrice')
   SpecialPriceModel? get specialPrice;
   @override
   @JsonKey(name: 'createdAt')
@@ -1115,7 +1118,9 @@ mixin _$ProductModel {
   String get category => throw _privateConstructorUsedError;
   @JsonKey(name: 'cashierId')
   String get cashierId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'sackPrices')
   List<SackPriceModel> get sackPrices => throw _privateConstructorUsedError;
+  @JsonKey(name: 'perKiloPrice')
   PerKiloPriceModel? get perKiloPrice => throw _privateConstructorUsedError;
   ProductCashierModel? get cashier => throw _privateConstructorUsedError;
   @JsonKey(name: 'createdAt')
@@ -1145,8 +1150,8 @@ abstract class $ProductModelCopyWith<$Res> {
       String picture,
       String category,
       @JsonKey(name: 'cashierId') String cashierId,
-      List<SackPriceModel> sackPrices,
-      PerKiloPriceModel? perKiloPrice,
+      @JsonKey(name: 'sackPrices') List<SackPriceModel> sackPrices,
+      @JsonKey(name: 'perKiloPrice') PerKiloPriceModel? perKiloPrice,
       ProductCashierModel? cashier,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
@@ -1268,8 +1273,8 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       String picture,
       String category,
       @JsonKey(name: 'cashierId') String cashierId,
-      List<SackPriceModel> sackPrices,
-      PerKiloPriceModel? perKiloPrice,
+      @JsonKey(name: 'sackPrices') List<SackPriceModel> sackPrices,
+      @JsonKey(name: 'perKiloPrice') PerKiloPriceModel? perKiloPrice,
       ProductCashierModel? cashier,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
@@ -1358,8 +1363,9 @@ class _$ProductModelImpl extends _ProductModel {
       required this.picture,
       required this.category,
       @JsonKey(name: 'cashierId') required this.cashierId,
+      @JsonKey(name: 'sackPrices')
       final List<SackPriceModel> sackPrices = const [],
-      this.perKiloPrice,
+      @JsonKey(name: 'perKiloPrice') this.perKiloPrice,
       this.cashier,
       @JsonKey(name: 'createdAt') required this.createdAt,
       @JsonKey(name: 'updatedAt') required this.updatedAt})
@@ -1382,7 +1388,7 @@ class _$ProductModelImpl extends _ProductModel {
   final String cashierId;
   final List<SackPriceModel> _sackPrices;
   @override
-  @JsonKey()
+  @JsonKey(name: 'sackPrices')
   List<SackPriceModel> get sackPrices {
     if (_sackPrices is EqualUnmodifiableListView) return _sackPrices;
     // ignore: implicit_dynamic_type
@@ -1390,6 +1396,7 @@ class _$ProductModelImpl extends _ProductModel {
   }
 
   @override
+  @JsonKey(name: 'perKiloPrice')
   final PerKiloPriceModel? perKiloPrice;
   @override
   final ProductCashierModel? cashier;
@@ -1466,8 +1473,8 @@ abstract class _ProductModel extends ProductModel {
           required final String picture,
           required final String category,
           @JsonKey(name: 'cashierId') required final String cashierId,
-          final List<SackPriceModel> sackPrices,
-          final PerKiloPriceModel? perKiloPrice,
+          @JsonKey(name: 'sackPrices') final List<SackPriceModel> sackPrices,
+          @JsonKey(name: 'perKiloPrice') final PerKiloPriceModel? perKiloPrice,
           final ProductCashierModel? cashier,
           @JsonKey(name: 'createdAt') required final DateTime createdAt,
           @JsonKey(name: 'updatedAt') required final DateTime updatedAt}) =
@@ -1489,8 +1496,10 @@ abstract class _ProductModel extends ProductModel {
   @JsonKey(name: 'cashierId')
   String get cashierId;
   @override
+  @JsonKey(name: 'sackPrices')
   List<SackPriceModel> get sackPrices;
   @override
+  @JsonKey(name: 'perKiloPrice')
   PerKiloPriceModel? get perKiloPrice;
   @override
   ProductCashierModel? get cashier;

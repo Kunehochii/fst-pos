@@ -13,34 +13,26 @@ _$GroupedProfitModelImpl _$$GroupedProfitModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$GroupedProfitModelImpl(
-          productName: $checkedConvert('product_name', (v) => v as String),
-          priceType: $checkedConvert('price_type', (v) => v as String),
-          profitPerUnit: $checkedConvert('profit_per_unit', (v) => v as String),
-          totalQuantity: $checkedConvert('total_quantity', (v) => v as String),
-          totalProfit: $checkedConvert('total_profit', (v) => v as String),
-          orderCount: $checkedConvert('order_count', (v) => (v as num).toInt()),
+          productName: $checkedConvert('productName', (v) => v as String),
+          priceType: $checkedConvert('priceType', (v) => v as String),
+          profitPerUnit: $checkedConvert('profitPerUnit', (v) => v as String),
+          totalQuantity: $checkedConvert('totalQuantity', (v) => v as String),
+          totalProfit: $checkedConvert('totalProfit', (v) => v as String),
+          orderCount: $checkedConvert('orderCount', (v) => (v as num).toInt()),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'productName': 'product_name',
-        'priceType': 'price_type',
-        'profitPerUnit': 'profit_per_unit',
-        'totalQuantity': 'total_quantity',
-        'totalProfit': 'total_profit',
-        'orderCount': 'order_count'
       },
     );
 
 Map<String, dynamic> _$$GroupedProfitModelImplToJson(
         _$GroupedProfitModelImpl instance) =>
     <String, dynamic>{
-      'product_name': instance.productName,
-      'price_type': instance.priceType,
-      'profit_per_unit': instance.profitPerUnit,
-      'total_quantity': instance.totalQuantity,
-      'total_profit': instance.totalProfit,
-      'order_count': instance.orderCount,
+      'productName': instance.productName,
+      'priceType': instance.priceType,
+      'profitPerUnit': instance.profitPerUnit,
+      'totalQuantity': instance.totalQuantity,
+      'totalProfit': instance.totalProfit,
+      'orderCount': instance.orderCount,
     };
 
 _$ProfitPaymentTotalsModelImpl _$$ProfitPaymentTotalsModelImplFromJson(
@@ -52,14 +44,11 @@ _$ProfitPaymentTotalsModelImpl _$$ProfitPaymentTotalsModelImplFromJson(
         final val = _$ProfitPaymentTotalsModelImpl(
           cash: $checkedConvert('cash', (v) => v as String),
           checkAmount: $checkedConvert('check', (v) => v as String),
-          bankTransfer: $checkedConvert('bank_transfer', (v) => v as String),
+          bankTransfer: $checkedConvert('bankTransfer', (v) => v as String),
         );
         return val;
       },
-      fieldKeyMap: const {
-        'checkAmount': 'check',
-        'bankTransfer': 'bank_transfer'
-      },
+      fieldKeyMap: const {'checkAmount': 'check'},
     );
 
 Map<String, dynamic> _$$ProfitPaymentTotalsModelImplToJson(
@@ -67,7 +56,7 @@ Map<String, dynamic> _$$ProfitPaymentTotalsModelImplToJson(
     <String, dynamic>{
       'cash': instance.cash,
       'check': instance.checkAmount,
-      'bank_transfer': instance.bankTransfer,
+      'bankTransfer': instance.bankTransfer,
     };
 
 _$ProfitSummaryModelImpl _$$ProfitSummaryModelImplFromJson(
@@ -77,30 +66,24 @@ _$ProfitSummaryModelImpl _$$ProfitSummaryModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$ProfitSummaryModelImpl(
-          totalQuantity: $checkedConvert('total_quantity', (v) => v as String),
-          totalProfit: $checkedConvert('total_profit', (v) => v as String),
+          totalQuantity: $checkedConvert('totalQuantity', (v) => v as String),
+          totalProfit: $checkedConvert('totalProfit', (v) => v as String),
           paymentTotals: $checkedConvert(
-              'payment_totals',
+              'paymentTotals',
               (v) =>
                   ProfitPaymentTotalsModel.fromJson(v as Map<String, dynamic>)),
           transactionCount:
-              $checkedConvert('transaction_count', (v) => (v as num).toInt()),
+              $checkedConvert('transactionCount', (v) => (v as num).toInt()),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'totalQuantity': 'total_quantity',
-        'totalProfit': 'total_profit',
-        'paymentTotals': 'payment_totals',
-        'transactionCount': 'transaction_count'
       },
     );
 
 Map<String, dynamic> _$$ProfitSummaryModelImplToJson(
         _$ProfitSummaryModelImpl instance) =>
     <String, dynamic>{
-      'total_quantity': instance.totalQuantity,
-      'total_profit': instance.totalProfit,
-      'payment_totals': instance.paymentTotals.toJson(),
-      'transaction_count': instance.transactionCount,
+      'totalQuantity': instance.totalQuantity,
+      'totalProfit': instance.totalProfit,
+      'paymentTotals': instance.paymentTotals.toJson(),
+      'transactionCount': instance.transactionCount,
     };

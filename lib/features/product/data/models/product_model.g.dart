@@ -49,7 +49,7 @@ _$SackPriceModelImpl _$$SackPriceModelImplFromJson(Map<String, dynamic> json) =>
           type: $checkedConvert('type', (v) => v as String),
           profit: $checkedConvert('profit', (v) => v as String?),
           specialPrice: $checkedConvert(
-              'special_price',
+              'specialPrice',
               (v) => v == null
                   ? null
                   : SpecialPriceModel.fromJson(v as Map<String, dynamic>)),
@@ -60,7 +60,6 @@ _$SackPriceModelImpl _$$SackPriceModelImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
-      fieldKeyMap: const {'specialPrice': 'special_price'},
     );
 
 Map<String, dynamic> _$$SackPriceModelImplToJson(
@@ -72,7 +71,7 @@ Map<String, dynamic> _$$SackPriceModelImplToJson(
       'type': instance.type,
       if (instance.profit case final value?) 'profit': value,
       if (instance.specialPrice?.toJson() case final value?)
-        'special_price': value,
+        'specialPrice': value,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
@@ -145,7 +144,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
           category: $checkedConvert('category', (v) => v as String),
           cashierId: $checkedConvert('cashierId', (v) => v as String),
           sackPrices: $checkedConvert(
-              'sack_prices',
+              'sackPrices',
               (v) =>
                   (v as List<dynamic>?)
                       ?.map((e) =>
@@ -153,7 +152,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
                       .toList() ??
                   const []),
           perKiloPrice: $checkedConvert(
-              'per_kilo_price',
+              'perKiloPrice',
               (v) => v == null
                   ? null
                   : PerKiloPriceModel.fromJson(v as Map<String, dynamic>)),
@@ -169,10 +168,6 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
-      fieldKeyMap: const {
-        'sackPrices': 'sack_prices',
-        'perKiloPrice': 'per_kilo_price'
-      },
     );
 
 Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
@@ -182,9 +177,9 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'picture': instance.picture,
       'category': instance.category,
       'cashierId': instance.cashierId,
-      'sack_prices': instance.sackPrices.map((e) => e.toJson()).toList(),
+      'sackPrices': instance.sackPrices.map((e) => e.toJson()).toList(),
       if (instance.perKiloPrice?.toJson() case final value?)
-        'per_kilo_price': value,
+        'perKiloPrice': value,
       if (instance.cashier?.toJson() case final value?) 'cashier': value,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),

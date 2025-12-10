@@ -71,6 +71,15 @@ class SaleItemModel with _$SaleItemModel {
         perKiloPriceId: entity.perKiloPriceId,
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt,
+        product: entity.product != null
+            ? ProductModel.fromEntity(entity.product!)
+            : null,
+        sackPrice: entity.sackPrice != null
+            ? SackPriceModel.fromEntity(entity.sackPrice!)
+            : null,
+        perKiloPrice: entity.perKiloPrice != null
+            ? PerKiloPriceModel.fromEntity(entity.perKiloPrice!)
+            : null,
       );
 }
 
@@ -171,6 +180,8 @@ class CreateSaleItemRequest with _$CreateSaleItemRequest {
 /// Per kilo price request for creating sale.
 @freezed
 class PerKiloPriceRequest with _$PerKiloPriceRequest {
+  const PerKiloPriceRequest._();
+
   const factory PerKiloPriceRequest({
     required String id,
     required String quantity,
@@ -183,6 +194,8 @@ class PerKiloPriceRequest with _$PerKiloPriceRequest {
 /// Sack price request for creating sale.
 @freezed
 class SackPriceRequest with _$SackPriceRequest {
+  const SackPriceRequest._();
+
   const factory SackPriceRequest({
     required String id,
     required String quantity,

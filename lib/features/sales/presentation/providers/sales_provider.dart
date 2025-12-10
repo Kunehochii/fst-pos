@@ -238,6 +238,16 @@ class CheckoutNotifier extends _$CheckoutNotifier {
                 perKiloPriceId: item.perKiloPriceId,
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
+                // Preserve product data for local cache
+                product: item.product,
+                sackPrice: item.sackPriceId != null
+                    ? item.product.sackPrices.firstWhere(
+                        (sp) => sp.id == item.sackPriceId,
+                      )
+                    : null,
+                perKiloPrice: item.perKiloPriceId != null
+                    ? item.product.perKiloPrice
+                    : null,
               ))
           .toList();
 
@@ -509,5 +519,71 @@ Future<int> pendingSalesCount(Ref ref) async {
     return await repository.getPendingSalesCount();
   } catch (e) {
     return 0;
+  }
+}
+
+// ============================================================================
+// SYNC PENDING SALES
+// ============================================================================
+
+/// Sync pending sales state.
+sealed class SyncSalesState {
+  const SyncSalesState();
+}
+
+class SyncSalesIdle extends SyncSalesState {
+  const SyncSalesIdle();
+}
+
+class SyncSalesSyncing extends SyncSalesState {
+  const SyncSalesSyncing();
+}
+
+class SyncSalesSuccess extends SyncSalesState {
+  final int count;
+  const SyncSalesSuccess(this.count);
+}
+
+class SyncSalesError extends SyncSalesState {
+  final Failure failure;
+  const SyncSalesError(this.failure);
+}
+
+/// Notifier for syncing pending sales.
+@riverpod
+class SyncSalesNotifier extends _$SyncSalesNotifier {
+  @override
+  SyncSalesState build() => const SyncSalesIdle();
+
+  /// Sync all pending sales.
+  Future<bool> syncPendingSales() async {
+    state = const SyncSalesSyncing();
+
+    try {
+      final repository = ref.read(salesRepositoryProvider);
+      final (failure, count) = await repository.syncPendingSales();
+
+      if (failure != null) {
+        state = SyncSalesError(failure);
+        return false;
+      }
+
+      state = SyncSalesSuccess(count);
+
+      // Refresh sales lists and pending count
+      ref.invalidate(salesHistoryNotifierProvider);
+      ref.invalidate(voidedSalesNotifierProvider);
+      ref.invalidate(pendingSalesCountProvider);
+
+      return true;
+    } catch (e) {
+      state = SyncSalesError(Failure.unknown(message: e.toString()));
+      return false;
+    }
+  }
+
+  /// Reset to idle.
+  void reset() {
+    state = const SyncSalesIdle();
   }
 }

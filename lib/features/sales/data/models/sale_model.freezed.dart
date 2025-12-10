@@ -1678,8 +1678,9 @@ class __$$PerKiloPriceRequestImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PerKiloPriceRequestImpl implements _PerKiloPriceRequest {
-  const _$PerKiloPriceRequestImpl({required this.id, required this.quantity});
+class _$PerKiloPriceRequestImpl extends _PerKiloPriceRequest {
+  const _$PerKiloPriceRequestImpl({required this.id, required this.quantity})
+      : super._();
 
   factory _$PerKiloPriceRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$PerKiloPriceRequestImplFromJson(json);
@@ -1725,10 +1726,11 @@ class _$PerKiloPriceRequestImpl implements _PerKiloPriceRequest {
   }
 }
 
-abstract class _PerKiloPriceRequest implements PerKiloPriceRequest {
+abstract class _PerKiloPriceRequest extends PerKiloPriceRequest {
   const factory _PerKiloPriceRequest(
       {required final String id,
       required final String quantity}) = _$PerKiloPriceRequestImpl;
+  const _PerKiloPriceRequest._() : super._();
 
   factory _PerKiloPriceRequest.fromJson(Map<String, dynamic> json) =
       _$PerKiloPriceRequestImpl.fromJson;
@@ -1858,9 +1860,10 @@ class __$$SackPriceRequestImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SackPriceRequestImpl implements _SackPriceRequest {
+class _$SackPriceRequestImpl extends _SackPriceRequest {
   const _$SackPriceRequestImpl(
-      {required this.id, required this.quantity, required this.type});
+      {required this.id, required this.quantity, required this.type})
+      : super._();
 
   factory _$SackPriceRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$SackPriceRequestImplFromJson(json);
@@ -1909,11 +1912,12 @@ class _$SackPriceRequestImpl implements _SackPriceRequest {
   }
 }
 
-abstract class _SackPriceRequest implements SackPriceRequest {
+abstract class _SackPriceRequest extends SackPriceRequest {
   const factory _SackPriceRequest(
       {required final String id,
       required final String quantity,
       required final String type}) = _$SackPriceRequestImpl;
+  const _SackPriceRequest._() : super._();
 
   factory _SackPriceRequest.fromJson(Map<String, dynamic> json) =
       _$SackPriceRequestImpl.fromJson;

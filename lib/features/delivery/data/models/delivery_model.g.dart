@@ -53,21 +53,17 @@ _$DeliveryItemModelImpl _$$DeliveryItemModelImplFromJson(
                   ? null
                   : ProductModel.fromJson(v as Map<String, dynamic>)),
           sackPrice: $checkedConvert(
-              'sack_price',
+              'sackPrice',
               (v) => v == null
                   ? null
                   : SackPriceModel.fromJson(v as Map<String, dynamic>)),
           perKiloPrice: $checkedConvert(
-              'per_kilo_price',
+              'perKiloPrice',
               (v) => v == null
                   ? null
                   : PerKiloPriceModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
-      },
-      fieldKeyMap: const {
-        'sackPrice': 'sack_price',
-        'perKiloPrice': 'per_kilo_price'
       },
     );
 
@@ -83,9 +79,9 @@ Map<String, dynamic> _$$DeliveryItemModelImplToJson(
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       if (instance.product?.toJson() case final value?) 'product': value,
-      if (instance.sackPrice?.toJson() case final value?) 'sack_price': value,
+      if (instance.sackPrice?.toJson() case final value?) 'sackPrice': value,
       if (instance.perKiloPrice?.toJson() case final value?)
-        'per_kilo_price': value,
+        'perKiloPrice': value,
     };
 
 _$DeliveryModelImpl _$$DeliveryModelImplFromJson(Map<String, dynamic> json) =>
@@ -140,34 +136,29 @@ _$CreateDeliveryItemModelImpl _$$CreateDeliveryItemModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$CreateDeliveryItemModelImpl(
-          productId: $checkedConvert('product_id', (v) => v as String),
+          productId: $checkedConvert('productId', (v) => v as String),
           sackPrice: $checkedConvert(
-              'sack_price',
+              'sackPrice',
               (v) => v == null
                   ? null
                   : SackPriceDtoModel.fromJson(v as Map<String, dynamic>)),
           perKiloPrice: $checkedConvert(
-              'per_kilo_price',
+              'perKiloPrice',
               (v) => v == null
                   ? null
                   : PerKiloPriceDtoModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
-      fieldKeyMap: const {
-        'productId': 'product_id',
-        'sackPrice': 'sack_price',
-        'perKiloPrice': 'per_kilo_price'
-      },
     );
 
 Map<String, dynamic> _$$CreateDeliveryItemModelImplToJson(
         _$CreateDeliveryItemModelImpl instance) =>
     <String, dynamic>{
-      'product_id': instance.productId,
-      if (instance.sackPrice?.toJson() case final value?) 'sack_price': value,
+      'productId': instance.productId,
+      if (instance.sackPrice?.toJson() case final value?) 'sackPrice': value,
       if (instance.perKiloPrice?.toJson() case final value?)
-        'per_kilo_price': value,
+        'perKiloPrice': value,
     };
 
 _$SackPriceDtoModelImpl _$$SackPriceDtoModelImplFromJson(
@@ -221,7 +212,7 @@ _$CreateDeliveryModelImpl _$$CreateDeliveryModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$CreateDeliveryModelImpl(
-          driverName: $checkedConvert('driver_name', (v) => v as String),
+          driverName: $checkedConvert('driverName', (v) => v as String),
           deliveryTimeStart:
               $checkedConvert('deliveryTimeStart', (v) => v as String),
           deliveryItems: $checkedConvert(
@@ -233,13 +224,12 @@ _$CreateDeliveryModelImpl _$$CreateDeliveryModelImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {'driverName': 'driver_name'},
     );
 
 Map<String, dynamic> _$$CreateDeliveryModelImplToJson(
         _$CreateDeliveryModelImpl instance) =>
     <String, dynamic>{
-      'driver_name': instance.driverName,
+      'driverName': instance.driverName,
       'deliveryTimeStart': instance.deliveryTimeStart,
       'deliveryItems': instance.deliveryItems.map((e) => e.toJson()).toList(),
     };
@@ -251,7 +241,7 @@ _$UpdateDeliveryModelImpl _$$UpdateDeliveryModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$UpdateDeliveryModelImpl(
-          driverName: $checkedConvert('driver_name', (v) => v as String?),
+          driverName: $checkedConvert('driverName', (v) => v as String?),
           deliveryTimeStart:
               $checkedConvert('deliveryTimeStart', (v) => v as String?),
           deliveryItems: $checkedConvert(
@@ -263,13 +253,12 @@ _$UpdateDeliveryModelImpl _$$UpdateDeliveryModelImplFromJson(
         );
         return val;
       },
-      fieldKeyMap: const {'driverName': 'driver_name'},
     );
 
 Map<String, dynamic> _$$UpdateDeliveryModelImplToJson(
         _$UpdateDeliveryModelImpl instance) =>
     <String, dynamic>{
-      if (instance.driverName case final value?) 'driver_name': value,
+      if (instance.driverName case final value?) 'driverName': value,
       if (instance.deliveryTimeStart case final value?)
         'deliveryTimeStart': value,
       if (instance.deliveryItems?.map((e) => e.toJson()).toList()

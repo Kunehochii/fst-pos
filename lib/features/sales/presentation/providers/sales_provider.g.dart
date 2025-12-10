@@ -104,7 +104,7 @@ final cartNotifierProvider =
 );
 
 typedef _$CartNotifier = AutoDisposeNotifier<CartState>;
-String _$checkoutNotifierHash() => r'be936ce368927077255317416a08e33ce8df8254';
+String _$checkoutNotifierHash() => r'19851e62d65d0d6b537577d212498511a32ff07a';
 
 /// Checkout notifier for processing sales.
 ///
@@ -178,5 +178,23 @@ final voidSaleNotifierProvider =
 );
 
 typedef _$VoidSaleNotifier = AutoDisposeNotifier<VoidSaleState>;
+String _$syncSalesNotifierHash() => r'd75c5c6cd591052324bab435ec0a878ee4013527';
+
+/// Notifier for syncing pending sales.
+///
+/// Copied from [SyncSalesNotifier].
+@ProviderFor(SyncSalesNotifier)
+final syncSalesNotifierProvider =
+    AutoDisposeNotifierProvider<SyncSalesNotifier, SyncSalesState>.internal(
+  SyncSalesNotifier.new,
+  name: r'syncSalesNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$syncSalesNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SyncSalesNotifier = AutoDisposeNotifier<SyncSalesState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
