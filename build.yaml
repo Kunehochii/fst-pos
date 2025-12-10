@@ -22,8 +22,8 @@ targets:
           explicit_to_json: true
           # Include fields with null values
           include_if_null: false
-          # Use field rename strategy
-          field_rename: snake
+          # Use field rename strategy (none to preserve camelCase)
+          field_rename: none
           # Check for required keys
           checked: true
           # Create factory in generated code
