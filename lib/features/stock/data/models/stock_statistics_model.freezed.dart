@@ -20,16 +20,16 @@ ProductStockModel _$ProductStockModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProductStockModel {
-  @JsonKey(name: 'productId')
-  String get productId => throw _privateConstructorUsedError;
   @JsonKey(name: 'productName')
   String get productName => throw _privateConstructorUsedError;
-  double get sold => throw _privateConstructorUsedError;
-  @JsonKey(name: 'transferredKahon')
-  double get transferredKahon => throw _privateConstructorUsedError;
-  @JsonKey(name: 'otherTransfers')
-  double get otherTransfers => throw _privateConstructorUsedError;
+  @JsonKey(name: 'stockSold')
+  double get stockSold => throw _privateConstructorUsedError;
+  @JsonKey(name: 'stockTransferredKahon')
+  double get stockTransferredKahon => throw _privateConstructorUsedError;
+  @JsonKey(name: 'stockOtherTransfers')
+  double get stockOtherTransfers => throw _privateConstructorUsedError;
   double get total => throw _privateConstructorUsedError;
+  double? get totalPrice => throw _privateConstructorUsedError;
 
   /// Serializes this ProductStockModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,12 +48,12 @@ abstract class $ProductStockModelCopyWith<$Res> {
       _$ProductStockModelCopyWithImpl<$Res, ProductStockModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'productId') String productId,
-      @JsonKey(name: 'productName') String productName,
-      double sold,
-      @JsonKey(name: 'transferredKahon') double transferredKahon,
-      @JsonKey(name: 'otherTransfers') double otherTransfers,
-      double total});
+      {@JsonKey(name: 'productName') String productName,
+      @JsonKey(name: 'stockSold') double stockSold,
+      @JsonKey(name: 'stockTransferredKahon') double stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers') double stockOtherTransfers,
+      double total,
+      double? totalPrice});
 }
 
 /// @nodoc
@@ -71,38 +71,38 @@ class _$ProductStockModelCopyWithImpl<$Res, $Val extends ProductStockModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = null,
     Object? productName = null,
-    Object? sold = null,
-    Object? transferredKahon = null,
-    Object? otherTransfers = null,
+    Object? stockSold = null,
+    Object? stockTransferredKahon = null,
+    Object? stockOtherTransfers = null,
     Object? total = null,
+    Object? totalPrice = freezed,
   }) {
     return _then(_value.copyWith(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as String,
       productName: null == productName
           ? _value.productName
           : productName // ignore: cast_nullable_to_non_nullable
               as String,
-      sold: null == sold
-          ? _value.sold
-          : sold // ignore: cast_nullable_to_non_nullable
+      stockSold: null == stockSold
+          ? _value.stockSold
+          : stockSold // ignore: cast_nullable_to_non_nullable
               as double,
-      transferredKahon: null == transferredKahon
-          ? _value.transferredKahon
-          : transferredKahon // ignore: cast_nullable_to_non_nullable
+      stockTransferredKahon: null == stockTransferredKahon
+          ? _value.stockTransferredKahon
+          : stockTransferredKahon // ignore: cast_nullable_to_non_nullable
               as double,
-      otherTransfers: null == otherTransfers
-          ? _value.otherTransfers
-          : otherTransfers // ignore: cast_nullable_to_non_nullable
+      stockOtherTransfers: null == stockOtherTransfers
+          ? _value.stockOtherTransfers
+          : stockOtherTransfers // ignore: cast_nullable_to_non_nullable
               as double,
       total: null == total
           ? _value.total
           : total // ignore: cast_nullable_to_non_nullable
               as double,
+      totalPrice: freezed == totalPrice
+          ? _value.totalPrice
+          : totalPrice // ignore: cast_nullable_to_non_nullable
+              as double?,
     ) as $Val);
   }
 }
@@ -116,12 +116,12 @@ abstract class _$$ProductStockModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'productId') String productId,
-      @JsonKey(name: 'productName') String productName,
-      double sold,
-      @JsonKey(name: 'transferredKahon') double transferredKahon,
-      @JsonKey(name: 'otherTransfers') double otherTransfers,
-      double total});
+      {@JsonKey(name: 'productName') String productName,
+      @JsonKey(name: 'stockSold') double stockSold,
+      @JsonKey(name: 'stockTransferredKahon') double stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers') double stockOtherTransfers,
+      double total,
+      double? totalPrice});
 }
 
 /// @nodoc
@@ -137,38 +137,38 @@ class __$$ProductStockModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = null,
     Object? productName = null,
-    Object? sold = null,
-    Object? transferredKahon = null,
-    Object? otherTransfers = null,
+    Object? stockSold = null,
+    Object? stockTransferredKahon = null,
+    Object? stockOtherTransfers = null,
     Object? total = null,
+    Object? totalPrice = freezed,
   }) {
     return _then(_$ProductStockModelImpl(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as String,
       productName: null == productName
           ? _value.productName
           : productName // ignore: cast_nullable_to_non_nullable
               as String,
-      sold: null == sold
-          ? _value.sold
-          : sold // ignore: cast_nullable_to_non_nullable
+      stockSold: null == stockSold
+          ? _value.stockSold
+          : stockSold // ignore: cast_nullable_to_non_nullable
               as double,
-      transferredKahon: null == transferredKahon
-          ? _value.transferredKahon
-          : transferredKahon // ignore: cast_nullable_to_non_nullable
+      stockTransferredKahon: null == stockTransferredKahon
+          ? _value.stockTransferredKahon
+          : stockTransferredKahon // ignore: cast_nullable_to_non_nullable
               as double,
-      otherTransfers: null == otherTransfers
-          ? _value.otherTransfers
-          : otherTransfers // ignore: cast_nullable_to_non_nullable
+      stockOtherTransfers: null == stockOtherTransfers
+          ? _value.stockOtherTransfers
+          : stockOtherTransfers // ignore: cast_nullable_to_non_nullable
               as double,
       total: null == total
           ? _value.total
           : total // ignore: cast_nullable_to_non_nullable
               as double,
+      totalPrice: freezed == totalPrice
+          ? _value.totalPrice
+          : totalPrice // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -177,37 +177,38 @@ class __$$ProductStockModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProductStockModelImpl extends _ProductStockModel {
   const _$ProductStockModelImpl(
-      {@JsonKey(name: 'productId') required this.productId,
-      @JsonKey(name: 'productName') required this.productName,
-      required this.sold,
-      @JsonKey(name: 'transferredKahon') required this.transferredKahon,
-      @JsonKey(name: 'otherTransfers') required this.otherTransfers,
-      required this.total})
+      {@JsonKey(name: 'productName') required this.productName,
+      @JsonKey(name: 'stockSold') required this.stockSold,
+      @JsonKey(name: 'stockTransferredKahon')
+      required this.stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers') required this.stockOtherTransfers,
+      required this.total,
+      this.totalPrice})
       : super._();
 
   factory _$ProductStockModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductStockModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'productId')
-  final String productId;
-  @override
   @JsonKey(name: 'productName')
   final String productName;
   @override
-  final double sold;
+  @JsonKey(name: 'stockSold')
+  final double stockSold;
   @override
-  @JsonKey(name: 'transferredKahon')
-  final double transferredKahon;
+  @JsonKey(name: 'stockTransferredKahon')
+  final double stockTransferredKahon;
   @override
-  @JsonKey(name: 'otherTransfers')
-  final double otherTransfers;
+  @JsonKey(name: 'stockOtherTransfers')
+  final double stockOtherTransfers;
   @override
   final double total;
+  @override
+  final double? totalPrice;
 
   @override
   String toString() {
-    return 'ProductStockModel(productId: $productId, productName: $productName, sold: $sold, transferredKahon: $transferredKahon, otherTransfers: $otherTransfers, total: $total)';
+    return 'ProductStockModel(productName: $productName, stockSold: $stockSold, stockTransferredKahon: $stockTransferredKahon, stockOtherTransfers: $stockOtherTransfers, total: $total, totalPrice: $totalPrice)';
   }
 
   @override
@@ -215,22 +216,23 @@ class _$ProductStockModelImpl extends _ProductStockModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProductStockModelImpl &&
-            (identical(other.productId, productId) ||
-                other.productId == productId) &&
             (identical(other.productName, productName) ||
                 other.productName == productName) &&
-            (identical(other.sold, sold) || other.sold == sold) &&
-            (identical(other.transferredKahon, transferredKahon) ||
-                other.transferredKahon == transferredKahon) &&
-            (identical(other.otherTransfers, otherTransfers) ||
-                other.otherTransfers == otherTransfers) &&
-            (identical(other.total, total) || other.total == total));
+            (identical(other.stockSold, stockSold) ||
+                other.stockSold == stockSold) &&
+            (identical(other.stockTransferredKahon, stockTransferredKahon) ||
+                other.stockTransferredKahon == stockTransferredKahon) &&
+            (identical(other.stockOtherTransfers, stockOtherTransfers) ||
+                other.stockOtherTransfers == stockOtherTransfers) &&
+            (identical(other.total, total) || other.total == total) &&
+            (identical(other.totalPrice, totalPrice) ||
+                other.totalPrice == totalPrice));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, productId, productName, sold,
-      transferredKahon, otherTransfers, total);
+  int get hashCode => Object.hash(runtimeType, productName, stockSold,
+      stockTransferredKahon, stockOtherTransfers, total, totalPrice);
 
   /// Create a copy of ProductStockModel
   /// with the given fields replaced by the non-null parameter values.
@@ -251,33 +253,35 @@ class _$ProductStockModelImpl extends _ProductStockModel {
 
 abstract class _ProductStockModel extends ProductStockModel {
   const factory _ProductStockModel(
-      {@JsonKey(name: 'productId') required final String productId,
-      @JsonKey(name: 'productName') required final String productName,
-      required final double sold,
-      @JsonKey(name: 'transferredKahon') required final double transferredKahon,
-      @JsonKey(name: 'otherTransfers') required final double otherTransfers,
-      required final double total}) = _$ProductStockModelImpl;
+      {@JsonKey(name: 'productName') required final String productName,
+      @JsonKey(name: 'stockSold') required final double stockSold,
+      @JsonKey(name: 'stockTransferredKahon')
+      required final double stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers')
+      required final double stockOtherTransfers,
+      required final double total,
+      final double? totalPrice}) = _$ProductStockModelImpl;
   const _ProductStockModel._() : super._();
 
   factory _ProductStockModel.fromJson(Map<String, dynamic> json) =
       _$ProductStockModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'productId')
-  String get productId;
-  @override
   @JsonKey(name: 'productName')
   String get productName;
   @override
-  double get sold;
+  @JsonKey(name: 'stockSold')
+  double get stockSold;
   @override
-  @JsonKey(name: 'transferredKahon')
-  double get transferredKahon;
+  @JsonKey(name: 'stockTransferredKahon')
+  double get stockTransferredKahon;
   @override
-  @JsonKey(name: 'otherTransfers')
-  double get otherTransfers;
+  @JsonKey(name: 'stockOtherTransfers')
+  double get stockOtherTransfers;
   @override
   double get total;
+  @override
+  double? get totalPrice;
 
   /// Create a copy of ProductStockModel
   /// with the given fields replaced by the non-null parameter values.
@@ -512,18 +516,667 @@ abstract class _StockTotalsModel extends StockTotalsModel {
       throw _privateConstructorUsedError;
 }
 
+PrinterCategoryModel _$PrinterCategoryModelFromJson(Map<String, dynamic> json) {
+  return _PrinterCategoryModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PrinterCategoryModel {
+  List<String> get lines => throw _privateConstructorUsedError;
+  StockTotalsModel get totals => throw _privateConstructorUsedError;
+
+  /// Serializes this PrinterCategoryModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PrinterCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PrinterCategoryModelCopyWith<PrinterCategoryModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PrinterCategoryModelCopyWith<$Res> {
+  factory $PrinterCategoryModelCopyWith(PrinterCategoryModel value,
+          $Res Function(PrinterCategoryModel) then) =
+      _$PrinterCategoryModelCopyWithImpl<$Res, PrinterCategoryModel>;
+  @useResult
+  $Res call({List<String> lines, StockTotalsModel totals});
+
+  $StockTotalsModelCopyWith<$Res> get totals;
+}
+
+/// @nodoc
+class _$PrinterCategoryModelCopyWithImpl<$Res,
+        $Val extends PrinterCategoryModel>
+    implements $PrinterCategoryModelCopyWith<$Res> {
+  _$PrinterCategoryModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PrinterCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? lines = null,
+    Object? totals = null,
+  }) {
+    return _then(_value.copyWith(
+      lines: null == lines
+          ? _value.lines
+          : lines // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      totals: null == totals
+          ? _value.totals
+          : totals // ignore: cast_nullable_to_non_nullable
+              as StockTotalsModel,
+    ) as $Val);
+  }
+
+  /// Create a copy of PrinterCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StockTotalsModelCopyWith<$Res> get totals {
+    return $StockTotalsModelCopyWith<$Res>(_value.totals, (value) {
+      return _then(_value.copyWith(totals: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$PrinterCategoryModelImplCopyWith<$Res>
+    implements $PrinterCategoryModelCopyWith<$Res> {
+  factory _$$PrinterCategoryModelImplCopyWith(_$PrinterCategoryModelImpl value,
+          $Res Function(_$PrinterCategoryModelImpl) then) =
+      __$$PrinterCategoryModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<String> lines, StockTotalsModel totals});
+
+  @override
+  $StockTotalsModelCopyWith<$Res> get totals;
+}
+
+/// @nodoc
+class __$$PrinterCategoryModelImplCopyWithImpl<$Res>
+    extends _$PrinterCategoryModelCopyWithImpl<$Res, _$PrinterCategoryModelImpl>
+    implements _$$PrinterCategoryModelImplCopyWith<$Res> {
+  __$$PrinterCategoryModelImplCopyWithImpl(_$PrinterCategoryModelImpl _value,
+      $Res Function(_$PrinterCategoryModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of PrinterCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? lines = null,
+    Object? totals = null,
+  }) {
+    return _then(_$PrinterCategoryModelImpl(
+      lines: null == lines
+          ? _value._lines
+          : lines // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      totals: null == totals
+          ? _value.totals
+          : totals // ignore: cast_nullable_to_non_nullable
+              as StockTotalsModel,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PrinterCategoryModelImpl extends _PrinterCategoryModel {
+  const _$PrinterCategoryModelImpl(
+      {required final List<String> lines, required this.totals})
+      : _lines = lines,
+        super._();
+
+  factory _$PrinterCategoryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrinterCategoryModelImplFromJson(json);
+
+  final List<String> _lines;
+  @override
+  List<String> get lines {
+    if (_lines is EqualUnmodifiableListView) return _lines;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_lines);
+  }
+
+  @override
+  final StockTotalsModel totals;
+
+  @override
+  String toString() {
+    return 'PrinterCategoryModel(lines: $lines, totals: $totals)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PrinterCategoryModelImpl &&
+            const DeepCollectionEquality().equals(other._lines, _lines) &&
+            (identical(other.totals, totals) || other.totals == totals));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_lines), totals);
+
+  /// Create a copy of PrinterCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PrinterCategoryModelImplCopyWith<_$PrinterCategoryModelImpl>
+      get copyWith =>
+          __$$PrinterCategoryModelImplCopyWithImpl<_$PrinterCategoryModelImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PrinterCategoryModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PrinterCategoryModel extends PrinterCategoryModel {
+  const factory _PrinterCategoryModel(
+      {required final List<String> lines,
+      required final StockTotalsModel totals}) = _$PrinterCategoryModelImpl;
+  const _PrinterCategoryModel._() : super._();
+
+  factory _PrinterCategoryModel.fromJson(Map<String, dynamic> json) =
+      _$PrinterCategoryModelImpl.fromJson;
+
+  @override
+  List<String> get lines;
+  @override
+  StockTotalsModel get totals;
+
+  /// Create a copy of PrinterCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PrinterCategoryModelImplCopyWith<_$PrinterCategoryModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+SummaryCategoryModel _$SummaryCategoryModelFromJson(Map<String, dynamic> json) {
+  return _SummaryCategoryModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SummaryCategoryModel {
+  List<ProductStockModel> get products => throw _privateConstructorUsedError;
+  StockTotalsModel get totals => throw _privateConstructorUsedError;
+
+  /// Serializes this SummaryCategoryModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of SummaryCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SummaryCategoryModelCopyWith<SummaryCategoryModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SummaryCategoryModelCopyWith<$Res> {
+  factory $SummaryCategoryModelCopyWith(SummaryCategoryModel value,
+          $Res Function(SummaryCategoryModel) then) =
+      _$SummaryCategoryModelCopyWithImpl<$Res, SummaryCategoryModel>;
+  @useResult
+  $Res call({List<ProductStockModel> products, StockTotalsModel totals});
+
+  $StockTotalsModelCopyWith<$Res> get totals;
+}
+
+/// @nodoc
+class _$SummaryCategoryModelCopyWithImpl<$Res,
+        $Val extends SummaryCategoryModel>
+    implements $SummaryCategoryModelCopyWith<$Res> {
+  _$SummaryCategoryModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SummaryCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? products = null,
+    Object? totals = null,
+  }) {
+    return _then(_value.copyWith(
+      products: null == products
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductStockModel>,
+      totals: null == totals
+          ? _value.totals
+          : totals // ignore: cast_nullable_to_non_nullable
+              as StockTotalsModel,
+    ) as $Val);
+  }
+
+  /// Create a copy of SummaryCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StockTotalsModelCopyWith<$Res> get totals {
+    return $StockTotalsModelCopyWith<$Res>(_value.totals, (value) {
+      return _then(_value.copyWith(totals: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$SummaryCategoryModelImplCopyWith<$Res>
+    implements $SummaryCategoryModelCopyWith<$Res> {
+  factory _$$SummaryCategoryModelImplCopyWith(_$SummaryCategoryModelImpl value,
+          $Res Function(_$SummaryCategoryModelImpl) then) =
+      __$$SummaryCategoryModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<ProductStockModel> products, StockTotalsModel totals});
+
+  @override
+  $StockTotalsModelCopyWith<$Res> get totals;
+}
+
+/// @nodoc
+class __$$SummaryCategoryModelImplCopyWithImpl<$Res>
+    extends _$SummaryCategoryModelCopyWithImpl<$Res, _$SummaryCategoryModelImpl>
+    implements _$$SummaryCategoryModelImplCopyWith<$Res> {
+  __$$SummaryCategoryModelImplCopyWithImpl(_$SummaryCategoryModelImpl _value,
+      $Res Function(_$SummaryCategoryModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of SummaryCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? products = null,
+    Object? totals = null,
+  }) {
+    return _then(_$SummaryCategoryModelImpl(
+      products: null == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductStockModel>,
+      totals: null == totals
+          ? _value.totals
+          : totals // ignore: cast_nullable_to_non_nullable
+              as StockTotalsModel,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SummaryCategoryModelImpl extends _SummaryCategoryModel {
+  const _$SummaryCategoryModelImpl(
+      {required final List<ProductStockModel> products, required this.totals})
+      : _products = products,
+        super._();
+
+  factory _$SummaryCategoryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SummaryCategoryModelImplFromJson(json);
+
+  final List<ProductStockModel> _products;
+  @override
+  List<ProductStockModel> get products {
+    if (_products is EqualUnmodifiableListView) return _products;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_products);
+  }
+
+  @override
+  final StockTotalsModel totals;
+
+  @override
+  String toString() {
+    return 'SummaryCategoryModel(products: $products, totals: $totals)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SummaryCategoryModelImpl &&
+            const DeepCollectionEquality().equals(other._products, _products) &&
+            (identical(other.totals, totals) || other.totals == totals));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_products), totals);
+
+  /// Create a copy of SummaryCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SummaryCategoryModelImplCopyWith<_$SummaryCategoryModelImpl>
+      get copyWith =>
+          __$$SummaryCategoryModelImplCopyWithImpl<_$SummaryCategoryModelImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SummaryCategoryModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SummaryCategoryModel extends SummaryCategoryModel {
+  const factory _SummaryCategoryModel(
+      {required final List<ProductStockModel> products,
+      required final StockTotalsModel totals}) = _$SummaryCategoryModelImpl;
+  const _SummaryCategoryModel._() : super._();
+
+  factory _SummaryCategoryModel.fromJson(Map<String, dynamic> json) =
+      _$SummaryCategoryModelImpl.fromJson;
+
+  @override
+  List<ProductStockModel> get products;
+  @override
+  StockTotalsModel get totals;
+
+  /// Create a copy of SummaryCategoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SummaryCategoryModelImplCopyWith<_$SummaryCategoryModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+StockSummaryModel _$StockSummaryModelFromJson(Map<String, dynamic> json) {
+  return _StockSummaryModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$StockSummaryModel {
+  SummaryCategoryModel get regular => throw _privateConstructorUsedError;
+  SummaryCategoryModel get asin => throw _privateConstructorUsedError;
+  SummaryCategoryModel get plastic => throw _privateConstructorUsedError;
+  String get dateRange => throw _privateConstructorUsedError;
+
+  /// Serializes this StockSummaryModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $StockSummaryModelCopyWith<StockSummaryModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $StockSummaryModelCopyWith<$Res> {
+  factory $StockSummaryModelCopyWith(
+          StockSummaryModel value, $Res Function(StockSummaryModel) then) =
+      _$StockSummaryModelCopyWithImpl<$Res, StockSummaryModel>;
+  @useResult
+  $Res call(
+      {SummaryCategoryModel regular,
+      SummaryCategoryModel asin,
+      SummaryCategoryModel plastic,
+      String dateRange});
+
+  $SummaryCategoryModelCopyWith<$Res> get regular;
+  $SummaryCategoryModelCopyWith<$Res> get asin;
+  $SummaryCategoryModelCopyWith<$Res> get plastic;
+}
+
+/// @nodoc
+class _$StockSummaryModelCopyWithImpl<$Res, $Val extends StockSummaryModel>
+    implements $StockSummaryModelCopyWith<$Res> {
+  _$StockSummaryModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? regular = null,
+    Object? asin = null,
+    Object? plastic = null,
+    Object? dateRange = null,
+  }) {
+    return _then(_value.copyWith(
+      regular: null == regular
+          ? _value.regular
+          : regular // ignore: cast_nullable_to_non_nullable
+              as SummaryCategoryModel,
+      asin: null == asin
+          ? _value.asin
+          : asin // ignore: cast_nullable_to_non_nullable
+              as SummaryCategoryModel,
+      plastic: null == plastic
+          ? _value.plastic
+          : plastic // ignore: cast_nullable_to_non_nullable
+              as SummaryCategoryModel,
+      dateRange: null == dateRange
+          ? _value.dateRange
+          : dateRange // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SummaryCategoryModelCopyWith<$Res> get regular {
+    return $SummaryCategoryModelCopyWith<$Res>(_value.regular, (value) {
+      return _then(_value.copyWith(regular: value) as $Val);
+    });
+  }
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SummaryCategoryModelCopyWith<$Res> get asin {
+    return $SummaryCategoryModelCopyWith<$Res>(_value.asin, (value) {
+      return _then(_value.copyWith(asin: value) as $Val);
+    });
+  }
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SummaryCategoryModelCopyWith<$Res> get plastic {
+    return $SummaryCategoryModelCopyWith<$Res>(_value.plastic, (value) {
+      return _then(_value.copyWith(plastic: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$StockSummaryModelImplCopyWith<$Res>
+    implements $StockSummaryModelCopyWith<$Res> {
+  factory _$$StockSummaryModelImplCopyWith(_$StockSummaryModelImpl value,
+          $Res Function(_$StockSummaryModelImpl) then) =
+      __$$StockSummaryModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {SummaryCategoryModel regular,
+      SummaryCategoryModel asin,
+      SummaryCategoryModel plastic,
+      String dateRange});
+
+  @override
+  $SummaryCategoryModelCopyWith<$Res> get regular;
+  @override
+  $SummaryCategoryModelCopyWith<$Res> get asin;
+  @override
+  $SummaryCategoryModelCopyWith<$Res> get plastic;
+}
+
+/// @nodoc
+class __$$StockSummaryModelImplCopyWithImpl<$Res>
+    extends _$StockSummaryModelCopyWithImpl<$Res, _$StockSummaryModelImpl>
+    implements _$$StockSummaryModelImplCopyWith<$Res> {
+  __$$StockSummaryModelImplCopyWithImpl(_$StockSummaryModelImpl _value,
+      $Res Function(_$StockSummaryModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? regular = null,
+    Object? asin = null,
+    Object? plastic = null,
+    Object? dateRange = null,
+  }) {
+    return _then(_$StockSummaryModelImpl(
+      regular: null == regular
+          ? _value.regular
+          : regular // ignore: cast_nullable_to_non_nullable
+              as SummaryCategoryModel,
+      asin: null == asin
+          ? _value.asin
+          : asin // ignore: cast_nullable_to_non_nullable
+              as SummaryCategoryModel,
+      plastic: null == plastic
+          ? _value.plastic
+          : plastic // ignore: cast_nullable_to_non_nullable
+              as SummaryCategoryModel,
+      dateRange: null == dateRange
+          ? _value.dateRange
+          : dateRange // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$StockSummaryModelImpl extends _StockSummaryModel {
+  const _$StockSummaryModelImpl(
+      {required this.regular,
+      required this.asin,
+      required this.plastic,
+      required this.dateRange})
+      : super._();
+
+  factory _$StockSummaryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StockSummaryModelImplFromJson(json);
+
+  @override
+  final SummaryCategoryModel regular;
+  @override
+  final SummaryCategoryModel asin;
+  @override
+  final SummaryCategoryModel plastic;
+  @override
+  final String dateRange;
+
+  @override
+  String toString() {
+    return 'StockSummaryModel(regular: $regular, asin: $asin, plastic: $plastic, dateRange: $dateRange)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StockSummaryModelImpl &&
+            (identical(other.regular, regular) || other.regular == regular) &&
+            (identical(other.asin, asin) || other.asin == asin) &&
+            (identical(other.plastic, plastic) || other.plastic == plastic) &&
+            (identical(other.dateRange, dateRange) ||
+                other.dateRange == dateRange));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, regular, asin, plastic, dateRange);
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StockSummaryModelImplCopyWith<_$StockSummaryModelImpl> get copyWith =>
+      __$$StockSummaryModelImplCopyWithImpl<_$StockSummaryModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$StockSummaryModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _StockSummaryModel extends StockSummaryModel {
+  const factory _StockSummaryModel(
+      {required final SummaryCategoryModel regular,
+      required final SummaryCategoryModel asin,
+      required final SummaryCategoryModel plastic,
+      required final String dateRange}) = _$StockSummaryModelImpl;
+  const _StockSummaryModel._() : super._();
+
+  factory _StockSummaryModel.fromJson(Map<String, dynamic> json) =
+      _$StockSummaryModelImpl.fromJson;
+
+  @override
+  SummaryCategoryModel get regular;
+  @override
+  SummaryCategoryModel get asin;
+  @override
+  SummaryCategoryModel get plastic;
+  @override
+  String get dateRange;
+
+  /// Create a copy of StockSummaryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$StockSummaryModelImplCopyWith<_$StockSummaryModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 StockStatisticsModel _$StockStatisticsModelFromJson(Map<String, dynamic> json) {
   return _StockStatisticsModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$StockStatisticsModel {
-  @JsonKey(name: 'dateRange')
-  String get dateRange => throw _privateConstructorUsedError;
-  @JsonKey(name: 'regular')
-  StockCategoryModel get regular => throw _privateConstructorUsedError;
-  @JsonKey(name: 'plastic')
-  StockCategoryModel get plastic => throw _privateConstructorUsedError;
+  PrinterCategoryModel get regular => throw _privateConstructorUsedError;
+  PrinterCategoryModel get asin => throw _privateConstructorUsedError;
+  PrinterCategoryModel get plastic => throw _privateConstructorUsedError;
+  StockSummaryModel get summary => throw _privateConstructorUsedError;
 
   /// Serializes this StockStatisticsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -542,12 +1195,15 @@ abstract class $StockStatisticsModelCopyWith<$Res> {
       _$StockStatisticsModelCopyWithImpl<$Res, StockStatisticsModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'dateRange') String dateRange,
-      @JsonKey(name: 'regular') StockCategoryModel regular,
-      @JsonKey(name: 'plastic') StockCategoryModel plastic});
+      {PrinterCategoryModel regular,
+      PrinterCategoryModel asin,
+      PrinterCategoryModel plastic,
+      StockSummaryModel summary});
 
-  $StockCategoryModelCopyWith<$Res> get regular;
-  $StockCategoryModelCopyWith<$Res> get plastic;
+  $PrinterCategoryModelCopyWith<$Res> get regular;
+  $PrinterCategoryModelCopyWith<$Res> get asin;
+  $PrinterCategoryModelCopyWith<$Res> get plastic;
+  $StockSummaryModelCopyWith<$Res> get summary;
 }
 
 /// @nodoc
@@ -566,23 +1222,28 @@ class _$StockStatisticsModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? dateRange = null,
     Object? regular = null,
+    Object? asin = null,
     Object? plastic = null,
+    Object? summary = null,
   }) {
     return _then(_value.copyWith(
-      dateRange: null == dateRange
-          ? _value.dateRange
-          : dateRange // ignore: cast_nullable_to_non_nullable
-              as String,
       regular: null == regular
           ? _value.regular
           : regular // ignore: cast_nullable_to_non_nullable
-              as StockCategoryModel,
+              as PrinterCategoryModel,
+      asin: null == asin
+          ? _value.asin
+          : asin // ignore: cast_nullable_to_non_nullable
+              as PrinterCategoryModel,
       plastic: null == plastic
           ? _value.plastic
           : plastic // ignore: cast_nullable_to_non_nullable
-              as StockCategoryModel,
+              as PrinterCategoryModel,
+      summary: null == summary
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as StockSummaryModel,
     ) as $Val);
   }
 
@@ -590,8 +1251,8 @@ class _$StockStatisticsModelCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $StockCategoryModelCopyWith<$Res> get regular {
-    return $StockCategoryModelCopyWith<$Res>(_value.regular, (value) {
+  $PrinterCategoryModelCopyWith<$Res> get regular {
+    return $PrinterCategoryModelCopyWith<$Res>(_value.regular, (value) {
       return _then(_value.copyWith(regular: value) as $Val);
     });
   }
@@ -600,9 +1261,29 @@ class _$StockStatisticsModelCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $StockCategoryModelCopyWith<$Res> get plastic {
-    return $StockCategoryModelCopyWith<$Res>(_value.plastic, (value) {
+  $PrinterCategoryModelCopyWith<$Res> get asin {
+    return $PrinterCategoryModelCopyWith<$Res>(_value.asin, (value) {
+      return _then(_value.copyWith(asin: value) as $Val);
+    });
+  }
+
+  /// Create a copy of StockStatisticsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PrinterCategoryModelCopyWith<$Res> get plastic {
+    return $PrinterCategoryModelCopyWith<$Res>(_value.plastic, (value) {
       return _then(_value.copyWith(plastic: value) as $Val);
+    });
+  }
+
+  /// Create a copy of StockStatisticsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StockSummaryModelCopyWith<$Res> get summary {
+    return $StockSummaryModelCopyWith<$Res>(_value.summary, (value) {
+      return _then(_value.copyWith(summary: value) as $Val);
     });
   }
 }
@@ -616,14 +1297,19 @@ abstract class _$$StockStatisticsModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'dateRange') String dateRange,
-      @JsonKey(name: 'regular') StockCategoryModel regular,
-      @JsonKey(name: 'plastic') StockCategoryModel plastic});
+      {PrinterCategoryModel regular,
+      PrinterCategoryModel asin,
+      PrinterCategoryModel plastic,
+      StockSummaryModel summary});
 
   @override
-  $StockCategoryModelCopyWith<$Res> get regular;
+  $PrinterCategoryModelCopyWith<$Res> get regular;
   @override
-  $StockCategoryModelCopyWith<$Res> get plastic;
+  $PrinterCategoryModelCopyWith<$Res> get asin;
+  @override
+  $PrinterCategoryModelCopyWith<$Res> get plastic;
+  @override
+  $StockSummaryModelCopyWith<$Res> get summary;
 }
 
 /// @nodoc
@@ -639,23 +1325,28 @@ class __$$StockStatisticsModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? dateRange = null,
     Object? regular = null,
+    Object? asin = null,
     Object? plastic = null,
+    Object? summary = null,
   }) {
     return _then(_$StockStatisticsModelImpl(
-      dateRange: null == dateRange
-          ? _value.dateRange
-          : dateRange // ignore: cast_nullable_to_non_nullable
-              as String,
       regular: null == regular
           ? _value.regular
           : regular // ignore: cast_nullable_to_non_nullable
-              as StockCategoryModel,
+              as PrinterCategoryModel,
+      asin: null == asin
+          ? _value.asin
+          : asin // ignore: cast_nullable_to_non_nullable
+              as PrinterCategoryModel,
       plastic: null == plastic
           ? _value.plastic
           : plastic // ignore: cast_nullable_to_non_nullable
-              as StockCategoryModel,
+              as PrinterCategoryModel,
+      summary: null == summary
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as StockSummaryModel,
     ));
   }
 }
@@ -664,27 +1355,27 @@ class __$$StockStatisticsModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$StockStatisticsModelImpl extends _StockStatisticsModel {
   const _$StockStatisticsModelImpl(
-      {@JsonKey(name: 'dateRange') required this.dateRange,
-      @JsonKey(name: 'regular') required this.regular,
-      @JsonKey(name: 'plastic') required this.plastic})
+      {required this.regular,
+      required this.asin,
+      required this.plastic,
+      required this.summary})
       : super._();
 
   factory _$StockStatisticsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StockStatisticsModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'dateRange')
-  final String dateRange;
+  final PrinterCategoryModel regular;
   @override
-  @JsonKey(name: 'regular')
-  final StockCategoryModel regular;
+  final PrinterCategoryModel asin;
   @override
-  @JsonKey(name: 'plastic')
-  final StockCategoryModel plastic;
+  final PrinterCategoryModel plastic;
+  @override
+  final StockSummaryModel summary;
 
   @override
   String toString() {
-    return 'StockStatisticsModel(dateRange: $dateRange, regular: $regular, plastic: $plastic)';
+    return 'StockStatisticsModel(regular: $regular, asin: $asin, plastic: $plastic, summary: $summary)';
   }
 
   @override
@@ -692,15 +1383,15 @@ class _$StockStatisticsModelImpl extends _StockStatisticsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$StockStatisticsModelImpl &&
-            (identical(other.dateRange, dateRange) ||
-                other.dateRange == dateRange) &&
             (identical(other.regular, regular) || other.regular == regular) &&
-            (identical(other.plastic, plastic) || other.plastic == plastic));
+            (identical(other.asin, asin) || other.asin == asin) &&
+            (identical(other.plastic, plastic) || other.plastic == plastic) &&
+            (identical(other.summary, summary) || other.summary == summary));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, dateRange, regular, plastic);
+  int get hashCode => Object.hash(runtimeType, regular, asin, plastic, summary);
 
   /// Create a copy of StockStatisticsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -722,24 +1413,23 @@ class _$StockStatisticsModelImpl extends _StockStatisticsModel {
 
 abstract class _StockStatisticsModel extends StockStatisticsModel {
   const factory _StockStatisticsModel(
-      {@JsonKey(name: 'dateRange') required final String dateRange,
-      @JsonKey(name: 'regular') required final StockCategoryModel regular,
-      @JsonKey(name: 'plastic')
-      required final StockCategoryModel plastic}) = _$StockStatisticsModelImpl;
+      {required final PrinterCategoryModel regular,
+      required final PrinterCategoryModel asin,
+      required final PrinterCategoryModel plastic,
+      required final StockSummaryModel summary}) = _$StockStatisticsModelImpl;
   const _StockStatisticsModel._() : super._();
 
   factory _StockStatisticsModel.fromJson(Map<String, dynamic> json) =
       _$StockStatisticsModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'dateRange')
-  String get dateRange;
+  PrinterCategoryModel get regular;
   @override
-  @JsonKey(name: 'regular')
-  StockCategoryModel get regular;
+  PrinterCategoryModel get asin;
   @override
-  @JsonKey(name: 'plastic')
-  StockCategoryModel get plastic;
+  PrinterCategoryModel get plastic;
+  @override
+  StockSummaryModel get summary;
 
   /// Create a copy of StockStatisticsModel
   /// with the given fields replaced by the non-null parameter values.

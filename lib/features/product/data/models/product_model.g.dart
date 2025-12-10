@@ -140,7 +140,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
         final val = _$ProductModelImpl(
           id: $checkedConvert('id', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          picture: $checkedConvert('picture', (v) => v as String),
+          picture: $checkedConvert('picture', (v) => v as String?),
           category: $checkedConvert('category', (v) => v as String),
           cashierId: $checkedConvert('cashierId', (v) => v as String),
           sackPrices: $checkedConvert(
@@ -174,7 +174,7 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'picture': instance.picture,
+      if (instance.picture case final value?) 'picture': value,
       'category': instance.category,
       'cashierId': instance.cashierId,
       'sackPrices': instance.sackPrices.map((e) => e.toJson()).toList(),

@@ -13,14 +13,15 @@ _$ProductStockModelImpl _$$ProductStockModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$ProductStockModelImpl(
-          productId: $checkedConvert('productId', (v) => v as String),
           productName: $checkedConvert('productName', (v) => v as String),
-          sold: $checkedConvert('sold', (v) => (v as num).toDouble()),
-          transferredKahon:
-              $checkedConvert('transferredKahon', (v) => (v as num).toDouble()),
-          otherTransfers:
-              $checkedConvert('otherTransfers', (v) => (v as num).toDouble()),
+          stockSold: $checkedConvert('stockSold', (v) => (v as num).toDouble()),
+          stockTransferredKahon: $checkedConvert(
+              'stockTransferredKahon', (v) => (v as num).toDouble()),
+          stockOtherTransfers: $checkedConvert(
+              'stockOtherTransfers', (v) => (v as num).toDouble()),
           total: $checkedConvert('total', (v) => (v as num).toDouble()),
+          totalPrice:
+              $checkedConvert('totalPrice', (v) => (v as num?)?.toDouble()),
         );
         return val;
       },
@@ -29,12 +30,12 @@ _$ProductStockModelImpl _$$ProductStockModelImplFromJson(
 Map<String, dynamic> _$$ProductStockModelImplToJson(
         _$ProductStockModelImpl instance) =>
     <String, dynamic>{
-      'productId': instance.productId,
       'productName': instance.productName,
-      'sold': instance.sold,
-      'transferredKahon': instance.transferredKahon,
-      'otherTransfers': instance.otherTransfers,
+      'stockSold': instance.stockSold,
+      'stockTransferredKahon': instance.stockTransferredKahon,
+      'stockOtherTransfers': instance.stockOtherTransfers,
       'total': instance.total,
+      if (instance.totalPrice case final value?) 'totalPrice': value,
     };
 
 _$StockTotalsModelImpl _$$StockTotalsModelImplFromJson(
@@ -64,6 +65,84 @@ Map<String, dynamic> _$$StockTotalsModelImplToJson(
       'total': instance.total,
     };
 
+_$PrinterCategoryModelImpl _$$PrinterCategoryModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$PrinterCategoryModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$PrinterCategoryModelImpl(
+          lines: $checkedConvert('lines',
+              (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+          totals: $checkedConvert('totals',
+              (v) => StockTotalsModel.fromJson(v as Map<String, dynamic>)),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$PrinterCategoryModelImplToJson(
+        _$PrinterCategoryModelImpl instance) =>
+    <String, dynamic>{
+      'lines': instance.lines,
+      'totals': instance.totals.toJson(),
+    };
+
+_$SummaryCategoryModelImpl _$$SummaryCategoryModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$SummaryCategoryModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$SummaryCategoryModelImpl(
+          products: $checkedConvert(
+              'products',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      ProductStockModel.fromJson(e as Map<String, dynamic>))
+                  .toList()),
+          totals: $checkedConvert('totals',
+              (v) => StockTotalsModel.fromJson(v as Map<String, dynamic>)),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$SummaryCategoryModelImplToJson(
+        _$SummaryCategoryModelImpl instance) =>
+    <String, dynamic>{
+      'products': instance.products.map((e) => e.toJson()).toList(),
+      'totals': instance.totals.toJson(),
+    };
+
+_$StockSummaryModelImpl _$$StockSummaryModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$StockSummaryModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$StockSummaryModelImpl(
+          regular: $checkedConvert('regular',
+              (v) => SummaryCategoryModel.fromJson(v as Map<String, dynamic>)),
+          asin: $checkedConvert('asin',
+              (v) => SummaryCategoryModel.fromJson(v as Map<String, dynamic>)),
+          plastic: $checkedConvert('plastic',
+              (v) => SummaryCategoryModel.fromJson(v as Map<String, dynamic>)),
+          dateRange: $checkedConvert('dateRange', (v) => v as String),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$StockSummaryModelImplToJson(
+        _$StockSummaryModelImpl instance) =>
+    <String, dynamic>{
+      'regular': instance.regular.toJson(),
+      'asin': instance.asin.toJson(),
+      'plastic': instance.plastic.toJson(),
+      'dateRange': instance.dateRange,
+    };
+
 _$StockStatisticsModelImpl _$$StockStatisticsModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
@@ -71,11 +150,14 @@ _$StockStatisticsModelImpl _$$StockStatisticsModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$StockStatisticsModelImpl(
-          dateRange: $checkedConvert('dateRange', (v) => v as String),
           regular: $checkedConvert('regular',
-              (v) => StockCategoryModel.fromJson(v as Map<String, dynamic>)),
+              (v) => PrinterCategoryModel.fromJson(v as Map<String, dynamic>)),
+          asin: $checkedConvert('asin',
+              (v) => PrinterCategoryModel.fromJson(v as Map<String, dynamic>)),
           plastic: $checkedConvert('plastic',
-              (v) => StockCategoryModel.fromJson(v as Map<String, dynamic>)),
+              (v) => PrinterCategoryModel.fromJson(v as Map<String, dynamic>)),
+          summary: $checkedConvert('summary',
+              (v) => StockSummaryModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -84,9 +166,10 @@ _$StockStatisticsModelImpl _$$StockStatisticsModelImplFromJson(
 Map<String, dynamic> _$$StockStatisticsModelImplToJson(
         _$StockStatisticsModelImpl instance) =>
     <String, dynamic>{
-      'dateRange': instance.dateRange,
       'regular': instance.regular.toJson(),
+      'asin': instance.asin.toJson(),
       'plastic': instance.plastic.toJson(),
+      'summary': instance.summary.toJson(),
     };
 
 _$StockCategoryModelImpl _$$StockCategoryModelImplFromJson(

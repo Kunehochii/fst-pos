@@ -166,17 +166,6 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       ));
     }
 
-    // Sales History - based on SALES_HISTORY permission
-    if (_hasPermission(cashier, 'SALES_HISTORY')) {
-      items.add(_buildMenuItem(
-        context: context,
-        currentPath: currentPath,
-        route: AppRoutes.salesHistory,
-        icon: Icons.history,
-        title: 'Sales History',
-      ));
-    }
-
     // Sales Check - based on SALES_HISTORY permission
     if (_hasPermission(cashier, 'SALES_HISTORY')) {
       items.add(_buildMenuItem(

@@ -14,6 +14,565 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+TransferProductModel _$TransferProductModelFromJson(Map<String, dynamic> json) {
+  return _TransferProductModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TransferProductModel {
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+
+  /// Serializes this TransferProductModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TransferProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TransferProductModelCopyWith<TransferProductModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransferProductModelCopyWith<$Res> {
+  factory $TransferProductModelCopyWith(TransferProductModel value,
+          $Res Function(TransferProductModel) then) =
+      _$TransferProductModelCopyWithImpl<$Res, TransferProductModel>;
+  @useResult
+  $Res call({String id, String name, String category});
+}
+
+/// @nodoc
+class _$TransferProductModelCopyWithImpl<$Res,
+        $Val extends TransferProductModel>
+    implements $TransferProductModelCopyWith<$Res> {
+  _$TransferProductModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TransferProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? category = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TransferProductModelImplCopyWith<$Res>
+    implements $TransferProductModelCopyWith<$Res> {
+  factory _$$TransferProductModelImplCopyWith(_$TransferProductModelImpl value,
+          $Res Function(_$TransferProductModelImpl) then) =
+      __$$TransferProductModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String name, String category});
+}
+
+/// @nodoc
+class __$$TransferProductModelImplCopyWithImpl<$Res>
+    extends _$TransferProductModelCopyWithImpl<$Res, _$TransferProductModelImpl>
+    implements _$$TransferProductModelImplCopyWith<$Res> {
+  __$$TransferProductModelImplCopyWithImpl(_$TransferProductModelImpl _value,
+      $Res Function(_$TransferProductModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TransferProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? category = null,
+  }) {
+    return _then(_$TransferProductModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TransferProductModelImpl extends _TransferProductModel {
+  const _$TransferProductModelImpl(
+      {required this.id, required this.name, required this.category})
+      : super._();
+
+  factory _$TransferProductModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TransferProductModelImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String name;
+  @override
+  final String category;
+
+  @override
+  String toString() {
+    return 'TransferProductModel(id: $id, name: $name, category: $category)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TransferProductModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.category, category) ||
+                other.category == category));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, name, category);
+
+  /// Create a copy of TransferProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TransferProductModelImplCopyWith<_$TransferProductModelImpl>
+      get copyWith =>
+          __$$TransferProductModelImplCopyWithImpl<_$TransferProductModelImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TransferProductModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TransferProductModel extends TransferProductModel {
+  const factory _TransferProductModel(
+      {required final String id,
+      required final String name,
+      required final String category}) = _$TransferProductModelImpl;
+  const _TransferProductModel._() : super._();
+
+  factory _TransferProductModel.fromJson(Map<String, dynamic> json) =
+      _$TransferProductModelImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get name;
+  @override
+  String get category;
+
+  /// Create a copy of TransferProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TransferProductModelImplCopyWith<_$TransferProductModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+TransferSackPriceModel _$TransferSackPriceModelFromJson(
+    Map<String, dynamic> json) {
+  return _TransferSackPriceModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TransferSackPriceModel {
+  String get id => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  String get price => throw _privateConstructorUsedError;
+
+  /// Serializes this TransferSackPriceModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TransferSackPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TransferSackPriceModelCopyWith<TransferSackPriceModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransferSackPriceModelCopyWith<$Res> {
+  factory $TransferSackPriceModelCopyWith(TransferSackPriceModel value,
+          $Res Function(TransferSackPriceModel) then) =
+      _$TransferSackPriceModelCopyWithImpl<$Res, TransferSackPriceModel>;
+  @useResult
+  $Res call({String id, String type, String price});
+}
+
+/// @nodoc
+class _$TransferSackPriceModelCopyWithImpl<$Res,
+        $Val extends TransferSackPriceModel>
+    implements $TransferSackPriceModelCopyWith<$Res> {
+  _$TransferSackPriceModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TransferSackPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? type = null,
+    Object? price = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TransferSackPriceModelImplCopyWith<$Res>
+    implements $TransferSackPriceModelCopyWith<$Res> {
+  factory _$$TransferSackPriceModelImplCopyWith(
+          _$TransferSackPriceModelImpl value,
+          $Res Function(_$TransferSackPriceModelImpl) then) =
+      __$$TransferSackPriceModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String type, String price});
+}
+
+/// @nodoc
+class __$$TransferSackPriceModelImplCopyWithImpl<$Res>
+    extends _$TransferSackPriceModelCopyWithImpl<$Res,
+        _$TransferSackPriceModelImpl>
+    implements _$$TransferSackPriceModelImplCopyWith<$Res> {
+  __$$TransferSackPriceModelImplCopyWithImpl(
+      _$TransferSackPriceModelImpl _value,
+      $Res Function(_$TransferSackPriceModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TransferSackPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? type = null,
+    Object? price = null,
+  }) {
+    return _then(_$TransferSackPriceModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TransferSackPriceModelImpl extends _TransferSackPriceModel {
+  const _$TransferSackPriceModelImpl(
+      {required this.id, required this.type, required this.price})
+      : super._();
+
+  factory _$TransferSackPriceModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TransferSackPriceModelImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String type;
+  @override
+  final String price;
+
+  @override
+  String toString() {
+    return 'TransferSackPriceModel(id: $id, type: $type, price: $price)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TransferSackPriceModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.price, price) || other.price == price));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, type, price);
+
+  /// Create a copy of TransferSackPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TransferSackPriceModelImplCopyWith<_$TransferSackPriceModelImpl>
+      get copyWith => __$$TransferSackPriceModelImplCopyWithImpl<
+          _$TransferSackPriceModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TransferSackPriceModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TransferSackPriceModel extends TransferSackPriceModel {
+  const factory _TransferSackPriceModel(
+      {required final String id,
+      required final String type,
+      required final String price}) = _$TransferSackPriceModelImpl;
+  const _TransferSackPriceModel._() : super._();
+
+  factory _TransferSackPriceModel.fromJson(Map<String, dynamic> json) =
+      _$TransferSackPriceModelImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get type;
+  @override
+  String get price;
+
+  /// Create a copy of TransferSackPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TransferSackPriceModelImplCopyWith<_$TransferSackPriceModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+TransferPerKiloPriceModel _$TransferPerKiloPriceModelFromJson(
+    Map<String, dynamic> json) {
+  return _TransferPerKiloPriceModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TransferPerKiloPriceModel {
+  String get id => throw _privateConstructorUsedError;
+  String get price => throw _privateConstructorUsedError;
+
+  /// Serializes this TransferPerKiloPriceModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TransferPerKiloPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TransferPerKiloPriceModelCopyWith<TransferPerKiloPriceModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransferPerKiloPriceModelCopyWith<$Res> {
+  factory $TransferPerKiloPriceModelCopyWith(TransferPerKiloPriceModel value,
+          $Res Function(TransferPerKiloPriceModel) then) =
+      _$TransferPerKiloPriceModelCopyWithImpl<$Res, TransferPerKiloPriceModel>;
+  @useResult
+  $Res call({String id, String price});
+}
+
+/// @nodoc
+class _$TransferPerKiloPriceModelCopyWithImpl<$Res,
+        $Val extends TransferPerKiloPriceModel>
+    implements $TransferPerKiloPriceModelCopyWith<$Res> {
+  _$TransferPerKiloPriceModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TransferPerKiloPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? price = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TransferPerKiloPriceModelImplCopyWith<$Res>
+    implements $TransferPerKiloPriceModelCopyWith<$Res> {
+  factory _$$TransferPerKiloPriceModelImplCopyWith(
+          _$TransferPerKiloPriceModelImpl value,
+          $Res Function(_$TransferPerKiloPriceModelImpl) then) =
+      __$$TransferPerKiloPriceModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String price});
+}
+
+/// @nodoc
+class __$$TransferPerKiloPriceModelImplCopyWithImpl<$Res>
+    extends _$TransferPerKiloPriceModelCopyWithImpl<$Res,
+        _$TransferPerKiloPriceModelImpl>
+    implements _$$TransferPerKiloPriceModelImplCopyWith<$Res> {
+  __$$TransferPerKiloPriceModelImplCopyWithImpl(
+      _$TransferPerKiloPriceModelImpl _value,
+      $Res Function(_$TransferPerKiloPriceModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TransferPerKiloPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? price = null,
+  }) {
+    return _then(_$TransferPerKiloPriceModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TransferPerKiloPriceModelImpl extends _TransferPerKiloPriceModel {
+  const _$TransferPerKiloPriceModelImpl({required this.id, required this.price})
+      : super._();
+
+  factory _$TransferPerKiloPriceModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TransferPerKiloPriceModelImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String price;
+
+  @override
+  String toString() {
+    return 'TransferPerKiloPriceModel(id: $id, price: $price)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TransferPerKiloPriceModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.price, price) || other.price == price));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, price);
+
+  /// Create a copy of TransferPerKiloPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TransferPerKiloPriceModelImplCopyWith<_$TransferPerKiloPriceModelImpl>
+      get copyWith => __$$TransferPerKiloPriceModelImplCopyWithImpl<
+          _$TransferPerKiloPriceModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TransferPerKiloPriceModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TransferPerKiloPriceModel extends TransferPerKiloPriceModel {
+  const factory _TransferPerKiloPriceModel(
+      {required final String id,
+      required final String price}) = _$TransferPerKiloPriceModelImpl;
+  const _TransferPerKiloPriceModel._() : super._();
+
+  factory _TransferPerKiloPriceModel.fromJson(Map<String, dynamic> json) =
+      _$TransferPerKiloPriceModelImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get price;
+
+  /// Create a copy of TransferPerKiloPriceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TransferPerKiloPriceModelImplCopyWith<_$TransferPerKiloPriceModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 TransferCashierModel _$TransferCashierModelFromJson(Map<String, dynamic> json) {
   return _TransferCashierModel.fromJson(json);
 }
@@ -241,9 +800,10 @@ mixin _$TransferModel {
   DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'updatedAt')
   DateTime get updatedAt => throw _privateConstructorUsedError;
-  ProductModel? get product => throw _privateConstructorUsedError;
-  SackPriceModel? get sackPrice => throw _privateConstructorUsedError;
-  PerKiloPriceModel? get perKiloPrice => throw _privateConstructorUsedError;
+  TransferProductModel? get product => throw _privateConstructorUsedError;
+  TransferSackPriceModel? get sackPrice => throw _privateConstructorUsedError;
+  TransferPerKiloPriceModel? get perKiloPrice =>
+      throw _privateConstructorUsedError;
   TransferCashierModel? get cashier => throw _privateConstructorUsedError;
 
   /// Serializes this TransferModel to a JSON map.
@@ -273,14 +833,14 @@ abstract class $TransferModelCopyWith<$Res> {
       @JsonKey(name: 'cashierId') String cashierId,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt,
-      ProductModel? product,
-      SackPriceModel? sackPrice,
-      PerKiloPriceModel? perKiloPrice,
+      TransferProductModel? product,
+      TransferSackPriceModel? sackPrice,
+      TransferPerKiloPriceModel? perKiloPrice,
       TransferCashierModel? cashier});
 
-  $ProductModelCopyWith<$Res>? get product;
-  $SackPriceModelCopyWith<$Res>? get sackPrice;
-  $PerKiloPriceModelCopyWith<$Res>? get perKiloPrice;
+  $TransferProductModelCopyWith<$Res>? get product;
+  $TransferSackPriceModelCopyWith<$Res>? get sackPrice;
+  $TransferPerKiloPriceModelCopyWith<$Res>? get perKiloPrice;
   $TransferCashierModelCopyWith<$Res>? get cashier;
 }
 
@@ -358,15 +918,15 @@ class _$TransferModelCopyWithImpl<$Res, $Val extends TransferModel>
       product: freezed == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
-              as ProductModel?,
+              as TransferProductModel?,
       sackPrice: freezed == sackPrice
           ? _value.sackPrice
           : sackPrice // ignore: cast_nullable_to_non_nullable
-              as SackPriceModel?,
+              as TransferSackPriceModel?,
       perKiloPrice: freezed == perKiloPrice
           ? _value.perKiloPrice
           : perKiloPrice // ignore: cast_nullable_to_non_nullable
-              as PerKiloPriceModel?,
+              as TransferPerKiloPriceModel?,
       cashier: freezed == cashier
           ? _value.cashier
           : cashier // ignore: cast_nullable_to_non_nullable
@@ -378,12 +938,12 @@ class _$TransferModelCopyWithImpl<$Res, $Val extends TransferModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ProductModelCopyWith<$Res>? get product {
+  $TransferProductModelCopyWith<$Res>? get product {
     if (_value.product == null) {
       return null;
     }
 
-    return $ProductModelCopyWith<$Res>(_value.product!, (value) {
+    return $TransferProductModelCopyWith<$Res>(_value.product!, (value) {
       return _then(_value.copyWith(product: value) as $Val);
     });
   }
@@ -392,12 +952,12 @@ class _$TransferModelCopyWithImpl<$Res, $Val extends TransferModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $SackPriceModelCopyWith<$Res>? get sackPrice {
+  $TransferSackPriceModelCopyWith<$Res>? get sackPrice {
     if (_value.sackPrice == null) {
       return null;
     }
 
-    return $SackPriceModelCopyWith<$Res>(_value.sackPrice!, (value) {
+    return $TransferSackPriceModelCopyWith<$Res>(_value.sackPrice!, (value) {
       return _then(_value.copyWith(sackPrice: value) as $Val);
     });
   }
@@ -406,12 +966,13 @@ class _$TransferModelCopyWithImpl<$Res, $Val extends TransferModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $PerKiloPriceModelCopyWith<$Res>? get perKiloPrice {
+  $TransferPerKiloPriceModelCopyWith<$Res>? get perKiloPrice {
     if (_value.perKiloPrice == null) {
       return null;
     }
 
-    return $PerKiloPriceModelCopyWith<$Res>(_value.perKiloPrice!, (value) {
+    return $TransferPerKiloPriceModelCopyWith<$Res>(_value.perKiloPrice!,
+        (value) {
       return _then(_value.copyWith(perKiloPrice: value) as $Val);
     });
   }
@@ -450,17 +1011,17 @@ abstract class _$$TransferModelImplCopyWith<$Res>
       @JsonKey(name: 'cashierId') String cashierId,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt,
-      ProductModel? product,
-      SackPriceModel? sackPrice,
-      PerKiloPriceModel? perKiloPrice,
+      TransferProductModel? product,
+      TransferSackPriceModel? sackPrice,
+      TransferPerKiloPriceModel? perKiloPrice,
       TransferCashierModel? cashier});
 
   @override
-  $ProductModelCopyWith<$Res>? get product;
+  $TransferProductModelCopyWith<$Res>? get product;
   @override
-  $SackPriceModelCopyWith<$Res>? get sackPrice;
+  $TransferSackPriceModelCopyWith<$Res>? get sackPrice;
   @override
-  $PerKiloPriceModelCopyWith<$Res>? get perKiloPrice;
+  $TransferPerKiloPriceModelCopyWith<$Res>? get perKiloPrice;
   @override
   $TransferCashierModelCopyWith<$Res>? get cashier;
 }
@@ -537,15 +1098,15 @@ class __$$TransferModelImplCopyWithImpl<$Res>
       product: freezed == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
-              as ProductModel?,
+              as TransferProductModel?,
       sackPrice: freezed == sackPrice
           ? _value.sackPrice
           : sackPrice // ignore: cast_nullable_to_non_nullable
-              as SackPriceModel?,
+              as TransferSackPriceModel?,
       perKiloPrice: freezed == perKiloPrice
           ? _value.perKiloPrice
           : perKiloPrice // ignore: cast_nullable_to_non_nullable
-              as PerKiloPriceModel?,
+              as TransferPerKiloPriceModel?,
       cashier: freezed == cashier
           ? _value.cashier
           : cashier // ignore: cast_nullable_to_non_nullable
@@ -605,11 +1166,11 @@ class _$TransferModelImpl extends _TransferModel {
   @JsonKey(name: 'updatedAt')
   final DateTime updatedAt;
   @override
-  final ProductModel? product;
+  final TransferProductModel? product;
   @override
-  final SackPriceModel? sackPrice;
+  final TransferSackPriceModel? sackPrice;
   @override
-  final PerKiloPriceModel? perKiloPrice;
+  final TransferPerKiloPriceModel? perKiloPrice;
   @override
   final TransferCashierModel? cashier;
 
@@ -696,9 +1257,9 @@ abstract class _TransferModel extends TransferModel {
       @JsonKey(name: 'cashierId') required final String cashierId,
       @JsonKey(name: 'createdAt') required final DateTime createdAt,
       @JsonKey(name: 'updatedAt') required final DateTime updatedAt,
-      final ProductModel? product,
-      final SackPriceModel? sackPrice,
-      final PerKiloPriceModel? perKiloPrice,
+      final TransferProductModel? product,
+      final TransferSackPriceModel? sackPrice,
+      final TransferPerKiloPriceModel? perKiloPrice,
       final TransferCashierModel? cashier}) = _$TransferModelImpl;
   const _TransferModel._() : super._();
 
@@ -733,11 +1294,11 @@ abstract class _TransferModel extends TransferModel {
   @JsonKey(name: 'updatedAt')
   DateTime get updatedAt;
   @override
-  ProductModel? get product;
+  TransferProductModel? get product;
   @override
-  SackPriceModel? get sackPrice;
+  TransferSackPriceModel? get sackPrice;
   @override
-  PerKiloPriceModel? get perKiloPrice;
+  TransferPerKiloPriceModel? get perKiloPrice;
   @override
   TransferCashierModel? get cashier;
 

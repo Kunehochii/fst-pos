@@ -1,11 +1,93 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../product/data/models/product_model.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/transfer.dart';
 
 part 'transfer_model.freezed.dart';
 part 'transfer_model.g.dart';
+
+/// Lightweight product model for transfer API responses.
+/// Only contains the fields returned by the transfer endpoints.
+@freezed
+class TransferProductModel with _$TransferProductModel {
+  const TransferProductModel._();
+
+  const factory TransferProductModel({
+    required String id,
+    required String name,
+    required String category,
+  }) = _TransferProductModel;
+
+  factory TransferProductModel.fromJson(Map<String, dynamic> json) =>
+      _$TransferProductModelFromJson(json);
+
+  /// Convert to domain entity with default values for missing fields.
+  Product toEntity() => Product(
+        id: id,
+        name: name,
+        picture: 'https://placehold.co/800x800?text=Product',
+        category: ProductCategory.fromString(category),
+        cashierId: '', // Not provided by transfer API
+        sackPrices: [],
+        perKiloPrice: null,
+        cashier: null,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+}
+
+/// Lightweight sack price model for transfer API responses.
+/// Only contains id, type, and price (no stock, dates, etc.).
+@freezed
+class TransferSackPriceModel with _$TransferSackPriceModel {
+  const TransferSackPriceModel._();
+
+  const factory TransferSackPriceModel({
+    required String id,
+    required String type,
+    required String price,
+  }) = _TransferSackPriceModel;
+
+  factory TransferSackPriceModel.fromJson(Map<String, dynamic> json) =>
+      _$TransferSackPriceModelFromJson(json);
+
+  /// Convert to domain entity with default values for missing fields.
+  SackPrice toEntity() => SackPrice(
+        id: id,
+        price: double.parse(price),
+        stock: 0, // Not provided by transfer API
+        type: SackType.fromString(type),
+        profit: null,
+        specialPrice: null,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+}
+
+/// Lightweight per kilo price model for transfer API responses.
+/// Only contains id and price (no stock, dates, etc.).
+@freezed
+class TransferPerKiloPriceModel with _$TransferPerKiloPriceModel {
+  const TransferPerKiloPriceModel._();
+
+  const factory TransferPerKiloPriceModel({
+    required String id,
+    required String price,
+  }) = _TransferPerKiloPriceModel;
+
+  factory TransferPerKiloPriceModel.fromJson(Map<String, dynamic> json) =>
+      _$TransferPerKiloPriceModelFromJson(json);
+
+  /// Convert to domain entity with default values for missing fields.
+  PerKiloPrice toEntity() => PerKiloPrice(
+        id: id,
+        price: double.parse(price),
+        stock: 0, // Not provided by transfer API
+        profit: null,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+}
 
 /// Transfer cashier model for API serialization.
 @freezed
@@ -53,9 +135,9 @@ class TransferModel with _$TransferModel {
     @JsonKey(name: 'cashierId') required String cashierId,
     @JsonKey(name: 'createdAt') required DateTime createdAt,
     @JsonKey(name: 'updatedAt') required DateTime updatedAt,
-    ProductModel? product,
-    SackPriceModel? sackPrice,
-    PerKiloPriceModel? perKiloPrice,
+    TransferProductModel? product,
+    TransferSackPriceModel? sackPrice,
+    TransferPerKiloPriceModel? perKiloPrice,
     TransferCashierModel? cashier,
   }) = _TransferModel;
 
@@ -93,13 +175,24 @@ class TransferModel with _$TransferModel {
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt,
         product: entity.product != null
-            ? ProductModel.fromEntity(entity.product!)
+            ? TransferProductModel(
+                id: entity.product!.id,
+                name: entity.product!.name,
+                category: entity.product!.category.toApiString(),
+              )
             : null,
         sackPrice: entity.sackPrice != null
-            ? SackPriceModel.fromEntity(entity.sackPrice!)
+            ? TransferSackPriceModel(
+                id: entity.sackPrice!.id,
+                type: entity.sackPrice!.type.toApiString(),
+                price: entity.sackPrice!.price.toString(),
+              )
             : null,
         perKiloPrice: entity.perKiloPrice != null
-            ? PerKiloPriceModel.fromEntity(entity.perKiloPrice!)
+            ? TransferPerKiloPriceModel(
+                id: entity.perKiloPrice!.id,
+                price: entity.perKiloPrice!.price.toString(),
+              )
             : null,
         cashier: entity.cashier != null
             ? TransferCashierModel.fromEntity(entity.cashier!)

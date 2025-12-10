@@ -1114,7 +1114,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) {
 mixin _$ProductModel {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get picture => throw _privateConstructorUsedError;
+  String? get picture => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   @JsonKey(name: 'cashierId')
   String get cashierId => throw _privateConstructorUsedError;
@@ -1147,7 +1147,7 @@ abstract class $ProductModelCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      String picture,
+      String? picture,
       String category,
       @JsonKey(name: 'cashierId') String cashierId,
       @JsonKey(name: 'sackPrices') List<SackPriceModel> sackPrices,
@@ -1177,7 +1177,7 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? picture = null,
+    Object? picture = freezed,
     Object? category = null,
     Object? cashierId = null,
     Object? sackPrices = null,
@@ -1195,10 +1195,10 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      picture: null == picture
+      picture: freezed == picture
           ? _value.picture
           : picture // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -1270,7 +1270,7 @@ abstract class _$$ProductModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String name,
-      String picture,
+      String? picture,
       String category,
       @JsonKey(name: 'cashierId') String cashierId,
       @JsonKey(name: 'sackPrices') List<SackPriceModel> sackPrices,
@@ -1300,7 +1300,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? picture = null,
+    Object? picture = freezed,
     Object? category = null,
     Object? cashierId = null,
     Object? sackPrices = null,
@@ -1318,10 +1318,10 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      picture: null == picture
+      picture: freezed == picture
           ? _value.picture
           : picture // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -1360,7 +1360,7 @@ class _$ProductModelImpl extends _ProductModel {
   const _$ProductModelImpl(
       {required this.id,
       required this.name,
-      required this.picture,
+      this.picture,
       required this.category,
       @JsonKey(name: 'cashierId') required this.cashierId,
       @JsonKey(name: 'sackPrices')
@@ -1380,7 +1380,7 @@ class _$ProductModelImpl extends _ProductModel {
   @override
   final String name;
   @override
-  final String picture;
+  final String? picture;
   @override
   final String category;
   @override
@@ -1470,7 +1470,7 @@ abstract class _ProductModel extends ProductModel {
   const factory _ProductModel(
           {required final String id,
           required final String name,
-          required final String picture,
+          final String? picture,
           required final String category,
           @JsonKey(name: 'cashierId') required final String cashierId,
           @JsonKey(name: 'sackPrices') final List<SackPriceModel> sackPrices,
@@ -1489,7 +1489,7 @@ abstract class _ProductModel extends ProductModel {
   @override
   String get name;
   @override
-  String get picture;
+  String? get picture;
   @override
   String get category;
   @override

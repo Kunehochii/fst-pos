@@ -6,6 +6,73 @@ part of 'transfer_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$TransferProductModelImpl _$$TransferProductModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$TransferProductModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$TransferProductModelImpl(
+          id: $checkedConvert('id', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
+          category: $checkedConvert('category', (v) => v as String),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$TransferProductModelImplToJson(
+        _$TransferProductModelImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'category': instance.category,
+    };
+
+_$TransferSackPriceModelImpl _$$TransferSackPriceModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$TransferSackPriceModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$TransferSackPriceModelImpl(
+          id: $checkedConvert('id', (v) => v as String),
+          type: $checkedConvert('type', (v) => v as String),
+          price: $checkedConvert('price', (v) => v as String),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$TransferSackPriceModelImplToJson(
+        _$TransferSackPriceModelImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'type': instance.type,
+      'price': instance.price,
+    };
+
+_$TransferPerKiloPriceModelImpl _$$TransferPerKiloPriceModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$TransferPerKiloPriceModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$TransferPerKiloPriceModelImpl(
+          id: $checkedConvert('id', (v) => v as String),
+          price: $checkedConvert('price', (v) => v as String),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$TransferPerKiloPriceModelImplToJson(
+        _$TransferPerKiloPriceModelImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'price': instance.price,
+    };
+
 _$TransferCashierModelImpl _$$TransferCashierModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
@@ -52,17 +119,18 @@ _$TransferModelImpl _$$TransferModelImplFromJson(Map<String, dynamic> json) =>
               'product',
               (v) => v == null
                   ? null
-                  : ProductModel.fromJson(v as Map<String, dynamic>)),
+                  : TransferProductModel.fromJson(v as Map<String, dynamic>)),
           sackPrice: $checkedConvert(
               'sackPrice',
               (v) => v == null
                   ? null
-                  : SackPriceModel.fromJson(v as Map<String, dynamic>)),
+                  : TransferSackPriceModel.fromJson(v as Map<String, dynamic>)),
           perKiloPrice: $checkedConvert(
               'perKiloPrice',
               (v) => v == null
                   ? null
-                  : PerKiloPriceModel.fromJson(v as Map<String, dynamic>)),
+                  : TransferPerKiloPriceModel.fromJson(
+                      v as Map<String, dynamic>)),
           cashier: $checkedConvert(
               'cashier',
               (v) => v == null

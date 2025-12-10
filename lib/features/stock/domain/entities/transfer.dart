@@ -5,23 +5,24 @@ import '../../../product/domain/entities/product.dart';
 part 'transfer.freezed.dart';
 
 /// Transfer types matching the backend enum.
+/// Matches Prisma schema: OWN_CONSUMPTION, RETURN_TO_WAREHOUSE, KAHON, REPACK
 enum TransferType {
+  ownConsumption,
+  returnToWarehouse,
   kahon,
-  butas,
-  salesMaid,
-  manualAdjust;
+  repack;
 
   /// Convert from API string to enum.
   static TransferType fromString(String value) {
     switch (value.toUpperCase()) {
+      case 'OWN_CONSUMPTION':
+        return TransferType.ownConsumption;
+      case 'RETURN_TO_WAREHOUSE':
+        return TransferType.returnToWarehouse;
       case 'KAHON':
         return TransferType.kahon;
-      case 'BUTAS':
-        return TransferType.butas;
-      case 'SALES_MAID':
-        return TransferType.salesMaid;
-      case 'MANUAL_ADJUST':
-        return TransferType.manualAdjust;
+      case 'REPACK':
+        return TransferType.repack;
       default:
         return TransferType.kahon;
     }
@@ -30,42 +31,42 @@ enum TransferType {
   /// Convert to API string format.
   String toApiString() {
     switch (this) {
+      case TransferType.ownConsumption:
+        return 'OWN_CONSUMPTION';
+      case TransferType.returnToWarehouse:
+        return 'RETURN_TO_WAREHOUSE';
       case TransferType.kahon:
         return 'KAHON';
-      case TransferType.butas:
-        return 'BUTAS';
-      case TransferType.salesMaid:
-        return 'SALES_MAID';
-      case TransferType.manualAdjust:
-        return 'MANUAL_ADJUST';
+      case TransferType.repack:
+        return 'REPACK';
     }
   }
 
   /// Get display name.
   String get displayName {
     switch (this) {
+      case TransferType.ownConsumption:
+        return 'Own Consumption';
+      case TransferType.returnToWarehouse:
+        return 'Return to Warehouse';
       case TransferType.kahon:
         return 'Kahon';
-      case TransferType.butas:
-        return 'Butas';
-      case TransferType.salesMaid:
-        return 'Sales Maid';
-      case TransferType.manualAdjust:
-        return 'Manual Adjust';
+      case TransferType.repack:
+        return 'Repack';
     }
   }
 
   /// Get description.
   String get description {
     switch (this) {
+      case TransferType.ownConsumption:
+        return 'Personal/business consumption';
+      case TransferType.returnToWarehouse:
+        return 'Return stock to warehouse';
       case TransferType.kahon:
         return 'Transfer to kahon (box storage)';
-      case TransferType.butas:
-        return 'Damaged/spoiled items';
-      case TransferType.salesMaid:
-        return 'Items given to sales maid';
-      case TransferType.manualAdjust:
-        return 'Manual stock adjustment';
+      case TransferType.repack:
+        return 'Repack into different sizes';
     }
   }
 }

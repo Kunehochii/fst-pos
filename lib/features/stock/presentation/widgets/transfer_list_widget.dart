@@ -362,12 +362,12 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
     switch (type) {
       case TransferType.kahon:
         return Colors.blue;
-      case TransferType.butas:
-        return Colors.red;
-      case TransferType.salesMaid:
-        return Colors.purple;
-      case TransferType.manualAdjust:
+      case TransferType.ownConsumption:
         return Colors.orange;
+      case TransferType.returnToWarehouse:
+        return Colors.green;
+      case TransferType.repack:
+        return Colors.purple;
     }
   }
 
@@ -375,12 +375,12 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
     switch (type) {
       case TransferType.kahon:
         return Icons.inventory_2;
-      case TransferType.butas:
-        return Icons.broken_image;
-      case TransferType.salesMaid:
-        return Icons.person;
-      case TransferType.manualAdjust:
-        return Icons.edit;
+      case TransferType.ownConsumption:
+        return Icons.restaurant;
+      case TransferType.returnToWarehouse:
+        return Icons.undo;
+      case TransferType.repack:
+        return Icons.autorenew;
     }
   }
 

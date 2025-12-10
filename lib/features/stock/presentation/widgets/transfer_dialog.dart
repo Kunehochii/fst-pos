@@ -61,7 +61,7 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
 
     return Dialog(
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 400),
+        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
@@ -94,6 +94,7 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
                           style: TextStyle(
                             color: AppColors.mutedForeground,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -106,62 +107,74 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
               ),
               const SizedBox(height: 24),
 
-              // Transfer type selection
-              const Text(
-                'Transfer Type',
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 8),
-              _buildTransferTypeSelector(),
-              const SizedBox(height: 16),
+              // Scrollable content
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Transfer type selection
+                      const Text(
+                        'Transfer Type',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTransferTypeSelector(),
+                      const SizedBox(height: 16),
 
-              // Price selection (sack or per kilo)
-              _buildPriceSelection(),
-              const SizedBox(height: 16),
+                      // Price selection (sack or per kilo)
+                      _buildPriceSelection(),
+                      const SizedBox(height: 16),
 
-              // Quantity input
-              const Text(
-                'Quantity',
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _quantityController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                ],
-                decoration: InputDecoration(
-                  hintText: 'Enter quantity',
-                  suffixText: _getUnitLabel(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                      // Quantity input
+                      const Text(
+                        'Quantity',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _quantityController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}')),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: 'Enter quantity',
+                          suffixText: _getUnitLabel(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter quantity';
+                          }
+                          final qty = double.tryParse(value);
+                          if (qty == null || qty <= 0) {
+                            return 'Please enter a valid quantity';
+                          }
+                          // Check stock availability
+                          final maxStock = _getMaxStock();
+                          if (qty > maxStock) {
+                            return 'Insufficient stock (max: ${maxStock.toStringAsFixed(1)})';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Stock info
+                      _buildStockInfo(),
+                    ],
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter quantity';
-                  }
-                  final qty = double.tryParse(value);
-                  if (qty == null || qty <= 0) {
-                    return 'Please enter a valid quantity';
-                  }
-                  // Check stock availability
-                  final maxStock = _getMaxStock();
-                  if (qty > maxStock) {
-                    return 'Insufficient stock (max: ${maxStock.toStringAsFixed(1)})';
-                  }
-                  return null;
-                },
               ),
-              const SizedBox(height: 8),
-
-              // Stock info
-              _buildStockInfo(),
               const SizedBox(height: 24),
 
-              // Action buttons
+              // Action buttons (outside scrollable area)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

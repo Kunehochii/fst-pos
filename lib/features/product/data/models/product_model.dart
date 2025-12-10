@@ -170,7 +170,7 @@ class ProductModel with _$ProductModel {
   const factory ProductModel({
     required String id,
     required String name,
-    required String picture,
+    String? picture,
     required String category,
     @JsonKey(name: 'cashierId') required String cashierId,
     @JsonKey(name: 'sackPrices') @Default([]) List<SackPriceModel> sackPrices,
@@ -187,7 +187,7 @@ class ProductModel with _$ProductModel {
   Product toEntity() => Product(
         id: id,
         name: name,
-        picture: picture,
+        picture: picture ?? 'https://placehold.co/800x800?text=Product',
         category: ProductCategory.fromString(category),
         cashierId: cashierId,
         sackPrices: sackPrices.map((sp) => sp.toEntity()).toList(),
