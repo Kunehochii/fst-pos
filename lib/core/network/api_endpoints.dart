@@ -23,6 +23,7 @@ class ApiEndpoints {
   static const transfer = _TransferEndpoints();
   static const expenses = _ExpenseEndpoints();
   static const bills = _BillEndpoints();
+  static const sheet = _SheetEndpoints();
   // Add more endpoint groups as needed
 }
 
@@ -174,4 +175,47 @@ class _BillEndpoints {
 
   /// Get bill count by ID (GET /bills/:id)
   String byId(String id) => '/bills/$id';
+}
+
+class _SheetEndpoints {
+  const _SheetEndpoints();
+
+  // Sheet retrieval
+  /// Get Kahon sheet (GET /sheet/kahon)
+  String get kahon => '/sheet/kahon';
+
+  /// Get Kahon sheet by date (GET /sheet/kahon/date)
+  String get kahonByDate => '/sheet/kahon/date';
+
+  /// Get Inventory sheet (GET /sheet/inventory)
+  String get inventory => '/sheet/inventory';
+
+  /// Get Inventory sheet by date (GET /sheet/inventory/date)
+  String get inventoryByDate => '/sheet/inventory/date';
+
+  // Row operations
+  /// Add single row (POST /sheet/row)
+  String get row => '/sheet/row';
+
+  /// Add multiple rows (POST /sheet/rows)
+  String get rows => '/sheet/rows';
+
+  /// Delete row (DELETE /sheet/row/:id)
+  String rowById(String id) => '/sheet/row/$id';
+
+  /// Reorder row (PATCH /sheet/row/reorder)
+  String get rowReorder => '/sheet/row/reorder';
+
+  /// Batch update row positions (PATCH /sheet/rows/positions)
+  String get rowsPositions => '/sheet/rows/positions';
+
+  // Cell operations
+  /// Add single cell (POST /sheet/cell)
+  String get cell => '/sheet/cell';
+
+  /// Add multiple cells (POST /sheet/cells)
+  String get cells => '/sheet/cells';
+
+  /// Update/Delete cell (PATCH/DELETE /sheet/cell/:id)
+  String cellById(String id) => '/sheet/cell/$id';
 }

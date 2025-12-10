@@ -12,6 +12,7 @@ import '../../features/profit/presentation/pages/profit_page.dart';
 import '../../features/sales/presentation/pages/sales_page.dart';
 import '../../features/sales_check/presentation/pages/sales_check_page.dart';
 import '../../features/settings/settings.dart';
+import '../../features/sheet/sheet.dart';
 import '../../features/shift/shift.dart';
 import '../../features/stock/presentation/pages/stock_page.dart';
 import '../../shared/widgets/main_layout.dart';
@@ -163,6 +164,20 @@ GoRouter appRouter(Ref ref) {
               child: BillCountPage(),
             ),
           ),
+          GoRoute(
+            path: '/kahon',
+            name: 'kahon',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: SheetPage(sheetType: SheetType.kahon),
+            ),
+          ),
+          GoRoute(
+            path: '/inventory',
+            name: 'inventory',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: SheetPage(sheetType: SheetType.inventory),
+            ),
+          ),
           // Add more routes here following this pattern:
           // GoRoute(
           //   path: '/products',
@@ -210,6 +225,7 @@ abstract class AppRoutes {
   static const deliveries = '/deliveries';
   static const stocks = '/stocks';
   static const kahon = '/kahon';
+  static const inventory = '/inventory';
   static const salesHistory = '/sales-history';
   static const profit = '/profit';
   static const bills = '/bills';

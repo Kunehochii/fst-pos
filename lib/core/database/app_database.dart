@@ -11,6 +11,7 @@ import '../../features/bill_count/data/datasources/bill_count_tables.dart';
 import '../../features/delivery/data/datasources/delivery_tables.dart';
 import '../../features/product/data/datasources/product_tables.dart';
 import '../../features/sales/data/datasources/sales_tables.dart';
+import '../../features/sheet/data/datasources/sheet_tables.dart';
 import '../../features/stock/data/datasources/stock_tables.dart';
 
 part 'app_database.g.dart';
@@ -70,12 +71,19 @@ class SyncQueue extends Table {
   CachedBillCounts,
   PendingBillCountSync,
   BillCountCacheMeta,
+  // Sheet tables
+  CachedSheets,
+  SheetCacheMeta,
+  PendingSheetRowSync,
+  PendingSheetCellSync,
+  SheetRowIdMappings,
+  SheetCellIdMappings,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -115,6 +123,15 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(cachedBillCounts);
           await m.createTable(pendingBillCountSync);
           await m.createTable(billCountCacheMeta);
+        }
+        if (from < 7) {
+          // Add sheet caching tables
+          await m.createTable(cachedSheets);
+          await m.createTable(sheetCacheMeta);
+          await m.createTable(pendingSheetRowSync);
+          await m.createTable(pendingSheetCellSync);
+          await m.createTable(sheetRowIdMappings);
+          await m.createTable(sheetCellIdMappings);
         }
       },
       beforeOpen: (details) async {

@@ -7874,6 +7874,2322 @@ class BillCountCacheMetaCompanion
   }
 }
 
+class $CachedSheetsTable extends CachedSheets
+    with TableInfo<$CachedSheetsTable, CachedSheetRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedSheetsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cashierIdMeta =
+      const VerificationMeta('cashierId');
+  @override
+  late final GeneratedColumn<String> cashierId = GeneratedColumn<String>(
+      'cashier_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _columnsMeta =
+      const VerificationMeta('columns');
+  @override
+  late final GeneratedColumn<int> columns = GeneratedColumn<int>(
+      'columns', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(10));
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cachedAtMeta =
+      const VerificationMeta('cachedAt');
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+      'cached_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, cashierId, type, name, columns, data, cachedAt, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cached_sheets';
+  @override
+  VerificationContext validateIntegrity(Insertable<CachedSheetRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('cashier_id')) {
+      context.handle(_cashierIdMeta,
+          cashierId.isAcceptableOrUnknown(data['cashier_id']!, _cashierIdMeta));
+    } else if (isInserting) {
+      context.missing(_cashierIdMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('columns')) {
+      context.handle(_columnsMeta,
+          columns.isAcceptableOrUnknown(data['columns']!, _columnsMeta));
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(_cachedAtMeta,
+          cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CachedSheetRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CachedSheetRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      cashierId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cashier_id'])!,
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      columns: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}columns'])!,
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      cachedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}cached_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $CachedSheetsTable createAlias(String alias) {
+    return $CachedSheetsTable(attachedDatabase, alias);
+  }
+}
+
+class CachedSheetRow extends DataClass implements Insertable<CachedSheetRow> {
+  /// Sheet ID from the server.
+  final String id;
+
+  /// Cashier ID who owns this sheet.
+  final String cashierId;
+
+  /// Sheet type (KAHON, INVENTORY).
+  final String type;
+
+  /// Sheet name.
+  final String name;
+
+  /// Number of columns.
+  final int columns;
+
+  /// Complete sheet data as JSON (includes rows and cells).
+  final String data;
+
+  /// When the cache entry was created.
+  final DateTime cachedAt;
+
+  /// When the cache entry was last updated.
+  final DateTime updatedAt;
+  const CachedSheetRow(
+      {required this.id,
+      required this.cashierId,
+      required this.type,
+      required this.name,
+      required this.columns,
+      required this.data,
+      required this.cachedAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['cashier_id'] = Variable<String>(cashierId);
+    map['type'] = Variable<String>(type);
+    map['name'] = Variable<String>(name);
+    map['columns'] = Variable<int>(columns);
+    map['data'] = Variable<String>(data);
+    map['cached_at'] = Variable<DateTime>(cachedAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CachedSheetsCompanion toCompanion(bool nullToAbsent) {
+    return CachedSheetsCompanion(
+      id: Value(id),
+      cashierId: Value(cashierId),
+      type: Value(type),
+      name: Value(name),
+      columns: Value(columns),
+      data: Value(data),
+      cachedAt: Value(cachedAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CachedSheetRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedSheetRow(
+      id: serializer.fromJson<String>(json['id']),
+      cashierId: serializer.fromJson<String>(json['cashierId']),
+      type: serializer.fromJson<String>(json['type']),
+      name: serializer.fromJson<String>(json['name']),
+      columns: serializer.fromJson<int>(json['columns']),
+      data: serializer.fromJson<String>(json['data']),
+      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'cashierId': serializer.toJson<String>(cashierId),
+      'type': serializer.toJson<String>(type),
+      'name': serializer.toJson<String>(name),
+      'columns': serializer.toJson<int>(columns),
+      'data': serializer.toJson<String>(data),
+      'cachedAt': serializer.toJson<DateTime>(cachedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CachedSheetRow copyWith(
+          {String? id,
+          String? cashierId,
+          String? type,
+          String? name,
+          int? columns,
+          String? data,
+          DateTime? cachedAt,
+          DateTime? updatedAt}) =>
+      CachedSheetRow(
+        id: id ?? this.id,
+        cashierId: cashierId ?? this.cashierId,
+        type: type ?? this.type,
+        name: name ?? this.name,
+        columns: columns ?? this.columns,
+        data: data ?? this.data,
+        cachedAt: cachedAt ?? this.cachedAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  CachedSheetRow copyWithCompanion(CachedSheetsCompanion data) {
+    return CachedSheetRow(
+      id: data.id.present ? data.id.value : this.id,
+      cashierId: data.cashierId.present ? data.cashierId.value : this.cashierId,
+      type: data.type.present ? data.type.value : this.type,
+      name: data.name.present ? data.name.value : this.name,
+      columns: data.columns.present ? data.columns.value : this.columns,
+      data: data.data.present ? data.data.value : this.data,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedSheetRow(')
+          ..write('id: $id, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('type: $type, ')
+          ..write('name: $name, ')
+          ..write('columns: $columns, ')
+          ..write('data: $data, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, cashierId, type, name, columns, data, cachedAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedSheetRow &&
+          other.id == this.id &&
+          other.cashierId == this.cashierId &&
+          other.type == this.type &&
+          other.name == this.name &&
+          other.columns == this.columns &&
+          other.data == this.data &&
+          other.cachedAt == this.cachedAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CachedSheetsCompanion extends UpdateCompanion<CachedSheetRow> {
+  final Value<String> id;
+  final Value<String> cashierId;
+  final Value<String> type;
+  final Value<String> name;
+  final Value<int> columns;
+  final Value<String> data;
+  final Value<DateTime> cachedAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const CachedSheetsCompanion({
+    this.id = const Value.absent(),
+    this.cashierId = const Value.absent(),
+    this.type = const Value.absent(),
+    this.name = const Value.absent(),
+    this.columns = const Value.absent(),
+    this.data = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CachedSheetsCompanion.insert({
+    required String id,
+    required String cashierId,
+    required String type,
+    required String name,
+    this.columns = const Value.absent(),
+    required String data,
+    this.cachedAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        cashierId = Value(cashierId),
+        type = Value(type),
+        name = Value(name),
+        data = Value(data);
+  static Insertable<CachedSheetRow> custom({
+    Expression<String>? id,
+    Expression<String>? cashierId,
+    Expression<String>? type,
+    Expression<String>? name,
+    Expression<int>? columns,
+    Expression<String>? data,
+    Expression<DateTime>? cachedAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (cashierId != null) 'cashier_id': cashierId,
+      if (type != null) 'type': type,
+      if (name != null) 'name': name,
+      if (columns != null) 'columns': columns,
+      if (data != null) 'data': data,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CachedSheetsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? cashierId,
+      Value<String>? type,
+      Value<String>? name,
+      Value<int>? columns,
+      Value<String>? data,
+      Value<DateTime>? cachedAt,
+      Value<DateTime>? updatedAt,
+      Value<int>? rowid}) {
+    return CachedSheetsCompanion(
+      id: id ?? this.id,
+      cashierId: cashierId ?? this.cashierId,
+      type: type ?? this.type,
+      name: name ?? this.name,
+      columns: columns ?? this.columns,
+      data: data ?? this.data,
+      cachedAt: cachedAt ?? this.cachedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (cashierId.present) {
+      map['cashier_id'] = Variable<String>(cashierId.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (columns.present) {
+      map['columns'] = Variable<int>(columns.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedSheetsCompanion(')
+          ..write('id: $id, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('type: $type, ')
+          ..write('name: $name, ')
+          ..write('columns: $columns, ')
+          ..write('data: $data, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SheetCacheMetaTable extends SheetCacheMeta
+    with TableInfo<$SheetCacheMetaTable, SheetCacheMetaRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SheetCacheMetaTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _cacheKeyMeta =
+      const VerificationMeta('cacheKey');
+  @override
+  late final GeneratedColumn<String> cacheKey = GeneratedColumn<String>(
+      'cache_key', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cashierIdMeta =
+      const VerificationMeta('cashierId');
+  @override
+  late final GeneratedColumn<String> cashierId = GeneratedColumn<String>(
+      'cashier_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _lastSyncedAtMeta =
+      const VerificationMeta('lastSyncedAt');
+  @override
+  late final GeneratedColumn<DateTime> lastSyncedAt = GeneratedColumn<DateTime>(
+      'last_synced_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncingMeta =
+      const VerificationMeta('isSyncing');
+  @override
+  late final GeneratedColumn<bool> isSyncing = GeneratedColumn<bool>(
+      'is_syncing', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_syncing" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _lastErrorMeta =
+      const VerificationMeta('lastError');
+  @override
+  late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
+      'last_error', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [cacheKey, cashierId, type, lastSyncedAt, isSyncing, lastError];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sheet_cache_meta';
+  @override
+  VerificationContext validateIntegrity(Insertable<SheetCacheMetaRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('cache_key')) {
+      context.handle(_cacheKeyMeta,
+          cacheKey.isAcceptableOrUnknown(data['cache_key']!, _cacheKeyMeta));
+    } else if (isInserting) {
+      context.missing(_cacheKeyMeta);
+    }
+    if (data.containsKey('cashier_id')) {
+      context.handle(_cashierIdMeta,
+          cashierId.isAcceptableOrUnknown(data['cashier_id']!, _cashierIdMeta));
+    } else if (isInserting) {
+      context.missing(_cashierIdMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('last_synced_at')) {
+      context.handle(
+          _lastSyncedAtMeta,
+          lastSyncedAt.isAcceptableOrUnknown(
+              data['last_synced_at']!, _lastSyncedAtMeta));
+    } else if (isInserting) {
+      context.missing(_lastSyncedAtMeta);
+    }
+    if (data.containsKey('is_syncing')) {
+      context.handle(_isSyncingMeta,
+          isSyncing.isAcceptableOrUnknown(data['is_syncing']!, _isSyncingMeta));
+    }
+    if (data.containsKey('last_error')) {
+      context.handle(_lastErrorMeta,
+          lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {cacheKey};
+  @override
+  SheetCacheMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SheetCacheMetaRow(
+      cacheKey: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cache_key'])!,
+      cashierId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cashier_id'])!,
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      lastSyncedAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_synced_at'])!,
+      isSyncing: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_syncing'])!,
+      lastError: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}last_error']),
+    );
+  }
+
+  @override
+  $SheetCacheMetaTable createAlias(String alias) {
+    return $SheetCacheMetaTable(attachedDatabase, alias);
+  }
+}
+
+class SheetCacheMetaRow extends DataClass
+    implements Insertable<SheetCacheMetaRow> {
+  /// Cashier ID + Sheet type combination.
+  final String cacheKey;
+
+  /// Cashier ID whose sheets are cached.
+  final String cashierId;
+
+  /// Sheet type (KAHON, INVENTORY).
+  final String type;
+
+  /// When the sheets were last synced from server.
+  final DateTime lastSyncedAt;
+
+  /// Whether a sync is currently in progress.
+  final bool isSyncing;
+
+  /// Last sync error message, if any.
+  final String? lastError;
+  const SheetCacheMetaRow(
+      {required this.cacheKey,
+      required this.cashierId,
+      required this.type,
+      required this.lastSyncedAt,
+      required this.isSyncing,
+      this.lastError});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['cache_key'] = Variable<String>(cacheKey);
+    map['cashier_id'] = Variable<String>(cashierId);
+    map['type'] = Variable<String>(type);
+    map['last_synced_at'] = Variable<DateTime>(lastSyncedAt);
+    map['is_syncing'] = Variable<bool>(isSyncing);
+    if (!nullToAbsent || lastError != null) {
+      map['last_error'] = Variable<String>(lastError);
+    }
+    return map;
+  }
+
+  SheetCacheMetaCompanion toCompanion(bool nullToAbsent) {
+    return SheetCacheMetaCompanion(
+      cacheKey: Value(cacheKey),
+      cashierId: Value(cashierId),
+      type: Value(type),
+      lastSyncedAt: Value(lastSyncedAt),
+      isSyncing: Value(isSyncing),
+      lastError: lastError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastError),
+    );
+  }
+
+  factory SheetCacheMetaRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SheetCacheMetaRow(
+      cacheKey: serializer.fromJson<String>(json['cacheKey']),
+      cashierId: serializer.fromJson<String>(json['cashierId']),
+      type: serializer.fromJson<String>(json['type']),
+      lastSyncedAt: serializer.fromJson<DateTime>(json['lastSyncedAt']),
+      isSyncing: serializer.fromJson<bool>(json['isSyncing']),
+      lastError: serializer.fromJson<String?>(json['lastError']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cacheKey': serializer.toJson<String>(cacheKey),
+      'cashierId': serializer.toJson<String>(cashierId),
+      'type': serializer.toJson<String>(type),
+      'lastSyncedAt': serializer.toJson<DateTime>(lastSyncedAt),
+      'isSyncing': serializer.toJson<bool>(isSyncing),
+      'lastError': serializer.toJson<String?>(lastError),
+    };
+  }
+
+  SheetCacheMetaRow copyWith(
+          {String? cacheKey,
+          String? cashierId,
+          String? type,
+          DateTime? lastSyncedAt,
+          bool? isSyncing,
+          Value<String?> lastError = const Value.absent()}) =>
+      SheetCacheMetaRow(
+        cacheKey: cacheKey ?? this.cacheKey,
+        cashierId: cashierId ?? this.cashierId,
+        type: type ?? this.type,
+        lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+        isSyncing: isSyncing ?? this.isSyncing,
+        lastError: lastError.present ? lastError.value : this.lastError,
+      );
+  SheetCacheMetaRow copyWithCompanion(SheetCacheMetaCompanion data) {
+    return SheetCacheMetaRow(
+      cacheKey: data.cacheKey.present ? data.cacheKey.value : this.cacheKey,
+      cashierId: data.cashierId.present ? data.cashierId.value : this.cashierId,
+      type: data.type.present ? data.type.value : this.type,
+      lastSyncedAt: data.lastSyncedAt.present
+          ? data.lastSyncedAt.value
+          : this.lastSyncedAt,
+      isSyncing: data.isSyncing.present ? data.isSyncing.value : this.isSyncing,
+      lastError: data.lastError.present ? data.lastError.value : this.lastError,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SheetCacheMetaRow(')
+          ..write('cacheKey: $cacheKey, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('type: $type, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('isSyncing: $isSyncing, ')
+          ..write('lastError: $lastError')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      cacheKey, cashierId, type, lastSyncedAt, isSyncing, lastError);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SheetCacheMetaRow &&
+          other.cacheKey == this.cacheKey &&
+          other.cashierId == this.cashierId &&
+          other.type == this.type &&
+          other.lastSyncedAt == this.lastSyncedAt &&
+          other.isSyncing == this.isSyncing &&
+          other.lastError == this.lastError);
+}
+
+class SheetCacheMetaCompanion extends UpdateCompanion<SheetCacheMetaRow> {
+  final Value<String> cacheKey;
+  final Value<String> cashierId;
+  final Value<String> type;
+  final Value<DateTime> lastSyncedAt;
+  final Value<bool> isSyncing;
+  final Value<String?> lastError;
+  final Value<int> rowid;
+  const SheetCacheMetaCompanion({
+    this.cacheKey = const Value.absent(),
+    this.cashierId = const Value.absent(),
+    this.type = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.isSyncing = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SheetCacheMetaCompanion.insert({
+    required String cacheKey,
+    required String cashierId,
+    required String type,
+    required DateTime lastSyncedAt,
+    this.isSyncing = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : cacheKey = Value(cacheKey),
+        cashierId = Value(cashierId),
+        type = Value(type),
+        lastSyncedAt = Value(lastSyncedAt);
+  static Insertable<SheetCacheMetaRow> custom({
+    Expression<String>? cacheKey,
+    Expression<String>? cashierId,
+    Expression<String>? type,
+    Expression<DateTime>? lastSyncedAt,
+    Expression<bool>? isSyncing,
+    Expression<String>? lastError,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (cacheKey != null) 'cache_key': cacheKey,
+      if (cashierId != null) 'cashier_id': cashierId,
+      if (type != null) 'type': type,
+      if (lastSyncedAt != null) 'last_synced_at': lastSyncedAt,
+      if (isSyncing != null) 'is_syncing': isSyncing,
+      if (lastError != null) 'last_error': lastError,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SheetCacheMetaCompanion copyWith(
+      {Value<String>? cacheKey,
+      Value<String>? cashierId,
+      Value<String>? type,
+      Value<DateTime>? lastSyncedAt,
+      Value<bool>? isSyncing,
+      Value<String?>? lastError,
+      Value<int>? rowid}) {
+    return SheetCacheMetaCompanion(
+      cacheKey: cacheKey ?? this.cacheKey,
+      cashierId: cashierId ?? this.cashierId,
+      type: type ?? this.type,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+      isSyncing: isSyncing ?? this.isSyncing,
+      lastError: lastError ?? this.lastError,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (cacheKey.present) {
+      map['cache_key'] = Variable<String>(cacheKey.value);
+    }
+    if (cashierId.present) {
+      map['cashier_id'] = Variable<String>(cashierId.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (lastSyncedAt.present) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt.value);
+    }
+    if (isSyncing.present) {
+      map['is_syncing'] = Variable<bool>(isSyncing.value);
+    }
+    if (lastError.present) {
+      map['last_error'] = Variable<String>(lastError.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SheetCacheMetaCompanion(')
+          ..write('cacheKey: $cacheKey, ')
+          ..write('cashierId: $cashierId, ')
+          ..write('type: $type, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('isSyncing: $isSyncing, ')
+          ..write('lastError: $lastError, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PendingSheetRowSyncTable extends PendingSheetRowSync
+    with TableInfo<$PendingSheetRowSyncTable, PendingSheetRowSyncRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingSheetRowSyncTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _localIdMeta =
+      const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<String> localId = GeneratedColumn<String>(
+      'local_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _sheetIdMeta =
+      const VerificationMeta('sheetId');
+  @override
+  late final GeneratedColumn<String> sheetId = GeneratedColumn<String>(
+      'sheet_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _operationMeta =
+      const VerificationMeta('operation');
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+      'operation', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _payloadMeta =
+      const VerificationMeta('payload');
+  @override
+  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
+      'payload', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  @override
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _syncedAtMeta =
+      const VerificationMeta('syncedAt');
+  @override
+  late final GeneratedColumn<DateTime> syncedAt = GeneratedColumn<DateTime>(
+      'synced_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        localId,
+        serverId,
+        sheetId,
+        operation,
+        payload,
+        createdAt,
+        synced,
+        syncedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_sheet_row_sync';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PendingSheetRowSyncRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    } else if (isInserting) {
+      context.missing(_localIdMeta);
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    }
+    if (data.containsKey('sheet_id')) {
+      context.handle(_sheetIdMeta,
+          sheetId.isAcceptableOrUnknown(data['sheet_id']!, _sheetIdMeta));
+    } else if (isInserting) {
+      context.missing(_sheetIdMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(_operationMeta,
+          operation.isAcceptableOrUnknown(data['operation']!, _operationMeta));
+    } else if (isInserting) {
+      context.missing(_operationMeta);
+    }
+    if (data.containsKey('payload')) {
+      context.handle(_payloadMeta,
+          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
+    } else if (isInserting) {
+      context.missing(_payloadMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('synced')) {
+      context.handle(_syncedMeta,
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
+    }
+    if (data.containsKey('synced_at')) {
+      context.handle(_syncedAtMeta,
+          syncedAt.isAcceptableOrUnknown(data['synced_at']!, _syncedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingSheetRowSyncRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingSheetRowSyncRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      localId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_id'])!,
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id']),
+      sheetId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sheet_id'])!,
+      operation: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}operation'])!,
+      payload: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      syncedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}synced_at']),
+    );
+  }
+
+  @override
+  $PendingSheetRowSyncTable createAlias(String alias) {
+    return $PendingSheetRowSyncTable(attachedDatabase, alias);
+  }
+}
+
+class PendingSheetRowSyncRow extends DataClass
+    implements Insertable<PendingSheetRowSyncRow> {
+  /// Auto-generated ID.
+  final int id;
+
+  /// Temporary local ID for new rows.
+  final String localId;
+
+  /// Server ID if known (for updates/deletes).
+  final String? serverId;
+
+  /// Sheet ID this row belongs to.
+  final String sheetId;
+
+  /// Operation type: 'create', 'update', 'delete', 'reorder'.
+  final String operation;
+
+  /// Row data as JSON.
+  final String payload;
+
+  /// When this sync entry was created.
+  final DateTime createdAt;
+
+  /// Whether this has been synced.
+  final bool synced;
+
+  /// When this was synced.
+  final DateTime? syncedAt;
+  const PendingSheetRowSyncRow(
+      {required this.id,
+      required this.localId,
+      this.serverId,
+      required this.sheetId,
+      required this.operation,
+      required this.payload,
+      required this.createdAt,
+      required this.synced,
+      this.syncedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['local_id'] = Variable<String>(localId);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<String>(serverId);
+    }
+    map['sheet_id'] = Variable<String>(sheetId);
+    map['operation'] = Variable<String>(operation);
+    map['payload'] = Variable<String>(payload);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['synced'] = Variable<bool>(synced);
+    if (!nullToAbsent || syncedAt != null) {
+      map['synced_at'] = Variable<DateTime>(syncedAt);
+    }
+    return map;
+  }
+
+  PendingSheetRowSyncCompanion toCompanion(bool nullToAbsent) {
+    return PendingSheetRowSyncCompanion(
+      id: Value(id),
+      localId: Value(localId),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      sheetId: Value(sheetId),
+      operation: Value(operation),
+      payload: Value(payload),
+      createdAt: Value(createdAt),
+      synced: Value(synced),
+      syncedAt: syncedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncedAt),
+    );
+  }
+
+  factory PendingSheetRowSyncRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingSheetRowSyncRow(
+      id: serializer.fromJson<int>(json['id']),
+      localId: serializer.fromJson<String>(json['localId']),
+      serverId: serializer.fromJson<String?>(json['serverId']),
+      sheetId: serializer.fromJson<String>(json['sheetId']),
+      operation: serializer.fromJson<String>(json['operation']),
+      payload: serializer.fromJson<String>(json['payload']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      syncedAt: serializer.fromJson<DateTime?>(json['syncedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'localId': serializer.toJson<String>(localId),
+      'serverId': serializer.toJson<String?>(serverId),
+      'sheetId': serializer.toJson<String>(sheetId),
+      'operation': serializer.toJson<String>(operation),
+      'payload': serializer.toJson<String>(payload),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'synced': serializer.toJson<bool>(synced),
+      'syncedAt': serializer.toJson<DateTime?>(syncedAt),
+    };
+  }
+
+  PendingSheetRowSyncRow copyWith(
+          {int? id,
+          String? localId,
+          Value<String?> serverId = const Value.absent(),
+          String? sheetId,
+          String? operation,
+          String? payload,
+          DateTime? createdAt,
+          bool? synced,
+          Value<DateTime?> syncedAt = const Value.absent()}) =>
+      PendingSheetRowSyncRow(
+        id: id ?? this.id,
+        localId: localId ?? this.localId,
+        serverId: serverId.present ? serverId.value : this.serverId,
+        sheetId: sheetId ?? this.sheetId,
+        operation: operation ?? this.operation,
+        payload: payload ?? this.payload,
+        createdAt: createdAt ?? this.createdAt,
+        synced: synced ?? this.synced,
+        syncedAt: syncedAt.present ? syncedAt.value : this.syncedAt,
+      );
+  PendingSheetRowSyncRow copyWithCompanion(PendingSheetRowSyncCompanion data) {
+    return PendingSheetRowSyncRow(
+      id: data.id.present ? data.id.value : this.id,
+      localId: data.localId.present ? data.localId.value : this.localId,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      sheetId: data.sheetId.present ? data.sheetId.value : this.sheetId,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      payload: data.payload.present ? data.payload.value : this.payload,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      synced: data.synced.present ? data.synced.value : this.synced,
+      syncedAt: data.syncedAt.present ? data.syncedAt.value : this.syncedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSheetRowSyncRow(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('sheetId: $sheetId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('synced: $synced, ')
+          ..write('syncedAt: $syncedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, localId, serverId, sheetId, operation,
+      payload, createdAt, synced, syncedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingSheetRowSyncRow &&
+          other.id == this.id &&
+          other.localId == this.localId &&
+          other.serverId == this.serverId &&
+          other.sheetId == this.sheetId &&
+          other.operation == this.operation &&
+          other.payload == this.payload &&
+          other.createdAt == this.createdAt &&
+          other.synced == this.synced &&
+          other.syncedAt == this.syncedAt);
+}
+
+class PendingSheetRowSyncCompanion
+    extends UpdateCompanion<PendingSheetRowSyncRow> {
+  final Value<int> id;
+  final Value<String> localId;
+  final Value<String?> serverId;
+  final Value<String> sheetId;
+  final Value<String> operation;
+  final Value<String> payload;
+  final Value<DateTime> createdAt;
+  final Value<bool> synced;
+  final Value<DateTime?> syncedAt;
+  const PendingSheetRowSyncCompanion({
+    this.id = const Value.absent(),
+    this.localId = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.sheetId = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+  });
+  PendingSheetRowSyncCompanion.insert({
+    this.id = const Value.absent(),
+    required String localId,
+    this.serverId = const Value.absent(),
+    required String sheetId,
+    required String operation,
+    required String payload,
+    this.createdAt = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+  })  : localId = Value(localId),
+        sheetId = Value(sheetId),
+        operation = Value(operation),
+        payload = Value(payload);
+  static Insertable<PendingSheetRowSyncRow> custom({
+    Expression<int>? id,
+    Expression<String>? localId,
+    Expression<String>? serverId,
+    Expression<String>? sheetId,
+    Expression<String>? operation,
+    Expression<String>? payload,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? synced,
+    Expression<DateTime>? syncedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (localId != null) 'local_id': localId,
+      if (serverId != null) 'server_id': serverId,
+      if (sheetId != null) 'sheet_id': sheetId,
+      if (operation != null) 'operation': operation,
+      if (payload != null) 'payload': payload,
+      if (createdAt != null) 'created_at': createdAt,
+      if (synced != null) 'synced': synced,
+      if (syncedAt != null) 'synced_at': syncedAt,
+    });
+  }
+
+  PendingSheetRowSyncCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? localId,
+      Value<String?>? serverId,
+      Value<String>? sheetId,
+      Value<String>? operation,
+      Value<String>? payload,
+      Value<DateTime>? createdAt,
+      Value<bool>? synced,
+      Value<DateTime?>? syncedAt}) {
+    return PendingSheetRowSyncCompanion(
+      id: id ?? this.id,
+      localId: localId ?? this.localId,
+      serverId: serverId ?? this.serverId,
+      sheetId: sheetId ?? this.sheetId,
+      operation: operation ?? this.operation,
+      payload: payload ?? this.payload,
+      createdAt: createdAt ?? this.createdAt,
+      synced: synced ?? this.synced,
+      syncedAt: syncedAt ?? this.syncedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (localId.present) {
+      map['local_id'] = Variable<String>(localId.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (sheetId.present) {
+      map['sheet_id'] = Variable<String>(sheetId.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (synced.present) {
+      map['synced'] = Variable<bool>(synced.value);
+    }
+    if (syncedAt.present) {
+      map['synced_at'] = Variable<DateTime>(syncedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSheetRowSyncCompanion(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('sheetId: $sheetId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('synced: $synced, ')
+          ..write('syncedAt: $syncedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PendingSheetCellSyncTable extends PendingSheetCellSync
+    with TableInfo<$PendingSheetCellSyncTable, PendingSheetCellSyncRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingSheetCellSyncTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _localIdMeta =
+      const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<String> localId = GeneratedColumn<String>(
+      'local_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
+      'row_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _operationMeta =
+      const VerificationMeta('operation');
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+      'operation', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _payloadMeta =
+      const VerificationMeta('payload');
+  @override
+  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
+      'payload', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  @override
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _syncedAtMeta =
+      const VerificationMeta('syncedAt');
+  @override
+  late final GeneratedColumn<DateTime> syncedAt = GeneratedColumn<DateTime>(
+      'synced_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        localId,
+        serverId,
+        rowId,
+        operation,
+        payload,
+        createdAt,
+        synced,
+        syncedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_sheet_cell_sync';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PendingSheetCellSyncRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    } else if (isInserting) {
+      context.missing(_localIdMeta);
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    }
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    } else if (isInserting) {
+      context.missing(_rowIdMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(_operationMeta,
+          operation.isAcceptableOrUnknown(data['operation']!, _operationMeta));
+    } else if (isInserting) {
+      context.missing(_operationMeta);
+    }
+    if (data.containsKey('payload')) {
+      context.handle(_payloadMeta,
+          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
+    } else if (isInserting) {
+      context.missing(_payloadMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('synced')) {
+      context.handle(_syncedMeta,
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
+    }
+    if (data.containsKey('synced_at')) {
+      context.handle(_syncedAtMeta,
+          syncedAt.isAcceptableOrUnknown(data['synced_at']!, _syncedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingSheetCellSyncRow map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingSheetCellSyncRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      localId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_id'])!,
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id']),
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}row_id'])!,
+      operation: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}operation'])!,
+      payload: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      syncedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}synced_at']),
+    );
+  }
+
+  @override
+  $PendingSheetCellSyncTable createAlias(String alias) {
+    return $PendingSheetCellSyncTable(attachedDatabase, alias);
+  }
+}
+
+class PendingSheetCellSyncRow extends DataClass
+    implements Insertable<PendingSheetCellSyncRow> {
+  /// Auto-generated ID.
+  final int id;
+
+  /// Temporary local ID for new cells.
+  final String localId;
+
+  /// Server ID if known (for updates/deletes).
+  final String? serverId;
+
+  /// Row ID this cell belongs to (may be local or server ID).
+  final String rowId;
+
+  /// Operation type: 'create', 'update', 'delete'.
+  final String operation;
+
+  /// Cell data as JSON.
+  final String payload;
+
+  /// When this sync entry was created.
+  final DateTime createdAt;
+
+  /// Whether this has been synced.
+  final bool synced;
+
+  /// When this was synced.
+  final DateTime? syncedAt;
+  const PendingSheetCellSyncRow(
+      {required this.id,
+      required this.localId,
+      this.serverId,
+      required this.rowId,
+      required this.operation,
+      required this.payload,
+      required this.createdAt,
+      required this.synced,
+      this.syncedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['local_id'] = Variable<String>(localId);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<String>(serverId);
+    }
+    map['row_id'] = Variable<String>(rowId);
+    map['operation'] = Variable<String>(operation);
+    map['payload'] = Variable<String>(payload);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['synced'] = Variable<bool>(synced);
+    if (!nullToAbsent || syncedAt != null) {
+      map['synced_at'] = Variable<DateTime>(syncedAt);
+    }
+    return map;
+  }
+
+  PendingSheetCellSyncCompanion toCompanion(bool nullToAbsent) {
+    return PendingSheetCellSyncCompanion(
+      id: Value(id),
+      localId: Value(localId),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      rowId: Value(rowId),
+      operation: Value(operation),
+      payload: Value(payload),
+      createdAt: Value(createdAt),
+      synced: Value(synced),
+      syncedAt: syncedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncedAt),
+    );
+  }
+
+  factory PendingSheetCellSyncRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingSheetCellSyncRow(
+      id: serializer.fromJson<int>(json['id']),
+      localId: serializer.fromJson<String>(json['localId']),
+      serverId: serializer.fromJson<String?>(json['serverId']),
+      rowId: serializer.fromJson<String>(json['rowId']),
+      operation: serializer.fromJson<String>(json['operation']),
+      payload: serializer.fromJson<String>(json['payload']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      syncedAt: serializer.fromJson<DateTime?>(json['syncedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'localId': serializer.toJson<String>(localId),
+      'serverId': serializer.toJson<String?>(serverId),
+      'rowId': serializer.toJson<String>(rowId),
+      'operation': serializer.toJson<String>(operation),
+      'payload': serializer.toJson<String>(payload),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'synced': serializer.toJson<bool>(synced),
+      'syncedAt': serializer.toJson<DateTime?>(syncedAt),
+    };
+  }
+
+  PendingSheetCellSyncRow copyWith(
+          {int? id,
+          String? localId,
+          Value<String?> serverId = const Value.absent(),
+          String? rowId,
+          String? operation,
+          String? payload,
+          DateTime? createdAt,
+          bool? synced,
+          Value<DateTime?> syncedAt = const Value.absent()}) =>
+      PendingSheetCellSyncRow(
+        id: id ?? this.id,
+        localId: localId ?? this.localId,
+        serverId: serverId.present ? serverId.value : this.serverId,
+        rowId: rowId ?? this.rowId,
+        operation: operation ?? this.operation,
+        payload: payload ?? this.payload,
+        createdAt: createdAt ?? this.createdAt,
+        synced: synced ?? this.synced,
+        syncedAt: syncedAt.present ? syncedAt.value : this.syncedAt,
+      );
+  PendingSheetCellSyncRow copyWithCompanion(
+      PendingSheetCellSyncCompanion data) {
+    return PendingSheetCellSyncRow(
+      id: data.id.present ? data.id.value : this.id,
+      localId: data.localId.present ? data.localId.value : this.localId,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      rowId: data.rowId.present ? data.rowId.value : this.rowId,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      payload: data.payload.present ? data.payload.value : this.payload,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      synced: data.synced.present ? data.synced.value : this.synced,
+      syncedAt: data.syncedAt.present ? data.syncedAt.value : this.syncedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSheetCellSyncRow(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('rowId: $rowId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('synced: $synced, ')
+          ..write('syncedAt: $syncedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, localId, serverId, rowId, operation,
+      payload, createdAt, synced, syncedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingSheetCellSyncRow &&
+          other.id == this.id &&
+          other.localId == this.localId &&
+          other.serverId == this.serverId &&
+          other.rowId == this.rowId &&
+          other.operation == this.operation &&
+          other.payload == this.payload &&
+          other.createdAt == this.createdAt &&
+          other.synced == this.synced &&
+          other.syncedAt == this.syncedAt);
+}
+
+class PendingSheetCellSyncCompanion
+    extends UpdateCompanion<PendingSheetCellSyncRow> {
+  final Value<int> id;
+  final Value<String> localId;
+  final Value<String?> serverId;
+  final Value<String> rowId;
+  final Value<String> operation;
+  final Value<String> payload;
+  final Value<DateTime> createdAt;
+  final Value<bool> synced;
+  final Value<DateTime?> syncedAt;
+  const PendingSheetCellSyncCompanion({
+    this.id = const Value.absent(),
+    this.localId = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.rowId = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+  });
+  PendingSheetCellSyncCompanion.insert({
+    this.id = const Value.absent(),
+    required String localId,
+    this.serverId = const Value.absent(),
+    required String rowId,
+    required String operation,
+    required String payload,
+    this.createdAt = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+  })  : localId = Value(localId),
+        rowId = Value(rowId),
+        operation = Value(operation),
+        payload = Value(payload);
+  static Insertable<PendingSheetCellSyncRow> custom({
+    Expression<int>? id,
+    Expression<String>? localId,
+    Expression<String>? serverId,
+    Expression<String>? rowId,
+    Expression<String>? operation,
+    Expression<String>? payload,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? synced,
+    Expression<DateTime>? syncedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (localId != null) 'local_id': localId,
+      if (serverId != null) 'server_id': serverId,
+      if (rowId != null) 'row_id': rowId,
+      if (operation != null) 'operation': operation,
+      if (payload != null) 'payload': payload,
+      if (createdAt != null) 'created_at': createdAt,
+      if (synced != null) 'synced': synced,
+      if (syncedAt != null) 'synced_at': syncedAt,
+    });
+  }
+
+  PendingSheetCellSyncCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? localId,
+      Value<String?>? serverId,
+      Value<String>? rowId,
+      Value<String>? operation,
+      Value<String>? payload,
+      Value<DateTime>? createdAt,
+      Value<bool>? synced,
+      Value<DateTime?>? syncedAt}) {
+    return PendingSheetCellSyncCompanion(
+      id: id ?? this.id,
+      localId: localId ?? this.localId,
+      serverId: serverId ?? this.serverId,
+      rowId: rowId ?? this.rowId,
+      operation: operation ?? this.operation,
+      payload: payload ?? this.payload,
+      createdAt: createdAt ?? this.createdAt,
+      synced: synced ?? this.synced,
+      syncedAt: syncedAt ?? this.syncedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (localId.present) {
+      map['local_id'] = Variable<String>(localId.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (rowId.present) {
+      map['row_id'] = Variable<String>(rowId.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (synced.present) {
+      map['synced'] = Variable<bool>(synced.value);
+    }
+    if (syncedAt.present) {
+      map['synced_at'] = Variable<DateTime>(syncedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSheetCellSyncCompanion(')
+          ..write('id: $id, ')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('rowId: $rowId, ')
+          ..write('operation: $operation, ')
+          ..write('payload: $payload, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('synced: $synced, ')
+          ..write('syncedAt: $syncedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SheetRowIdMappingsTable extends SheetRowIdMappings
+    with TableInfo<$SheetRowIdMappingsTable, SheetRowIdMappingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SheetRowIdMappingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localIdMeta =
+      const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<String> localId = GeneratedColumn<String>(
+      'local_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _sheetIdMeta =
+      const VerificationMeta('sheetId');
+  @override
+  late final GeneratedColumn<String> sheetId = GeneratedColumn<String>(
+      'sheet_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [localId, serverId, sheetId, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sheet_row_id_mappings';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<SheetRowIdMappingRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    } else if (isInserting) {
+      context.missing(_localIdMeta);
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    } else if (isInserting) {
+      context.missing(_serverIdMeta);
+    }
+    if (data.containsKey('sheet_id')) {
+      context.handle(_sheetIdMeta,
+          sheetId.isAcceptableOrUnknown(data['sheet_id']!, _sheetIdMeta));
+    } else if (isInserting) {
+      context.missing(_sheetIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  SheetRowIdMappingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SheetRowIdMappingRow(
+      localId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_id'])!,
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id'])!,
+      sheetId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sheet_id'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $SheetRowIdMappingsTable createAlias(String alias) {
+    return $SheetRowIdMappingsTable(attachedDatabase, alias);
+  }
+}
+
+class SheetRowIdMappingRow extends DataClass
+    implements Insertable<SheetRowIdMappingRow> {
+  /// Local temporary ID.
+  final String localId;
+
+  /// Server ID after sync.
+  final String serverId;
+
+  /// Sheet ID.
+  final String sheetId;
+
+  /// When this mapping was created.
+  final DateTime createdAt;
+  const SheetRowIdMappingRow(
+      {required this.localId,
+      required this.serverId,
+      required this.sheetId,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<String>(localId);
+    map['server_id'] = Variable<String>(serverId);
+    map['sheet_id'] = Variable<String>(sheetId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  SheetRowIdMappingsCompanion toCompanion(bool nullToAbsent) {
+    return SheetRowIdMappingsCompanion(
+      localId: Value(localId),
+      serverId: Value(serverId),
+      sheetId: Value(sheetId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory SheetRowIdMappingRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SheetRowIdMappingRow(
+      localId: serializer.fromJson<String>(json['localId']),
+      serverId: serializer.fromJson<String>(json['serverId']),
+      sheetId: serializer.fromJson<String>(json['sheetId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<String>(localId),
+      'serverId': serializer.toJson<String>(serverId),
+      'sheetId': serializer.toJson<String>(sheetId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  SheetRowIdMappingRow copyWith(
+          {String? localId,
+          String? serverId,
+          String? sheetId,
+          DateTime? createdAt}) =>
+      SheetRowIdMappingRow(
+        localId: localId ?? this.localId,
+        serverId: serverId ?? this.serverId,
+        sheetId: sheetId ?? this.sheetId,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  SheetRowIdMappingRow copyWithCompanion(SheetRowIdMappingsCompanion data) {
+    return SheetRowIdMappingRow(
+      localId: data.localId.present ? data.localId.value : this.localId,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      sheetId: data.sheetId.present ? data.sheetId.value : this.sheetId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SheetRowIdMappingRow(')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('sheetId: $sheetId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(localId, serverId, sheetId, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SheetRowIdMappingRow &&
+          other.localId == this.localId &&
+          other.serverId == this.serverId &&
+          other.sheetId == this.sheetId &&
+          other.createdAt == this.createdAt);
+}
+
+class SheetRowIdMappingsCompanion
+    extends UpdateCompanion<SheetRowIdMappingRow> {
+  final Value<String> localId;
+  final Value<String> serverId;
+  final Value<String> sheetId;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const SheetRowIdMappingsCompanion({
+    this.localId = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.sheetId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SheetRowIdMappingsCompanion.insert({
+    required String localId,
+    required String serverId,
+    required String sheetId,
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : localId = Value(localId),
+        serverId = Value(serverId),
+        sheetId = Value(sheetId);
+  static Insertable<SheetRowIdMappingRow> custom({
+    Expression<String>? localId,
+    Expression<String>? serverId,
+    Expression<String>? sheetId,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (serverId != null) 'server_id': serverId,
+      if (sheetId != null) 'sheet_id': sheetId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SheetRowIdMappingsCompanion copyWith(
+      {Value<String>? localId,
+      Value<String>? serverId,
+      Value<String>? sheetId,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return SheetRowIdMappingsCompanion(
+      localId: localId ?? this.localId,
+      serverId: serverId ?? this.serverId,
+      sheetId: sheetId ?? this.sheetId,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<String>(localId.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (sheetId.present) {
+      map['sheet_id'] = Variable<String>(sheetId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SheetRowIdMappingsCompanion(')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('sheetId: $sheetId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SheetCellIdMappingsTable extends SheetCellIdMappings
+    with TableInfo<$SheetCellIdMappingsTable, SheetCellIdMappingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SheetCellIdMappingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localIdMeta =
+      const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<String> localId = GeneratedColumn<String>(
+      'local_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
+      'row_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [localId, serverId, rowId, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sheet_cell_id_mappings';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<SheetCellIdMappingRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    } else if (isInserting) {
+      context.missing(_localIdMeta);
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    } else if (isInserting) {
+      context.missing(_serverIdMeta);
+    }
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    } else if (isInserting) {
+      context.missing(_rowIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  SheetCellIdMappingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SheetCellIdMappingRow(
+      localId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_id'])!,
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id'])!,
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}row_id'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $SheetCellIdMappingsTable createAlias(String alias) {
+    return $SheetCellIdMappingsTable(attachedDatabase, alias);
+  }
+}
+
+class SheetCellIdMappingRow extends DataClass
+    implements Insertable<SheetCellIdMappingRow> {
+  /// Local temporary ID.
+  final String localId;
+
+  /// Server ID after sync.
+  final String serverId;
+
+  /// Row ID.
+  final String rowId;
+
+  /// When this mapping was created.
+  final DateTime createdAt;
+  const SheetCellIdMappingRow(
+      {required this.localId,
+      required this.serverId,
+      required this.rowId,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<String>(localId);
+    map['server_id'] = Variable<String>(serverId);
+    map['row_id'] = Variable<String>(rowId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  SheetCellIdMappingsCompanion toCompanion(bool nullToAbsent) {
+    return SheetCellIdMappingsCompanion(
+      localId: Value(localId),
+      serverId: Value(serverId),
+      rowId: Value(rowId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory SheetCellIdMappingRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SheetCellIdMappingRow(
+      localId: serializer.fromJson<String>(json['localId']),
+      serverId: serializer.fromJson<String>(json['serverId']),
+      rowId: serializer.fromJson<String>(json['rowId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<String>(localId),
+      'serverId': serializer.toJson<String>(serverId),
+      'rowId': serializer.toJson<String>(rowId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  SheetCellIdMappingRow copyWith(
+          {String? localId,
+          String? serverId,
+          String? rowId,
+          DateTime? createdAt}) =>
+      SheetCellIdMappingRow(
+        localId: localId ?? this.localId,
+        serverId: serverId ?? this.serverId,
+        rowId: rowId ?? this.rowId,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  SheetCellIdMappingRow copyWithCompanion(SheetCellIdMappingsCompanion data) {
+    return SheetCellIdMappingRow(
+      localId: data.localId.present ? data.localId.value : this.localId,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      rowId: data.rowId.present ? data.rowId.value : this.rowId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SheetCellIdMappingRow(')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('rowId: $rowId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(localId, serverId, rowId, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SheetCellIdMappingRow &&
+          other.localId == this.localId &&
+          other.serverId == this.serverId &&
+          other.rowId == this.rowId &&
+          other.createdAt == this.createdAt);
+}
+
+class SheetCellIdMappingsCompanion
+    extends UpdateCompanion<SheetCellIdMappingRow> {
+  final Value<String> localId;
+  final Value<String> serverId;
+  final Value<String> rowId;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const SheetCellIdMappingsCompanion({
+    this.localId = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.rowId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SheetCellIdMappingsCompanion.insert({
+    required String localId,
+    required String serverId,
+    required String rowId,
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : localId = Value(localId),
+        serverId = Value(serverId),
+        rowId = Value(rowId);
+  static Insertable<SheetCellIdMappingRow> custom({
+    Expression<String>? localId,
+    Expression<String>? serverId,
+    Expression<String>? rowId,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (serverId != null) 'server_id': serverId,
+      if (rowId != null) 'row_id': rowId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SheetCellIdMappingsCompanion copyWith(
+      {Value<String>? localId,
+      Value<String>? serverId,
+      Value<String>? rowId,
+      Value<DateTime>? createdAt,
+      Value<int>? rowid}) {
+    return SheetCellIdMappingsCompanion(
+      localId: localId ?? this.localId,
+      serverId: serverId ?? this.serverId,
+      rowId: rowId ?? this.rowId,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<String>(localId.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (rowId.present) {
+      map['row_id'] = Variable<String>(rowId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SheetCellIdMappingsCompanion(')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('rowId: $rowId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7908,6 +10224,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $PendingBillCountSyncTable(this);
   late final $BillCountCacheMetaTable billCountCacheMeta =
       $BillCountCacheMetaTable(this);
+  late final $CachedSheetsTable cachedSheets = $CachedSheetsTable(this);
+  late final $SheetCacheMetaTable sheetCacheMeta = $SheetCacheMetaTable(this);
+  late final $PendingSheetRowSyncTable pendingSheetRowSync =
+      $PendingSheetRowSyncTable(this);
+  late final $PendingSheetCellSyncTable pendingSheetCellSync =
+      $PendingSheetCellSyncTable(this);
+  late final $SheetRowIdMappingsTable sheetRowIdMappings =
+      $SheetRowIdMappingsTable(this);
+  late final $SheetCellIdMappingsTable sheetCellIdMappings =
+      $SheetCellIdMappingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7929,7 +10255,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         transferStockAdjustments,
         cachedBillCounts,
         pendingBillCountSync,
-        billCountCacheMeta
+        billCountCacheMeta,
+        cachedSheets,
+        sheetCacheMeta,
+        pendingSheetRowSync,
+        pendingSheetCellSync,
+        sheetRowIdMappings,
+        sheetCellIdMappings
       ];
   @override
   DriftDatabaseOptions get options =>
@@ -11764,6 +14096,1204 @@ typedef $$BillCountCacheMetaTableProcessedTableManager = ProcessedTableManager<
     ),
     BillCountCacheMetaRow,
     PrefetchHooks Function()>;
+typedef $$CachedSheetsTableCreateCompanionBuilder = CachedSheetsCompanion
+    Function({
+  required String id,
+  required String cashierId,
+  required String type,
+  required String name,
+  Value<int> columns,
+  required String data,
+  Value<DateTime> cachedAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$CachedSheetsTableUpdateCompanionBuilder = CachedSheetsCompanion
+    Function({
+  Value<String> id,
+  Value<String> cashierId,
+  Value<String> type,
+  Value<String> name,
+  Value<int> columns,
+  Value<String> data,
+  Value<DateTime> cachedAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$CachedSheetsTableFilterComposer
+    extends Composer<_$AppDatabase, $CachedSheetsTable> {
+  $$CachedSheetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get columns => $composableBuilder(
+      column: $table.columns, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get data => $composableBuilder(
+      column: $table.data, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+      column: $table.cachedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$CachedSheetsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CachedSheetsTable> {
+  $$CachedSheetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get columns => $composableBuilder(
+      column: $table.columns, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get data => $composableBuilder(
+      column: $table.data, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+      column: $table.cachedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CachedSheetsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CachedSheetsTable> {
+  $$CachedSheetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get cashierId =>
+      $composableBuilder(column: $table.cashierId, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get columns =>
+      $composableBuilder(column: $table.columns, builder: (column) => column);
+
+  GeneratedColumn<String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CachedSheetsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CachedSheetsTable,
+    CachedSheetRow,
+    $$CachedSheetsTableFilterComposer,
+    $$CachedSheetsTableOrderingComposer,
+    $$CachedSheetsTableAnnotationComposer,
+    $$CachedSheetsTableCreateCompanionBuilder,
+    $$CachedSheetsTableUpdateCompanionBuilder,
+    (
+      CachedSheetRow,
+      BaseReferences<_$AppDatabase, $CachedSheetsTable, CachedSheetRow>
+    ),
+    CachedSheetRow,
+    PrefetchHooks Function()> {
+  $$CachedSheetsTableTableManager(_$AppDatabase db, $CachedSheetsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CachedSheetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CachedSheetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CachedSheetsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> cashierId = const Value.absent(),
+            Value<String> type = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<int> columns = const Value.absent(),
+            Value<String> data = const Value.absent(),
+            Value<DateTime> cachedAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CachedSheetsCompanion(
+            id: id,
+            cashierId: cashierId,
+            type: type,
+            name: name,
+            columns: columns,
+            data: data,
+            cachedAt: cachedAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String cashierId,
+            required String type,
+            required String name,
+            Value<int> columns = const Value.absent(),
+            required String data,
+            Value<DateTime> cachedAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CachedSheetsCompanion.insert(
+            id: id,
+            cashierId: cashierId,
+            type: type,
+            name: name,
+            columns: columns,
+            data: data,
+            cachedAt: cachedAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$CachedSheetsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CachedSheetsTable,
+    CachedSheetRow,
+    $$CachedSheetsTableFilterComposer,
+    $$CachedSheetsTableOrderingComposer,
+    $$CachedSheetsTableAnnotationComposer,
+    $$CachedSheetsTableCreateCompanionBuilder,
+    $$CachedSheetsTableUpdateCompanionBuilder,
+    (
+      CachedSheetRow,
+      BaseReferences<_$AppDatabase, $CachedSheetsTable, CachedSheetRow>
+    ),
+    CachedSheetRow,
+    PrefetchHooks Function()>;
+typedef $$SheetCacheMetaTableCreateCompanionBuilder = SheetCacheMetaCompanion
+    Function({
+  required String cacheKey,
+  required String cashierId,
+  required String type,
+  required DateTime lastSyncedAt,
+  Value<bool> isSyncing,
+  Value<String?> lastError,
+  Value<int> rowid,
+});
+typedef $$SheetCacheMetaTableUpdateCompanionBuilder = SheetCacheMetaCompanion
+    Function({
+  Value<String> cacheKey,
+  Value<String> cashierId,
+  Value<String> type,
+  Value<DateTime> lastSyncedAt,
+  Value<bool> isSyncing,
+  Value<String?> lastError,
+  Value<int> rowid,
+});
+
+class $$SheetCacheMetaTableFilterComposer
+    extends Composer<_$AppDatabase, $SheetCacheMetaTable> {
+  $$SheetCacheMetaTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get cacheKey => $composableBuilder(
+      column: $table.cacheKey, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastSyncedAt => $composableBuilder(
+      column: $table.lastSyncedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSyncing => $composableBuilder(
+      column: $table.isSyncing, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get lastError => $composableBuilder(
+      column: $table.lastError, builder: (column) => ColumnFilters(column));
+}
+
+class $$SheetCacheMetaTableOrderingComposer
+    extends Composer<_$AppDatabase, $SheetCacheMetaTable> {
+  $$SheetCacheMetaTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get cacheKey => $composableBuilder(
+      column: $table.cacheKey, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cashierId => $composableBuilder(
+      column: $table.cashierId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastSyncedAt => $composableBuilder(
+      column: $table.lastSyncedAt,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSyncing => $composableBuilder(
+      column: $table.isSyncing, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get lastError => $composableBuilder(
+      column: $table.lastError, builder: (column) => ColumnOrderings(column));
+}
+
+class $$SheetCacheMetaTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SheetCacheMetaTable> {
+  $$SheetCacheMetaTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get cacheKey =>
+      $composableBuilder(column: $table.cacheKey, builder: (column) => column);
+
+  GeneratedColumn<String> get cashierId =>
+      $composableBuilder(column: $table.cashierId, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSyncedAt => $composableBuilder(
+      column: $table.lastSyncedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSyncing =>
+      $composableBuilder(column: $table.isSyncing, builder: (column) => column);
+
+  GeneratedColumn<String> get lastError =>
+      $composableBuilder(column: $table.lastError, builder: (column) => column);
+}
+
+class $$SheetCacheMetaTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SheetCacheMetaTable,
+    SheetCacheMetaRow,
+    $$SheetCacheMetaTableFilterComposer,
+    $$SheetCacheMetaTableOrderingComposer,
+    $$SheetCacheMetaTableAnnotationComposer,
+    $$SheetCacheMetaTableCreateCompanionBuilder,
+    $$SheetCacheMetaTableUpdateCompanionBuilder,
+    (
+      SheetCacheMetaRow,
+      BaseReferences<_$AppDatabase, $SheetCacheMetaTable, SheetCacheMetaRow>
+    ),
+    SheetCacheMetaRow,
+    PrefetchHooks Function()> {
+  $$SheetCacheMetaTableTableManager(
+      _$AppDatabase db, $SheetCacheMetaTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SheetCacheMetaTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SheetCacheMetaTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SheetCacheMetaTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> cacheKey = const Value.absent(),
+            Value<String> cashierId = const Value.absent(),
+            Value<String> type = const Value.absent(),
+            Value<DateTime> lastSyncedAt = const Value.absent(),
+            Value<bool> isSyncing = const Value.absent(),
+            Value<String?> lastError = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SheetCacheMetaCompanion(
+            cacheKey: cacheKey,
+            cashierId: cashierId,
+            type: type,
+            lastSyncedAt: lastSyncedAt,
+            isSyncing: isSyncing,
+            lastError: lastError,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String cacheKey,
+            required String cashierId,
+            required String type,
+            required DateTime lastSyncedAt,
+            Value<bool> isSyncing = const Value.absent(),
+            Value<String?> lastError = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SheetCacheMetaCompanion.insert(
+            cacheKey: cacheKey,
+            cashierId: cashierId,
+            type: type,
+            lastSyncedAt: lastSyncedAt,
+            isSyncing: isSyncing,
+            lastError: lastError,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$SheetCacheMetaTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SheetCacheMetaTable,
+    SheetCacheMetaRow,
+    $$SheetCacheMetaTableFilterComposer,
+    $$SheetCacheMetaTableOrderingComposer,
+    $$SheetCacheMetaTableAnnotationComposer,
+    $$SheetCacheMetaTableCreateCompanionBuilder,
+    $$SheetCacheMetaTableUpdateCompanionBuilder,
+    (
+      SheetCacheMetaRow,
+      BaseReferences<_$AppDatabase, $SheetCacheMetaTable, SheetCacheMetaRow>
+    ),
+    SheetCacheMetaRow,
+    PrefetchHooks Function()>;
+typedef $$PendingSheetRowSyncTableCreateCompanionBuilder
+    = PendingSheetRowSyncCompanion Function({
+  Value<int> id,
+  required String localId,
+  Value<String?> serverId,
+  required String sheetId,
+  required String operation,
+  required String payload,
+  Value<DateTime> createdAt,
+  Value<bool> synced,
+  Value<DateTime?> syncedAt,
+});
+typedef $$PendingSheetRowSyncTableUpdateCompanionBuilder
+    = PendingSheetRowSyncCompanion Function({
+  Value<int> id,
+  Value<String> localId,
+  Value<String?> serverId,
+  Value<String> sheetId,
+  Value<String> operation,
+  Value<String> payload,
+  Value<DateTime> createdAt,
+  Value<bool> synced,
+  Value<DateTime?> syncedAt,
+});
+
+class $$PendingSheetRowSyncTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingSheetRowSyncTable> {
+  $$PendingSheetRowSyncTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get sheetId => $composableBuilder(
+      column: $table.sheetId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get synced => $composableBuilder(
+      column: $table.synced, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get syncedAt => $composableBuilder(
+      column: $table.syncedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$PendingSheetRowSyncTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingSheetRowSyncTable> {
+  $$PendingSheetRowSyncTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get sheetId => $composableBuilder(
+      column: $table.sheetId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get synced => $composableBuilder(
+      column: $table.synced, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get syncedAt => $composableBuilder(
+      column: $table.syncedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PendingSheetRowSyncTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingSheetRowSyncTable> {
+  $$PendingSheetRowSyncTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get sheetId =>
+      $composableBuilder(column: $table.sheetId, builder: (column) => column);
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<String> get payload =>
+      $composableBuilder(column: $table.payload, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get synced =>
+      $composableBuilder(column: $table.synced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => column);
+}
+
+class $$PendingSheetRowSyncTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PendingSheetRowSyncTable,
+    PendingSheetRowSyncRow,
+    $$PendingSheetRowSyncTableFilterComposer,
+    $$PendingSheetRowSyncTableOrderingComposer,
+    $$PendingSheetRowSyncTableAnnotationComposer,
+    $$PendingSheetRowSyncTableCreateCompanionBuilder,
+    $$PendingSheetRowSyncTableUpdateCompanionBuilder,
+    (
+      PendingSheetRowSyncRow,
+      BaseReferences<_$AppDatabase, $PendingSheetRowSyncTable,
+          PendingSheetRowSyncRow>
+    ),
+    PendingSheetRowSyncRow,
+    PrefetchHooks Function()> {
+  $$PendingSheetRowSyncTableTableManager(
+      _$AppDatabase db, $PendingSheetRowSyncTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingSheetRowSyncTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PendingSheetRowSyncTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PendingSheetRowSyncTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> localId = const Value.absent(),
+            Value<String?> serverId = const Value.absent(),
+            Value<String> sheetId = const Value.absent(),
+            Value<String> operation = const Value.absent(),
+            Value<String> payload = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<bool> synced = const Value.absent(),
+            Value<DateTime?> syncedAt = const Value.absent(),
+          }) =>
+              PendingSheetRowSyncCompanion(
+            id: id,
+            localId: localId,
+            serverId: serverId,
+            sheetId: sheetId,
+            operation: operation,
+            payload: payload,
+            createdAt: createdAt,
+            synced: synced,
+            syncedAt: syncedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String localId,
+            Value<String?> serverId = const Value.absent(),
+            required String sheetId,
+            required String operation,
+            required String payload,
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<bool> synced = const Value.absent(),
+            Value<DateTime?> syncedAt = const Value.absent(),
+          }) =>
+              PendingSheetRowSyncCompanion.insert(
+            id: id,
+            localId: localId,
+            serverId: serverId,
+            sheetId: sheetId,
+            operation: operation,
+            payload: payload,
+            createdAt: createdAt,
+            synced: synced,
+            syncedAt: syncedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PendingSheetRowSyncTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PendingSheetRowSyncTable,
+    PendingSheetRowSyncRow,
+    $$PendingSheetRowSyncTableFilterComposer,
+    $$PendingSheetRowSyncTableOrderingComposer,
+    $$PendingSheetRowSyncTableAnnotationComposer,
+    $$PendingSheetRowSyncTableCreateCompanionBuilder,
+    $$PendingSheetRowSyncTableUpdateCompanionBuilder,
+    (
+      PendingSheetRowSyncRow,
+      BaseReferences<_$AppDatabase, $PendingSheetRowSyncTable,
+          PendingSheetRowSyncRow>
+    ),
+    PendingSheetRowSyncRow,
+    PrefetchHooks Function()>;
+typedef $$PendingSheetCellSyncTableCreateCompanionBuilder
+    = PendingSheetCellSyncCompanion Function({
+  Value<int> id,
+  required String localId,
+  Value<String?> serverId,
+  required String rowId,
+  required String operation,
+  required String payload,
+  Value<DateTime> createdAt,
+  Value<bool> synced,
+  Value<DateTime?> syncedAt,
+});
+typedef $$PendingSheetCellSyncTableUpdateCompanionBuilder
+    = PendingSheetCellSyncCompanion Function({
+  Value<int> id,
+  Value<String> localId,
+  Value<String?> serverId,
+  Value<String> rowId,
+  Value<String> operation,
+  Value<String> payload,
+  Value<DateTime> createdAt,
+  Value<bool> synced,
+  Value<DateTime?> syncedAt,
+});
+
+class $$PendingSheetCellSyncTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingSheetCellSyncTable> {
+  $$PendingSheetCellSyncTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rowId => $composableBuilder(
+      column: $table.rowId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get synced => $composableBuilder(
+      column: $table.synced, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get syncedAt => $composableBuilder(
+      column: $table.syncedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$PendingSheetCellSyncTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingSheetCellSyncTable> {
+  $$PendingSheetCellSyncTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rowId => $composableBuilder(
+      column: $table.rowId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+      column: $table.operation, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get payload => $composableBuilder(
+      column: $table.payload, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get synced => $composableBuilder(
+      column: $table.synced, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get syncedAt => $composableBuilder(
+      column: $table.syncedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PendingSheetCellSyncTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingSheetCellSyncTable> {
+  $$PendingSheetCellSyncTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get rowId =>
+      $composableBuilder(column: $table.rowId, builder: (column) => column);
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<String> get payload =>
+      $composableBuilder(column: $table.payload, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get synced =>
+      $composableBuilder(column: $table.synced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => column);
+}
+
+class $$PendingSheetCellSyncTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PendingSheetCellSyncTable,
+    PendingSheetCellSyncRow,
+    $$PendingSheetCellSyncTableFilterComposer,
+    $$PendingSheetCellSyncTableOrderingComposer,
+    $$PendingSheetCellSyncTableAnnotationComposer,
+    $$PendingSheetCellSyncTableCreateCompanionBuilder,
+    $$PendingSheetCellSyncTableUpdateCompanionBuilder,
+    (
+      PendingSheetCellSyncRow,
+      BaseReferences<_$AppDatabase, $PendingSheetCellSyncTable,
+          PendingSheetCellSyncRow>
+    ),
+    PendingSheetCellSyncRow,
+    PrefetchHooks Function()> {
+  $$PendingSheetCellSyncTableTableManager(
+      _$AppDatabase db, $PendingSheetCellSyncTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingSheetCellSyncTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PendingSheetCellSyncTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PendingSheetCellSyncTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> localId = const Value.absent(),
+            Value<String?> serverId = const Value.absent(),
+            Value<String> rowId = const Value.absent(),
+            Value<String> operation = const Value.absent(),
+            Value<String> payload = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<bool> synced = const Value.absent(),
+            Value<DateTime?> syncedAt = const Value.absent(),
+          }) =>
+              PendingSheetCellSyncCompanion(
+            id: id,
+            localId: localId,
+            serverId: serverId,
+            rowId: rowId,
+            operation: operation,
+            payload: payload,
+            createdAt: createdAt,
+            synced: synced,
+            syncedAt: syncedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String localId,
+            Value<String?> serverId = const Value.absent(),
+            required String rowId,
+            required String operation,
+            required String payload,
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<bool> synced = const Value.absent(),
+            Value<DateTime?> syncedAt = const Value.absent(),
+          }) =>
+              PendingSheetCellSyncCompanion.insert(
+            id: id,
+            localId: localId,
+            serverId: serverId,
+            rowId: rowId,
+            operation: operation,
+            payload: payload,
+            createdAt: createdAt,
+            synced: synced,
+            syncedAt: syncedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PendingSheetCellSyncTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $PendingSheetCellSyncTable,
+        PendingSheetCellSyncRow,
+        $$PendingSheetCellSyncTableFilterComposer,
+        $$PendingSheetCellSyncTableOrderingComposer,
+        $$PendingSheetCellSyncTableAnnotationComposer,
+        $$PendingSheetCellSyncTableCreateCompanionBuilder,
+        $$PendingSheetCellSyncTableUpdateCompanionBuilder,
+        (
+          PendingSheetCellSyncRow,
+          BaseReferences<_$AppDatabase, $PendingSheetCellSyncTable,
+              PendingSheetCellSyncRow>
+        ),
+        PendingSheetCellSyncRow,
+        PrefetchHooks Function()>;
+typedef $$SheetRowIdMappingsTableCreateCompanionBuilder
+    = SheetRowIdMappingsCompanion Function({
+  required String localId,
+  required String serverId,
+  required String sheetId,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$SheetRowIdMappingsTableUpdateCompanionBuilder
+    = SheetRowIdMappingsCompanion Function({
+  Value<String> localId,
+  Value<String> serverId,
+  Value<String> sheetId,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+class $$SheetRowIdMappingsTableFilterComposer
+    extends Composer<_$AppDatabase, $SheetRowIdMappingsTable> {
+  $$SheetRowIdMappingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get sheetId => $composableBuilder(
+      column: $table.sheetId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$SheetRowIdMappingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SheetRowIdMappingsTable> {
+  $$SheetRowIdMappingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get sheetId => $composableBuilder(
+      column: $table.sheetId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$SheetRowIdMappingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SheetRowIdMappingsTable> {
+  $$SheetRowIdMappingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get sheetId =>
+      $composableBuilder(column: $table.sheetId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$SheetRowIdMappingsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SheetRowIdMappingsTable,
+    SheetRowIdMappingRow,
+    $$SheetRowIdMappingsTableFilterComposer,
+    $$SheetRowIdMappingsTableOrderingComposer,
+    $$SheetRowIdMappingsTableAnnotationComposer,
+    $$SheetRowIdMappingsTableCreateCompanionBuilder,
+    $$SheetRowIdMappingsTableUpdateCompanionBuilder,
+    (
+      SheetRowIdMappingRow,
+      BaseReferences<_$AppDatabase, $SheetRowIdMappingsTable,
+          SheetRowIdMappingRow>
+    ),
+    SheetRowIdMappingRow,
+    PrefetchHooks Function()> {
+  $$SheetRowIdMappingsTableTableManager(
+      _$AppDatabase db, $SheetRowIdMappingsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SheetRowIdMappingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SheetRowIdMappingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SheetRowIdMappingsTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> localId = const Value.absent(),
+            Value<String> serverId = const Value.absent(),
+            Value<String> sheetId = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SheetRowIdMappingsCompanion(
+            localId: localId,
+            serverId: serverId,
+            sheetId: sheetId,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String localId,
+            required String serverId,
+            required String sheetId,
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SheetRowIdMappingsCompanion.insert(
+            localId: localId,
+            serverId: serverId,
+            sheetId: sheetId,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$SheetRowIdMappingsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SheetRowIdMappingsTable,
+    SheetRowIdMappingRow,
+    $$SheetRowIdMappingsTableFilterComposer,
+    $$SheetRowIdMappingsTableOrderingComposer,
+    $$SheetRowIdMappingsTableAnnotationComposer,
+    $$SheetRowIdMappingsTableCreateCompanionBuilder,
+    $$SheetRowIdMappingsTableUpdateCompanionBuilder,
+    (
+      SheetRowIdMappingRow,
+      BaseReferences<_$AppDatabase, $SheetRowIdMappingsTable,
+          SheetRowIdMappingRow>
+    ),
+    SheetRowIdMappingRow,
+    PrefetchHooks Function()>;
+typedef $$SheetCellIdMappingsTableCreateCompanionBuilder
+    = SheetCellIdMappingsCompanion Function({
+  required String localId,
+  required String serverId,
+  required String rowId,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+typedef $$SheetCellIdMappingsTableUpdateCompanionBuilder
+    = SheetCellIdMappingsCompanion Function({
+  Value<String> localId,
+  Value<String> serverId,
+  Value<String> rowId,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
+
+class $$SheetCellIdMappingsTableFilterComposer
+    extends Composer<_$AppDatabase, $SheetCellIdMappingsTable> {
+  $$SheetCellIdMappingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rowId => $composableBuilder(
+      column: $table.rowId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$SheetCellIdMappingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SheetCellIdMappingsTable> {
+  $$SheetCellIdMappingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get localId => $composableBuilder(
+      column: $table.localId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rowId => $composableBuilder(
+      column: $table.rowId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$SheetCellIdMappingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SheetCellIdMappingsTable> {
+  $$SheetCellIdMappingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get rowId =>
+      $composableBuilder(column: $table.rowId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$SheetCellIdMappingsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SheetCellIdMappingsTable,
+    SheetCellIdMappingRow,
+    $$SheetCellIdMappingsTableFilterComposer,
+    $$SheetCellIdMappingsTableOrderingComposer,
+    $$SheetCellIdMappingsTableAnnotationComposer,
+    $$SheetCellIdMappingsTableCreateCompanionBuilder,
+    $$SheetCellIdMappingsTableUpdateCompanionBuilder,
+    (
+      SheetCellIdMappingRow,
+      BaseReferences<_$AppDatabase, $SheetCellIdMappingsTable,
+          SheetCellIdMappingRow>
+    ),
+    SheetCellIdMappingRow,
+    PrefetchHooks Function()> {
+  $$SheetCellIdMappingsTableTableManager(
+      _$AppDatabase db, $SheetCellIdMappingsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SheetCellIdMappingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SheetCellIdMappingsTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SheetCellIdMappingsTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> localId = const Value.absent(),
+            Value<String> serverId = const Value.absent(),
+            Value<String> rowId = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SheetCellIdMappingsCompanion(
+            localId: localId,
+            serverId: serverId,
+            rowId: rowId,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String localId,
+            required String serverId,
+            required String rowId,
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SheetCellIdMappingsCompanion.insert(
+            localId: localId,
+            serverId: serverId,
+            rowId: rowId,
+            createdAt: createdAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$SheetCellIdMappingsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SheetCellIdMappingsTable,
+    SheetCellIdMappingRow,
+    $$SheetCellIdMappingsTableFilterComposer,
+    $$SheetCellIdMappingsTableOrderingComposer,
+    $$SheetCellIdMappingsTableAnnotationComposer,
+    $$SheetCellIdMappingsTableCreateCompanionBuilder,
+    $$SheetCellIdMappingsTableUpdateCompanionBuilder,
+    (
+      SheetCellIdMappingRow,
+      BaseReferences<_$AppDatabase, $SheetCellIdMappingsTable,
+          SheetCellIdMappingRow>
+    ),
+    SheetCellIdMappingRow,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -11804,6 +15334,18 @@ class $AppDatabaseManager {
       $$PendingBillCountSyncTableTableManager(_db, _db.pendingBillCountSync);
   $$BillCountCacheMetaTableTableManager get billCountCacheMeta =>
       $$BillCountCacheMetaTableTableManager(_db, _db.billCountCacheMeta);
+  $$CachedSheetsTableTableManager get cachedSheets =>
+      $$CachedSheetsTableTableManager(_db, _db.cachedSheets);
+  $$SheetCacheMetaTableTableManager get sheetCacheMeta =>
+      $$SheetCacheMetaTableTableManager(_db, _db.sheetCacheMeta);
+  $$PendingSheetRowSyncTableTableManager get pendingSheetRowSync =>
+      $$PendingSheetRowSyncTableTableManager(_db, _db.pendingSheetRowSync);
+  $$PendingSheetCellSyncTableTableManager get pendingSheetCellSync =>
+      $$PendingSheetCellSyncTableTableManager(_db, _db.pendingSheetCellSync);
+  $$SheetRowIdMappingsTableTableManager get sheetRowIdMappings =>
+      $$SheetRowIdMappingsTableTableManager(_db, _db.sheetRowIdMappings);
+  $$SheetCellIdMappingsTableTableManager get sheetCellIdMappings =>
+      $$SheetCellIdMappingsTableTableManager(_db, _db.sheetCellIdMappings);
 }
 
 // **************************************************************************
