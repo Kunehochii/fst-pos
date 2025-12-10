@@ -113,11 +113,33 @@ class DeliveryListNotifier extends _$DeliveryListNotifier {
 
   @override
   Future<DeliveryListState> build() async {
+    // Sync pending deliveries in the background when provider initializes
+    _syncPendingDeliveriesInBackground();
     return _loadDeliveries();
   }
 
   /// Gets the current filter.
   DeliveryFilter get currentFilter => _currentFilter;
+
+  /// Syncs pending deliveries in the background (non-blocking).
+  void _syncPendingDeliveriesInBackground() {
+    Future.microtask(() async {
+      try {
+        final repository = ref.read(deliveryRepositoryProvider);
+        final pendingCount = await repository.getPendingSyncCount();
+
+        if (pendingCount > 0) {
+          await repository.syncWithServer();
+
+          // Refresh the list after sync
+          final newState = await _loadDeliveries(forceRefresh: true);
+          state = AsyncData(newState);
+        }
+      } catch (e) {
+        // Silently fail - sync will be retried on next refresh
+      }
+    });
+  }
 
   /// Loads deliveries with the current filter.
   Future<DeliveryListState> _loadDeliveries({bool forceRefresh = false}) async {
@@ -214,6 +236,24 @@ class DeliveryListNotifier extends _$DeliveryListNotifier {
       state = AsyncData(newState);
     } catch (e) {
       // Keep current state but log error
+    }
+  }
+
+  /// Clears the delivery cache and reloads from server.
+  Future<void> clearCacheAndReload() async {
+    try {
+      final repository = ref.read(deliveryRepositoryProvider);
+      await repository.clearCache();
+
+      // Force refresh from server
+      state = const AsyncLoading();
+      final newState = await _loadDeliveries(forceRefresh: true);
+      state = AsyncData(newState);
+    } catch (e) {
+      state = AsyncData(
+        DeliveryListError(
+            failure: Failure.cache(message: 'Failed to clear cache: $e')),
+      );
     }
   }
 }

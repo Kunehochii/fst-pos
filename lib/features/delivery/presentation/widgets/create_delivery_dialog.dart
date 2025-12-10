@@ -494,6 +494,7 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
                 ),
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
+                onChanged: (_) => setState(() {}),
               ),
           ],
         ),

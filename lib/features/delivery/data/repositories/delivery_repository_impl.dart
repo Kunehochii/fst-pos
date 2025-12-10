@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/delivery.dart';
 import '../../domain/repositories/delivery_repository.dart';
 import '../datasources/delivery_local_datasource.dart';
@@ -461,15 +464,82 @@ class DeliveryRepositoryImpl implements DeliveryRepository {
 
   /// Parses CreateDeliveryDto from JSON payload.
   CreateDeliveryDto _parseCreateDtoFromPayload(String payload) {
-    // This would parse the JSON back to the DTO
-    // For now, we'll throw an error as this needs proper implementation
-    throw UnimplementedError('Parse create DTO from payload');
+    final json = Map<String, dynamic>.from(
+      jsonDecode(payload) as Map,
+    );
+
+    final deliveryItemsJson = json['deliveryItems'] as List<dynamic>? ?? [];
+    final deliveryItems = deliveryItemsJson.map<CreateDeliveryItemDto>((item) {
+      final itemMap = item as Map<String, dynamic>;
+      final sackPriceJson = itemMap['sackPrice'] as Map<String, dynamic>?;
+      final perKiloPriceJson = itemMap['perKiloPrice'] as Map<String, dynamic>?;
+
+      return CreateDeliveryItemDto(
+        productId: itemMap['productId'] as String,
+        sackPrice: sackPriceJson != null
+            ? SackPriceDto(
+                id: sackPriceJson['id'] as String,
+                quantity: (sackPriceJson['quantity'] as num).toDouble(),
+                type: SackType.fromString(sackPriceJson['type'] as String),
+              )
+            : null,
+        perKiloPrice: perKiloPriceJson != null
+            ? PerKiloPriceDto(
+                id: perKiloPriceJson['id'] as String,
+                quantity: (perKiloPriceJson['quantity'] as num).toDouble(),
+              )
+            : null,
+      );
+    }).toList();
+
+    return CreateDeliveryDto(
+      driverName: json['driverName'] as String,
+      deliveryTimeStart: DateTime.parse(json['deliveryTimeStart'] as String),
+      deliveryItems: deliveryItems,
+    );
   }
 
   /// Parses UpdateDeliveryDto from JSON payload.
   UpdateDeliveryDto _parseUpdateDtoFromPayload(String payload) {
-    // This would parse the JSON back to the DTO
-    throw UnimplementedError('Parse update DTO from payload');
+    final json = Map<String, dynamic>.from(
+      jsonDecode(payload) as Map,
+    );
+
+    List<CreateDeliveryItemDto>? deliveryItems;
+    if (json['deliveryItems'] != null) {
+      final deliveryItemsJson = json['deliveryItems'] as List<dynamic>;
+      deliveryItems = deliveryItemsJson.map<CreateDeliveryItemDto>((item) {
+        final itemMap = item as Map<String, dynamic>;
+        final sackPriceJson = itemMap['sackPrice'] as Map<String, dynamic>?;
+        final perKiloPriceJson =
+            itemMap['perKiloPrice'] as Map<String, dynamic>?;
+
+        return CreateDeliveryItemDto(
+          productId: itemMap['productId'] as String,
+          sackPrice: sackPriceJson != null
+              ? SackPriceDto(
+                  id: sackPriceJson['id'] as String,
+                  quantity: (sackPriceJson['quantity'] as num).toDouble(),
+                  type: SackType.fromString(sackPriceJson['type'] as String),
+                )
+              : null,
+          perKiloPrice: perKiloPriceJson != null
+              ? PerKiloPriceDto(
+                  id: perKiloPriceJson['id'] as String,
+                  quantity: (perKiloPriceJson['quantity'] as num).toDouble(),
+                )
+              : null,
+        );
+      }).toList();
+    }
+
+    return UpdateDeliveryDto(
+      driverName: json['driverName'] as String?,
+      deliveryTimeStart: json['deliveryTimeStart'] != null
+          ? DateTime.parse(json['deliveryTimeStart'] as String)
+          : null,
+      deliveryItems: deliveryItems,
+    );
   }
 
   /// Checks if the error is a network-related error.

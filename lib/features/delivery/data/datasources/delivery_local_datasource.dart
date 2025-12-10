@@ -86,8 +86,38 @@ class DeliveryLocalDataSource {
       'cashierId': cashierId,
     });
 
-    // Create a model for JSON storage
-    final model = CreateDeliveryModel.fromDto(dto);
+    // Create a model for JSON storage (for API sync)
+    final createModel = CreateDeliveryModel.fromDto(dto);
+
+    // Create delivery items in DeliveryItemModel format for local cache
+    // This ensures the cached data can be parsed back as DeliveryModel
+    final deliveryItemsJson = dto.deliveryItems.map((item) {
+      final itemId = _uuid.v4();
+      return {
+        'id': itemId,
+        'quantity': item.sackPrice?.quantity.toString() ??
+            item.perKiloPrice?.quantity.toString() ??
+            '0',
+        'productId': item.productId,
+        if (item.sackPrice != null) 'sackPriceId': item.sackPrice!.id,
+        if (item.sackPrice != null)
+          'sackType': item.sackPrice!.type.toApiString(),
+        if (item.perKiloPrice != null) 'perKiloPriceId': item.perKiloPrice!.id,
+        'createdAt': now.toIso8601String(),
+        'updatedAt': now.toIso8601String(),
+      };
+    }).toList();
+
+    // Create data in DeliveryModel format for cache retrieval
+    final cacheData = {
+      'id': localId,
+      'driverName': dto.driverName,
+      'deliveryTimeStart': dto.deliveryTimeStart.toIso8601String(),
+      'cashierId': cashierId,
+      'createdAt': now.toIso8601String(),
+      'updatedAt': now.toIso8601String(),
+      'deliveryItems': deliveryItemsJson,
+    };
 
     await _db.into(_db.cachedDeliveries).insert(
           CachedDeliveriesCompanion.insert(
@@ -96,7 +126,7 @@ class DeliveryLocalDataSource {
             cashierId: cashierId,
             driverName: dto.driverName,
             deliveryTimeStart: dto.deliveryTimeStart,
-            data: jsonEncode(model.toJson()),
+            data: jsonEncode(cacheData),
             isSynced: const Value(false),
             isDeleted: const Value(false),
             createdAt: Value(now),
@@ -104,13 +134,13 @@ class DeliveryLocalDataSource {
           ),
         );
 
-    // Queue for sync
+    // Queue for sync (use CreateDeliveryModel format for API)
     await _db.into(_db.pendingDeliverySync).insert(
           PendingDeliverySyncCompanion.insert(
             localDeliveryId: localId,
             serverDeliveryId: const Value(null),
             operation: 'create',
-            payload: jsonEncode(model.toJson()),
+            payload: jsonEncode(createModel.toJson()),
             createdAt: Value(now),
           ),
         );

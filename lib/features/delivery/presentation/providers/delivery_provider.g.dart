@@ -258,7 +258,7 @@ final pendingDeliverySyncCountProvider =
 // ignore: unused_element
 typedef PendingDeliverySyncCountRef = AutoDisposeFutureProviderRef<int>;
 String _$deliveryListNotifierHash() =>
-    r'd7a8c13d3dd8b970794133fcc82b2da857cec4f4';
+    r'b9654338665c5f4378cf56f88f661f6a29959bf1';
 
 /// Manages the delivery list state with filtering.
 ///
