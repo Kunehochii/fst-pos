@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_endpoints.dart';
-import '../../domain/entities/sheet.dart';
 import '../../domain/repositories/sheet_repository.dart';
 import '../models/sheet_model.dart';
 
@@ -220,7 +219,8 @@ class SheetRemoteDataSource {
     String? color,
     bool? isCalculated,
   }) async {
-    final body = <String, dynamic>{};
+    // Build the body with only non-null values
+    final Map<String, dynamic> body = {};
 
     if (value != null) body['value'] = value;
     if (formula != null) body['formula'] = formula;
@@ -230,6 +230,9 @@ class SheetRemoteDataSource {
     final response = await _dio.patch(
       ApiEndpoints.sheet.cellById(cellId),
       data: body,
+      options: Options(
+        contentType: 'application/json',
+      ),
     );
     return CellModel.fromJson(response.data);
   }
