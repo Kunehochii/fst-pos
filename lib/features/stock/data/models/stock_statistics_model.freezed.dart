@@ -516,6 +516,238 @@ abstract class _StockTotalsModel extends StockTotalsModel {
       throw _privateConstructorUsedError;
 }
 
+SummaryTotalsModel _$SummaryTotalsModelFromJson(Map<String, dynamic> json) {
+  return _SummaryTotalsModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SummaryTotalsModel {
+  @JsonKey(name: 'stockSold')
+  double get stockSold => throw _privateConstructorUsedError;
+  @JsonKey(name: 'stockTransferredKahon')
+  double get stockTransferredKahon => throw _privateConstructorUsedError;
+  @JsonKey(name: 'stockOtherTransfers')
+  double get stockOtherTransfers => throw _privateConstructorUsedError;
+  double get total => throw _privateConstructorUsedError;
+
+  /// Serializes this SummaryTotalsModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of SummaryTotalsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SummaryTotalsModelCopyWith<SummaryTotalsModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SummaryTotalsModelCopyWith<$Res> {
+  factory $SummaryTotalsModelCopyWith(
+          SummaryTotalsModel value, $Res Function(SummaryTotalsModel) then) =
+      _$SummaryTotalsModelCopyWithImpl<$Res, SummaryTotalsModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'stockSold') double stockSold,
+      @JsonKey(name: 'stockTransferredKahon') double stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers') double stockOtherTransfers,
+      double total});
+}
+
+/// @nodoc
+class _$SummaryTotalsModelCopyWithImpl<$Res, $Val extends SummaryTotalsModel>
+    implements $SummaryTotalsModelCopyWith<$Res> {
+  _$SummaryTotalsModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SummaryTotalsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stockSold = null,
+    Object? stockTransferredKahon = null,
+    Object? stockOtherTransfers = null,
+    Object? total = null,
+  }) {
+    return _then(_value.copyWith(
+      stockSold: null == stockSold
+          ? _value.stockSold
+          : stockSold // ignore: cast_nullable_to_non_nullable
+              as double,
+      stockTransferredKahon: null == stockTransferredKahon
+          ? _value.stockTransferredKahon
+          : stockTransferredKahon // ignore: cast_nullable_to_non_nullable
+              as double,
+      stockOtherTransfers: null == stockOtherTransfers
+          ? _value.stockOtherTransfers
+          : stockOtherTransfers // ignore: cast_nullable_to_non_nullable
+              as double,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SummaryTotalsModelImplCopyWith<$Res>
+    implements $SummaryTotalsModelCopyWith<$Res> {
+  factory _$$SummaryTotalsModelImplCopyWith(_$SummaryTotalsModelImpl value,
+          $Res Function(_$SummaryTotalsModelImpl) then) =
+      __$$SummaryTotalsModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'stockSold') double stockSold,
+      @JsonKey(name: 'stockTransferredKahon') double stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers') double stockOtherTransfers,
+      double total});
+}
+
+/// @nodoc
+class __$$SummaryTotalsModelImplCopyWithImpl<$Res>
+    extends _$SummaryTotalsModelCopyWithImpl<$Res, _$SummaryTotalsModelImpl>
+    implements _$$SummaryTotalsModelImplCopyWith<$Res> {
+  __$$SummaryTotalsModelImplCopyWithImpl(_$SummaryTotalsModelImpl _value,
+      $Res Function(_$SummaryTotalsModelImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of SummaryTotalsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stockSold = null,
+    Object? stockTransferredKahon = null,
+    Object? stockOtherTransfers = null,
+    Object? total = null,
+  }) {
+    return _then(_$SummaryTotalsModelImpl(
+      stockSold: null == stockSold
+          ? _value.stockSold
+          : stockSold // ignore: cast_nullable_to_non_nullable
+              as double,
+      stockTransferredKahon: null == stockTransferredKahon
+          ? _value.stockTransferredKahon
+          : stockTransferredKahon // ignore: cast_nullable_to_non_nullable
+              as double,
+      stockOtherTransfers: null == stockOtherTransfers
+          ? _value.stockOtherTransfers
+          : stockOtherTransfers // ignore: cast_nullable_to_non_nullable
+              as double,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SummaryTotalsModelImpl extends _SummaryTotalsModel {
+  const _$SummaryTotalsModelImpl(
+      {@JsonKey(name: 'stockSold') required this.stockSold,
+      @JsonKey(name: 'stockTransferredKahon')
+      required this.stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers') required this.stockOtherTransfers,
+      required this.total})
+      : super._();
+
+  factory _$SummaryTotalsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SummaryTotalsModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'stockSold')
+  final double stockSold;
+  @override
+  @JsonKey(name: 'stockTransferredKahon')
+  final double stockTransferredKahon;
+  @override
+  @JsonKey(name: 'stockOtherTransfers')
+  final double stockOtherTransfers;
+  @override
+  final double total;
+
+  @override
+  String toString() {
+    return 'SummaryTotalsModel(stockSold: $stockSold, stockTransferredKahon: $stockTransferredKahon, stockOtherTransfers: $stockOtherTransfers, total: $total)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SummaryTotalsModelImpl &&
+            (identical(other.stockSold, stockSold) ||
+                other.stockSold == stockSold) &&
+            (identical(other.stockTransferredKahon, stockTransferredKahon) ||
+                other.stockTransferredKahon == stockTransferredKahon) &&
+            (identical(other.stockOtherTransfers, stockOtherTransfers) ||
+                other.stockOtherTransfers == stockOtherTransfers) &&
+            (identical(other.total, total) || other.total == total));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, stockSold, stockTransferredKahon,
+      stockOtherTransfers, total);
+
+  /// Create a copy of SummaryTotalsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SummaryTotalsModelImplCopyWith<_$SummaryTotalsModelImpl> get copyWith =>
+      __$$SummaryTotalsModelImplCopyWithImpl<_$SummaryTotalsModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SummaryTotalsModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SummaryTotalsModel extends SummaryTotalsModel {
+  const factory _SummaryTotalsModel(
+      {@JsonKey(name: 'stockSold') required final double stockSold,
+      @JsonKey(name: 'stockTransferredKahon')
+      required final double stockTransferredKahon,
+      @JsonKey(name: 'stockOtherTransfers')
+      required final double stockOtherTransfers,
+      required final double total}) = _$SummaryTotalsModelImpl;
+  const _SummaryTotalsModel._() : super._();
+
+  factory _SummaryTotalsModel.fromJson(Map<String, dynamic> json) =
+      _$SummaryTotalsModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'stockSold')
+  double get stockSold;
+  @override
+  @JsonKey(name: 'stockTransferredKahon')
+  double get stockTransferredKahon;
+  @override
+  @JsonKey(name: 'stockOtherTransfers')
+  double get stockOtherTransfers;
+  @override
+  double get total;
+
+  /// Create a copy of SummaryTotalsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SummaryTotalsModelImplCopyWith<_$SummaryTotalsModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 PrinterCategoryModel _$PrinterCategoryModelFromJson(Map<String, dynamic> json) {
   return _PrinterCategoryModel.fromJson(json);
 }
@@ -719,7 +951,7 @@ SummaryCategoryModel _$SummaryCategoryModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SummaryCategoryModel {
   List<ProductStockModel> get products => throw _privateConstructorUsedError;
-  StockTotalsModel get totals => throw _privateConstructorUsedError;
+  SummaryTotalsModel get totals => throw _privateConstructorUsedError;
 
   /// Serializes this SummaryCategoryModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -737,9 +969,9 @@ abstract class $SummaryCategoryModelCopyWith<$Res> {
           $Res Function(SummaryCategoryModel) then) =
       _$SummaryCategoryModelCopyWithImpl<$Res, SummaryCategoryModel>;
   @useResult
-  $Res call({List<ProductStockModel> products, StockTotalsModel totals});
+  $Res call({List<ProductStockModel> products, SummaryTotalsModel totals});
 
-  $StockTotalsModelCopyWith<$Res> get totals;
+  $SummaryTotalsModelCopyWith<$Res> get totals;
 }
 
 /// @nodoc
@@ -769,7 +1001,7 @@ class _$SummaryCategoryModelCopyWithImpl<$Res,
       totals: null == totals
           ? _value.totals
           : totals // ignore: cast_nullable_to_non_nullable
-              as StockTotalsModel,
+              as SummaryTotalsModel,
     ) as $Val);
   }
 
@@ -777,8 +1009,8 @@ class _$SummaryCategoryModelCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $StockTotalsModelCopyWith<$Res> get totals {
-    return $StockTotalsModelCopyWith<$Res>(_value.totals, (value) {
+  $SummaryTotalsModelCopyWith<$Res> get totals {
+    return $SummaryTotalsModelCopyWith<$Res>(_value.totals, (value) {
       return _then(_value.copyWith(totals: value) as $Val);
     });
   }
@@ -792,10 +1024,10 @@ abstract class _$$SummaryCategoryModelImplCopyWith<$Res>
       __$$SummaryCategoryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ProductStockModel> products, StockTotalsModel totals});
+  $Res call({List<ProductStockModel> products, SummaryTotalsModel totals});
 
   @override
-  $StockTotalsModelCopyWith<$Res> get totals;
+  $SummaryTotalsModelCopyWith<$Res> get totals;
 }
 
 /// @nodoc
@@ -822,7 +1054,7 @@ class __$$SummaryCategoryModelImplCopyWithImpl<$Res>
       totals: null == totals
           ? _value.totals
           : totals // ignore: cast_nullable_to_non_nullable
-              as StockTotalsModel,
+              as SummaryTotalsModel,
     ));
   }
 }
@@ -847,7 +1079,7 @@ class _$SummaryCategoryModelImpl extends _SummaryCategoryModel {
   }
 
   @override
-  final StockTotalsModel totals;
+  final SummaryTotalsModel totals;
 
   @override
   String toString() {
@@ -889,7 +1121,7 @@ class _$SummaryCategoryModelImpl extends _SummaryCategoryModel {
 abstract class _SummaryCategoryModel extends SummaryCategoryModel {
   const factory _SummaryCategoryModel(
       {required final List<ProductStockModel> products,
-      required final StockTotalsModel totals}) = _$SummaryCategoryModelImpl;
+      required final SummaryTotalsModel totals}) = _$SummaryCategoryModelImpl;
   const _SummaryCategoryModel._() : super._();
 
   factory _SummaryCategoryModel.fromJson(Map<String, dynamic> json) =
@@ -898,7 +1130,7 @@ abstract class _SummaryCategoryModel extends SummaryCategoryModel {
   @override
   List<ProductStockModel> get products;
   @override
-  StockTotalsModel get totals;
+  SummaryTotalsModel get totals;
 
   /// Create a copy of SummaryCategoryModel
   /// with the given fields replaced by the non-null parameter values.

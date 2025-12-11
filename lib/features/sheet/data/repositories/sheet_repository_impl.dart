@@ -213,6 +213,9 @@ class SheetRepositoryImpl implements SheetRepository {
         cells: cells,
       );
 
+      // Clear cache so next fetch gets fresh data
+      await _localDataSource.clearCacheBySheetId(sheetId);
+
       return (null, model.toEntity());
     } on DioException catch (e) {
       // Offline - queue for sync
@@ -304,6 +307,9 @@ class SheetRepositoryImpl implements SheetRepository {
         rows: rows,
       );
 
+      // Clear cache so next fetch gets fresh data
+      await _localDataSource.clearCacheBySheetId(sheetId);
+
       return (null, models.map((m) => m.toEntity()).toList());
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -351,6 +357,10 @@ class SheetRepositoryImpl implements SheetRepository {
 
     try {
       await _remoteDataSource.deleteRow(rowId);
+
+      // Clear all cache for this cashier since we don't know which sheet this row belongs to
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, null);
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -379,6 +389,10 @@ class SheetRepositoryImpl implements SheetRepository {
         rowId: rowId,
         newRowIndex: newRowIndex,
       );
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, model.toEntity());
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -405,6 +419,10 @@ class SheetRepositoryImpl implements SheetRepository {
 
     try {
       await _remoteDataSource.updateRowPositions(updates);
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, null);
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -455,6 +473,10 @@ class SheetRepositoryImpl implements SheetRepository {
         color: color,
         isCalculated: isCalculated,
       );
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, model.toEntity());
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -498,6 +520,10 @@ class SheetRepositoryImpl implements SheetRepository {
 
     try {
       await _remoteDataSource.addCells(cells);
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, null);
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -540,6 +566,10 @@ class SheetRepositoryImpl implements SheetRepository {
         color: color,
         isCalculated: isCalculated,
       );
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, model.toEntity());
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -566,6 +596,10 @@ class SheetRepositoryImpl implements SheetRepository {
 
     try {
       await _remoteDataSource.updateCells(cells);
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, null);
     } on DioException catch (e) {
       if (_isNetworkError(e)) {
@@ -593,6 +627,10 @@ class SheetRepositoryImpl implements SheetRepository {
 
     try {
       await _remoteDataSource.deleteCell(cellId);
+
+      // Clear all cache for this cashier
+      await _localDataSource.clearCache(_cashierId);
+
       return (null, null);
     } on DioException catch (e) {
       if (_isNetworkError(e)) {

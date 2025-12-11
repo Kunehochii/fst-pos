@@ -195,7 +195,9 @@ class _ExpensePageState extends ConsumerState<ExpensePage> {
   }
 
   Widget _buildContent(ExpenseState state, DateTime selectedDate) {
-    if (state is ExpenseLoading || state is ExpenseSaving) {
+    final isSaving = state is ExpenseSaving;
+
+    if (state is ExpenseLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -203,12 +205,29 @@ class _ExpensePageState extends ConsumerState<ExpensePage> {
       return _buildErrorState(state.failure);
     }
 
-    final loaded = state as ExpenseLoaded;
+    // During saving, show the form with saving state
+    if (isSaving && _isEditing) {
+      return ExpenseForm(
+        existingExpense: null,
+        onSave: _saveExpense,
+        onCancel: _cancelEditing,
+        isSaving: true,
+      );
+    }
+
+    if (state is! ExpenseLoaded) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final loaded = state;
     final dateStr = DateFormat('MMMM d, yyyy').format(selectedDate);
 
     if (_isEditing) {
       return ExpenseForm(
         existingExpense: loaded.expense,
+        onSave: _saveExpense,
+        onCancel: _cancelEditing,
+        isSaving: false,
       );
     }
 

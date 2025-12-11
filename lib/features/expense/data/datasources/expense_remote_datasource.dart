@@ -29,7 +29,10 @@ class ExpenseRemoteDataSource {
         queryParameters: queryParams,
       );
 
-      if (response.data == null) {
+      // Handle empty response (null or empty string from server)
+      if (response.data == null ||
+          response.data == '' ||
+          response.data is! Map) {
         AppLogger.debug('No expense found for date');
         return null;
       }

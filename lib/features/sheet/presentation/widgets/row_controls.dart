@@ -62,8 +62,9 @@ class RowDragHandle extends StatelessWidget {
   }
 }
 
-/// A reorderable list of sheet rows.
-class ReorderableRowList extends StatefulWidget {
+/// A list of sheet rows (without built-in reordering due to scroll constraints).
+/// Reordering is handled via the row action menu instead.
+class ReorderableRowList extends StatelessWidget {
   final Sheet sheet;
   final Set<String> selectedRowIds;
   final String? editingCellId;
@@ -86,71 +87,34 @@ class ReorderableRowList extends StatefulWidget {
   });
 
   @override
-  State<ReorderableRowList> createState() => _ReorderableRowListState();
-}
-
-class _ReorderableRowListState extends State<ReorderableRowList> {
-  int? _draggedIndex;
-
-  @override
   Widget build(BuildContext context) {
-    return ReorderableListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      buildDefaultDragHandles: false,
-      itemCount: widget.sheet.rows.length,
-      onReorder: (oldIndex, newIndex) {
-        if (newIndex > oldIndex) {
-          newIndex -= 1;
-        }
-        widget.onReorder?.call(oldIndex, newIndex);
-        setState(() {
-          _draggedIndex = null;
-        });
-      },
-      proxyDecorator: (child, index, animation) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            final double elevation =
-                Curves.easeInOut.transform(animation.value) * 8;
-            return Material(
-              elevation: elevation,
-              color: Colors.transparent,
-              shadowColor: Colors.black26,
-              child: child,
-            );
-          },
-          child: child,
-        );
-      },
-      itemBuilder: (context, index) {
-        final row = widget.sheet.rows[index];
-        final isSelected = widget.selectedRowIds.contains(row.id);
-        final isDragging = _draggedIndex == index;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (int index = 0; index < sheet.rows.length; index++)
+          _buildRow(index),
+      ],
+    );
+  }
 
-        return Container(
-          key: ValueKey(row.id),
-          child: Row(
-            children: [
-              // Row number and drag handle
-              ReorderableDragStartListener(
-                index: index,
-                child: RowDragHandle(
-                  rowIndex: index,
-                  isSelected: isSelected,
-                  isDragging: isDragging,
-                  onTap: () => widget.onRowSelect(row.id),
-                ),
-              ),
-              // Row content
-              Expanded(
-                child: widget.rowBuilder(row, index),
-              ),
-            ],
-          ),
-        );
-      },
+  Widget _buildRow(int index) {
+    final row = sheet.rows[index];
+    final isSelected = selectedRowIds.contains(row.id);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Row number and selection handle
+        RowDragHandle(
+          rowIndex: index,
+          isSelected: isSelected,
+          isDragging: false,
+          onTap: () => onRowSelect(row.id),
+        ),
+        // Row content
+        rowBuilder(row, index),
+      ],
     );
   }
 }

@@ -35,7 +35,8 @@ class ProductStockModel with _$ProductStockModel {
 }
 
 /// Stock totals model for API serialization.
-/// Maps to the "totals" object in category responses.
+/// Maps to the "totals" object in printer category responses (regular, asin, plastic at root level).
+/// Uses keys: sold, transferredKahon, otherTransfers, total
 @freezed
 class StockTotalsModel with _$StockTotalsModel {
   const StockTotalsModel._();
@@ -55,6 +56,33 @@ class StockTotalsModel with _$StockTotalsModel {
         sold: sold,
         transferredKahon: transferredKahon,
         otherTransfers: otherTransfers,
+        total: total,
+      );
+}
+
+/// Summary totals model for API serialization.
+/// Maps to the "totals" object in summary category responses (inside summary object).
+/// Uses keys: stockSold, stockTransferredKahon, stockOtherTransfers, total
+@freezed
+class SummaryTotalsModel with _$SummaryTotalsModel {
+  const SummaryTotalsModel._();
+
+  const factory SummaryTotalsModel({
+    @JsonKey(name: 'stockSold') required double stockSold,
+    @JsonKey(name: 'stockTransferredKahon')
+    required double stockTransferredKahon,
+    @JsonKey(name: 'stockOtherTransfers') required double stockOtherTransfers,
+    required double total,
+  }) = _SummaryTotalsModel;
+
+  factory SummaryTotalsModel.fromJson(Map<String, dynamic> json) =>
+      _$SummaryTotalsModelFromJson(json);
+
+  /// Convert to domain entity.
+  StockTotals toEntity() => StockTotals(
+        sold: stockSold,
+        transferredKahon: stockTransferredKahon,
+        otherTransfers: stockOtherTransfers,
         total: total,
       );
 }
@@ -82,7 +110,7 @@ class SummaryCategoryModel with _$SummaryCategoryModel {
 
   const factory SummaryCategoryModel({
     required List<ProductStockModel> products,
-    required StockTotalsModel totals,
+    required SummaryTotalsModel totals,
   }) = _SummaryCategoryModel;
 
   factory SummaryCategoryModel.fromJson(Map<String, dynamic> json) =>

@@ -9,10 +9,16 @@ import '../providers/expense_provider.dart';
 /// Form for adding/editing expense items.
 class ExpenseForm extends ConsumerStatefulWidget {
   final ExpenseList? existingExpense;
+  final VoidCallback? onSave;
+  final VoidCallback? onCancel;
+  final bool isSaving;
 
   const ExpenseForm({
     super.key,
     this.existingExpense,
+    this.onSave,
+    this.onCancel,
+    this.isSaving = false,
   });
 
   @override
@@ -190,7 +196,7 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
                 ),
         ),
 
-        // Total
+        // Total and Save button
         if (items.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(16),
@@ -202,19 +208,54 @@ class _ExpenseFormState extends ConsumerState<ExpenseForm> {
                 ),
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                Text(
-                  'Total (${items.length} items)',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total (${items.length} items)',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      '₱${totalAmount.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                  ],
                 ),
-                Text(
-                  '₱${totalAmount.toStringAsFixed(2)}',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    if (widget.onCancel != null)
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: widget.isSaving ? null : widget.onCancel,
+                          child: const Text('Cancel'),
+                        ),
                       ),
+                    if (widget.onCancel != null) const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: FilledButton.icon(
+                        onPressed: widget.isSaving ? null : widget.onSave,
+                        icon: widget.isSaving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(Icons.save),
+                        label: Text(
+                            widget.isSaving ? 'Saving...' : 'Save Expenses'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

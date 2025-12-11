@@ -5,6 +5,24 @@ import '../../domain/entities/expense.dart';
 part 'expense_model.freezed.dart';
 part 'expense_model.g.dart';
 
+/// Converter to handle amount that can come as String or num from API.
+class StringToDoubleConverter implements JsonConverter<double, dynamic> {
+  const StringToDoubleConverter();
+
+  @override
+  double fromJson(dynamic json) {
+    if (json is String) {
+      return double.tryParse(json) ?? 0.0;
+    } else if (json is num) {
+      return json.toDouble();
+    }
+    return 0.0;
+  }
+
+  @override
+  dynamic toJson(double value) => value;
+}
+
 /// Model for an expense item from API.
 @freezed
 class ExpenseItemModel with _$ExpenseItemModel {
@@ -13,7 +31,7 @@ class ExpenseItemModel with _$ExpenseItemModel {
   const factory ExpenseItemModel({
     required String id,
     required String name,
-    required double amount,
+    @StringToDoubleConverter() required double amount,
     @JsonKey(name: 'createdAt') required DateTime createdAt,
     @JsonKey(name: 'updatedAt') required DateTime updatedAt,
   }) = _ExpenseItemModel;

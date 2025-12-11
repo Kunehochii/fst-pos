@@ -94,7 +94,10 @@ _$SheetModelImpl _$$SheetModelImplFromJson(Map<String, dynamic> json) =>
           name: $checkedConvert('name', (v) => v as String),
           columns:
               $checkedConvert('columns', (v) => (v as num?)?.toInt() ?? 10),
-          cashierId: $checkedConvert('cashierId', (v) => v as String),
+          kahonCashierId:
+              $checkedConvert('kahonCashierId', (v) => v as String?),
+          inventoryCashierId:
+              $checkedConvert('inventoryCashierId', (v) => v as String?),
           rows: $checkedConvert(
               'rows',
               (v) =>
@@ -117,7 +120,9 @@ Map<String, dynamic> _$$SheetModelImplToJson(_$SheetModelImpl instance) =>
       'type': instance.type,
       'name': instance.name,
       'columns': instance.columns,
-      'cashierId': instance.cashierId,
+      if (instance.kahonCashierId case final value?) 'kahonCashierId': value,
+      if (instance.inventoryCashierId case final value?)
+        'inventoryCashierId': value,
       'rows': instance.rows.map((e) => e.toJson()).toList(),
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),

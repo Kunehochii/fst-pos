@@ -22,6 +22,7 @@ ExpenseItemModel _$ExpenseItemModelFromJson(Map<String, dynamic> json) {
 mixin _$ExpenseItemModel {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  @StringToDoubleConverter()
   double get amount => throw _privateConstructorUsedError;
   @JsonKey(name: 'createdAt')
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -47,7 +48,7 @@ abstract class $ExpenseItemModelCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      double amount,
+      @StringToDoubleConverter() double amount,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
 }
@@ -109,7 +110,7 @@ abstract class _$$ExpenseItemModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String name,
-      double amount,
+      @StringToDoubleConverter() double amount,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
 }
@@ -164,7 +165,7 @@ class _$ExpenseItemModelImpl extends _ExpenseItemModel {
   const _$ExpenseItemModelImpl(
       {required this.id,
       required this.name,
-      required this.amount,
+      @StringToDoubleConverter() required this.amount,
       @JsonKey(name: 'createdAt') required this.createdAt,
       @JsonKey(name: 'updatedAt') required this.updatedAt})
       : super._();
@@ -177,6 +178,7 @@ class _$ExpenseItemModelImpl extends _ExpenseItemModel {
   @override
   final String name;
   @override
+  @StringToDoubleConverter()
   final double amount;
   @override
   @JsonKey(name: 'createdAt')
@@ -230,7 +232,7 @@ abstract class _ExpenseItemModel extends ExpenseItemModel {
   const factory _ExpenseItemModel(
           {required final String id,
           required final String name,
-          required final double amount,
+          @StringToDoubleConverter() required final double amount,
           @JsonKey(name: 'createdAt') required final DateTime createdAt,
           @JsonKey(name: 'updatedAt') required final DateTime updatedAt}) =
       _$ExpenseItemModelImpl;
@@ -244,6 +246,7 @@ abstract class _ExpenseItemModel extends ExpenseItemModel {
   @override
   String get name;
   @override
+  @StringToDoubleConverter()
   double get amount;
   @override
   @JsonKey(name: 'createdAt')

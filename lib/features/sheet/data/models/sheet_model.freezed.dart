@@ -694,8 +694,10 @@ mixin _$SheetModel {
   String get type => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get columns => throw _privateConstructorUsedError;
-  @JsonKey(name: 'cashierId')
-  String get cashierId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kahonCashierId')
+  String? get kahonCashierId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'inventoryCashierId')
+  String? get inventoryCashierId => throw _privateConstructorUsedError;
   List<RowModel> get rows => throw _privateConstructorUsedError;
   @JsonKey(name: 'createdAt')
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -723,7 +725,8 @@ abstract class $SheetModelCopyWith<$Res> {
       String type,
       String name,
       int columns,
-      @JsonKey(name: 'cashierId') String cashierId,
+      @JsonKey(name: 'kahonCashierId') String? kahonCashierId,
+      @JsonKey(name: 'inventoryCashierId') String? inventoryCashierId,
       List<RowModel> rows,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
@@ -748,7 +751,8 @@ class _$SheetModelCopyWithImpl<$Res, $Val extends SheetModel>
     Object? type = null,
     Object? name = null,
     Object? columns = null,
-    Object? cashierId = null,
+    Object? kahonCashierId = freezed,
+    Object? inventoryCashierId = freezed,
     Object? rows = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -770,10 +774,14 @@ class _$SheetModelCopyWithImpl<$Res, $Val extends SheetModel>
           ? _value.columns
           : columns // ignore: cast_nullable_to_non_nullable
               as int,
-      cashierId: null == cashierId
-          ? _value.cashierId
-          : cashierId // ignore: cast_nullable_to_non_nullable
-              as String,
+      kahonCashierId: freezed == kahonCashierId
+          ? _value.kahonCashierId
+          : kahonCashierId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      inventoryCashierId: freezed == inventoryCashierId
+          ? _value.inventoryCashierId
+          : inventoryCashierId // ignore: cast_nullable_to_non_nullable
+              as String?,
       rows: null == rows
           ? _value.rows
           : rows // ignore: cast_nullable_to_non_nullable
@@ -803,7 +811,8 @@ abstract class _$$SheetModelImplCopyWith<$Res>
       String type,
       String name,
       int columns,
-      @JsonKey(name: 'cashierId') String cashierId,
+      @JsonKey(name: 'kahonCashierId') String? kahonCashierId,
+      @JsonKey(name: 'inventoryCashierId') String? inventoryCashierId,
       List<RowModel> rows,
       @JsonKey(name: 'createdAt') DateTime createdAt,
       @JsonKey(name: 'updatedAt') DateTime updatedAt});
@@ -826,7 +835,8 @@ class __$$SheetModelImplCopyWithImpl<$Res>
     Object? type = null,
     Object? name = null,
     Object? columns = null,
-    Object? cashierId = null,
+    Object? kahonCashierId = freezed,
+    Object? inventoryCashierId = freezed,
     Object? rows = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -848,10 +858,14 @@ class __$$SheetModelImplCopyWithImpl<$Res>
           ? _value.columns
           : columns // ignore: cast_nullable_to_non_nullable
               as int,
-      cashierId: null == cashierId
-          ? _value.cashierId
-          : cashierId // ignore: cast_nullable_to_non_nullable
-              as String,
+      kahonCashierId: freezed == kahonCashierId
+          ? _value.kahonCashierId
+          : kahonCashierId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      inventoryCashierId: freezed == inventoryCashierId
+          ? _value.inventoryCashierId
+          : inventoryCashierId // ignore: cast_nullable_to_non_nullable
+              as String?,
       rows: null == rows
           ? _value._rows
           : rows // ignore: cast_nullable_to_non_nullable
@@ -876,7 +890,8 @@ class _$SheetModelImpl extends _SheetModel {
       required this.type,
       required this.name,
       this.columns = 10,
-      @JsonKey(name: 'cashierId') required this.cashierId,
+      @JsonKey(name: 'kahonCashierId') this.kahonCashierId,
+      @JsonKey(name: 'inventoryCashierId') this.inventoryCashierId,
       final List<RowModel> rows = const [],
       @JsonKey(name: 'createdAt') required this.createdAt,
       @JsonKey(name: 'updatedAt') required this.updatedAt})
@@ -896,8 +911,11 @@ class _$SheetModelImpl extends _SheetModel {
   @JsonKey()
   final int columns;
   @override
-  @JsonKey(name: 'cashierId')
-  final String cashierId;
+  @JsonKey(name: 'kahonCashierId')
+  final String? kahonCashierId;
+  @override
+  @JsonKey(name: 'inventoryCashierId')
+  final String? inventoryCashierId;
   final List<RowModel> _rows;
   @override
   @JsonKey()
@@ -916,7 +934,7 @@ class _$SheetModelImpl extends _SheetModel {
 
   @override
   String toString() {
-    return 'SheetModel(id: $id, type: $type, name: $name, columns: $columns, cashierId: $cashierId, rows: $rows, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'SheetModel(id: $id, type: $type, name: $name, columns: $columns, kahonCashierId: $kahonCashierId, inventoryCashierId: $inventoryCashierId, rows: $rows, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -928,8 +946,10 @@ class _$SheetModelImpl extends _SheetModel {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.columns, columns) || other.columns == columns) &&
-            (identical(other.cashierId, cashierId) ||
-                other.cashierId == cashierId) &&
+            (identical(other.kahonCashierId, kahonCashierId) ||
+                other.kahonCashierId == kahonCashierId) &&
+            (identical(other.inventoryCashierId, inventoryCashierId) ||
+                other.inventoryCashierId == inventoryCashierId) &&
             const DeepCollectionEquality().equals(other._rows, _rows) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -945,7 +965,8 @@ class _$SheetModelImpl extends _SheetModel {
       type,
       name,
       columns,
-      cashierId,
+      kahonCashierId,
+      inventoryCashierId,
       const DeepCollectionEquality().hash(_rows),
       createdAt,
       updatedAt);
@@ -972,7 +993,8 @@ abstract class _SheetModel extends SheetModel {
           required final String type,
           required final String name,
           final int columns,
-          @JsonKey(name: 'cashierId') required final String cashierId,
+          @JsonKey(name: 'kahonCashierId') final String? kahonCashierId,
+          @JsonKey(name: 'inventoryCashierId') final String? inventoryCashierId,
           final List<RowModel> rows,
           @JsonKey(name: 'createdAt') required final DateTime createdAt,
           @JsonKey(name: 'updatedAt') required final DateTime updatedAt}) =
@@ -991,8 +1013,11 @@ abstract class _SheetModel extends SheetModel {
   @override
   int get columns;
   @override
-  @JsonKey(name: 'cashierId')
-  String get cashierId;
+  @JsonKey(name: 'kahonCashierId')
+  String? get kahonCashierId;
+  @override
+  @JsonKey(name: 'inventoryCashierId')
+  String? get inventoryCashierId;
   @override
   List<RowModel> get rows;
   @override

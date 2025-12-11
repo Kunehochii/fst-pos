@@ -149,6 +149,23 @@ class SheetLocalDataSource {
     });
   }
 
+  /// Clears the sheet cache by sheet ID.
+  Future<void> clearCacheBySheetId(String sheetId) async {
+    AppLogger.debug('Clearing sheet cache by sheetId', {'sheetId': sheetId});
+
+    // Look up the cached sheet to get cashierId and type
+    final row = await (_db.select(_db.cachedSheets)
+          ..where((t) => t.id.equals(sheetId)))
+        .getSingleOrNull();
+
+    if (row != null) {
+      await clearCache(
+        row.cashierId,
+        type: SheetType.fromString(row.type),
+      );
+    }
+  }
+
   // ============================================================================
   // Pending Sync Operations - Rows
   // ============================================================================

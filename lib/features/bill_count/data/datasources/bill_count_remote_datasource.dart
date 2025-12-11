@@ -29,7 +29,10 @@ class BillCountRemoteDataSource {
         queryParameters: queryParams,
       );
 
-      if (response.data == null) {
+      // Handle null or empty response (server returns null when no bill count exists)
+      if (response.data == null ||
+          response.data == '' ||
+          (response.data is String && (response.data as String).isEmpty)) {
         AppLogger.debug('No bill count found for date');
         return null;
       }

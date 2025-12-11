@@ -15,7 +15,8 @@ _$ExpenseItemModelImpl _$$ExpenseItemModelImplFromJson(
         final val = _$ExpenseItemModelImpl(
           id: $checkedConvert('id', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          amount: $checkedConvert('amount', (v) => (v as num).toDouble()),
+          amount: $checkedConvert(
+              'amount', (v) => const StringToDoubleConverter().fromJson(v)),
           createdAt:
               $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
           updatedAt:
@@ -30,7 +31,9 @@ Map<String, dynamic> _$$ExpenseItemModelImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'amount': instance.amount,
+      if (const StringToDoubleConverter().toJson(instance.amount)
+          case final value?)
+        'amount': value,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

@@ -65,6 +65,33 @@ Map<String, dynamic> _$$StockTotalsModelImplToJson(
       'total': instance.total,
     };
 
+_$SummaryTotalsModelImpl _$$SummaryTotalsModelImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$SummaryTotalsModelImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$SummaryTotalsModelImpl(
+          stockSold: $checkedConvert('stockSold', (v) => (v as num).toDouble()),
+          stockTransferredKahon: $checkedConvert(
+              'stockTransferredKahon', (v) => (v as num).toDouble()),
+          stockOtherTransfers: $checkedConvert(
+              'stockOtherTransfers', (v) => (v as num).toDouble()),
+          total: $checkedConvert('total', (v) => (v as num).toDouble()),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$SummaryTotalsModelImplToJson(
+        _$SummaryTotalsModelImpl instance) =>
+    <String, dynamic>{
+      'stockSold': instance.stockSold,
+      'stockTransferredKahon': instance.stockTransferredKahon,
+      'stockOtherTransfers': instance.stockOtherTransfers,
+      'total': instance.total,
+    };
+
 _$PrinterCategoryModelImpl _$$PrinterCategoryModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
@@ -102,7 +129,7 @@ _$SummaryCategoryModelImpl _$$SummaryCategoryModelImplFromJson(
                       ProductStockModel.fromJson(e as Map<String, dynamic>))
                   .toList()),
           totals: $checkedConvert('totals',
-              (v) => StockTotalsModel.fromJson(v as Map<String, dynamic>)),
+              (v) => SummaryTotalsModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },

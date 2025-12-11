@@ -240,6 +240,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
     maxColumns = maxColumns < 5 ? 5 : maxColumns; // minimum 5 columns
 
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         // Empty corner cell for row controls
         Container(
@@ -297,6 +298,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
     }
 
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         for (int colIndex = 0; colIndex < maxColumns; colIndex++)
           _buildCell(

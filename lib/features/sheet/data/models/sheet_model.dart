@@ -106,7 +106,8 @@ class SheetModel with _$SheetModel {
     required String type,
     required String name,
     @Default(10) int columns,
-    @JsonKey(name: 'cashierId') required String cashierId,
+    @JsonKey(name: 'kahonCashierId') String? kahonCashierId,
+    @JsonKey(name: 'inventoryCashierId') String? inventoryCashierId,
     @Default([]) List<RowModel> rows,
     @JsonKey(name: 'createdAt') required DateTime createdAt,
     @JsonKey(name: 'updatedAt') required DateTime updatedAt,
@@ -114,6 +115,9 @@ class SheetModel with _$SheetModel {
 
   factory SheetModel.fromJson(Map<String, dynamic> json) =>
       _$SheetModelFromJson(json);
+
+  /// Get the cashierId based on sheet type.
+  String get cashierId => kahonCashierId ?? inventoryCashierId ?? '';
 
   /// Convert to domain entity.
   Sheet toEntity() => Sheet(
@@ -133,7 +137,10 @@ class SheetModel with _$SheetModel {
         type: entity.type.toApiString(),
         name: entity.name,
         columns: entity.columns,
-        cashierId: entity.cashierId,
+        kahonCashierId:
+            entity.type == SheetType.kahon ? entity.cashierId : null,
+        inventoryCashierId:
+            entity.type == SheetType.inventory ? entity.cashierId : null,
         rows: entity.rows.map((r) => RowModel.fromEntity(r)).toList(),
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt,
