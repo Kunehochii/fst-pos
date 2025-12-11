@@ -166,6 +166,17 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       ));
     }
 
+    // Inventory - based on KAHON permission (same as Kahon)
+    if (_hasPermission(cashier, 'KAHON')) {
+      items.add(_buildMenuItem(
+        context: context,
+        currentPath: currentPath,
+        route: AppRoutes.inventory,
+        icon: Icons.inventory,
+        title: 'Inventory',
+      ));
+    }
+
     // Sales Check - based on SALES_HISTORY permission
     if (_hasPermission(cashier, 'SALES_HISTORY')) {
       items.add(_buildMenuItem(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/formula.dart';
@@ -29,10 +30,72 @@ class _SheetPageState extends ConsumerState<SheetPage> {
   final Set<String> _selectedRowIds = {};
   bool _hasUnsavedChanges = false;
   bool _isSaving = false;
+  DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial date filter
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _applyDateFilter();
+    });
+  }
+
+  void _applyDateFilter() {
+    final startOfDay = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
+    final endOfDay = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    if (widget.sheetType == SheetType.kahon) {
+      ref
+          .read(kahonSheetNotifierProvider.notifier)
+          .setDateRange(startOfDay, endOfDay);
+    } else {
+      ref
+          .read(inventorySheetNotifierProvider.notifier)
+          .setDateRange(startOfDay, endOfDay);
+    }
+  }
+
+  /// Invalidates the correct sheet provider based on sheet type.
+  void _invalidateSheet() {
+    if (widget.sheetType == SheetType.kahon) {
+      ref.read(kahonSheetNotifierProvider.notifier).refresh();
+    } else {
+      ref.read(inventorySheetNotifierProvider.notifier).refresh();
+    }
+  }
+
+  Future<void> _selectDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() => _selectedDate = picked);
+      _applyDateFilter();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final sheetAsync = ref.watch(sheetByTypeProvider(widget.sheetType));
+    // Use the correct notifier provider based on sheet type
+    final sheetAsync = widget.sheetType == SheetType.kahon
+        ? ref.watch(kahonSheetNotifierProvider)
+        : ref.watch(inventorySheetNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,6 +106,16 @@ class _SheetPageState extends ConsumerState<SheetPage> {
         ),
         centerTitle: false,
         actions: [
+          // Date picker button
+          TextButton.icon(
+            onPressed: _selectDate,
+            icon: const Icon(Icons.calendar_today, size: 18),
+            label: Text(
+              DateFormat('MMM d, yyyy').format(_selectedDate),
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          const SizedBox(width: 8),
           if (_hasUnsavedChanges)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -61,14 +134,21 @@ class _SheetPageState extends ConsumerState<SheetPage> {
         ],
       ),
       body: sheetAsync.when(
-        data: (sheet) =>
-            sheet == null ? _buildEmptyState() : _buildSheetView(sheet),
+        data: (sheetState) {
+          if (sheetState is SheetLoaded) {
+            return _buildSheetView(sheetState.sheet);
+          } else if (sheetState is SheetError) {
+            return _buildErrorState(sheetState.failure.message);
+          }
+          return _buildEmptyState();
+        },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => _buildErrorState(error),
       ),
       floatingActionButton: sheetAsync.maybeWhen(
-        data: (sheet) =>
-            sheet != null ? AddRowFAB(onPressed: () => _addRow(sheet)) : null,
+        data: (sheetState) => sheetState is SheetLoaded
+            ? AddRowFAB(onPressed: () => _addRow(sheetState.sheet))
+            : null,
         orElse: () => null,
       ),
     );
@@ -378,10 +458,10 @@ class _SheetPageState extends ConsumerState<SheetPage> {
 
   String? _getCellValue(Sheet sheet) {
     if (_selectedCell == null) return null;
-    final row = sheet.rows.firstWhere(
-      (r) => r.id == _selectedCell!.rowId,
-      orElse: () => sheet.rows[_selectedCell!.rowIndex],
-    );
+    if (sheet.rows.isEmpty) return null;
+    final row =
+        sheet.rows.where((r) => r.id == _selectedCell!.rowId).firstOrNull;
+    if (row == null) return null;
     final cell = row.cells
         .where((c) => c.columnIndex == _selectedCell!.columnIndex)
         .firstOrNull;
@@ -390,10 +470,10 @@ class _SheetPageState extends ConsumerState<SheetPage> {
 
   String? _getCellFormula(Sheet sheet) {
     if (_selectedCell == null) return null;
-    final row = sheet.rows.firstWhere(
-      (r) => r.id == _selectedCell!.rowId,
-      orElse: () => sheet.rows[_selectedCell!.rowIndex],
-    );
+    if (sheet.rows.isEmpty) return null;
+    final row =
+        sheet.rows.where((r) => r.id == _selectedCell!.rowId).firstOrNull;
+    if (row == null) return null;
     final cell = row.cells
         .where((c) => c.columnIndex == _selectedCell!.columnIndex)
         .firstOrNull;
@@ -402,10 +482,10 @@ class _SheetPageState extends ConsumerState<SheetPage> {
 
   String? _getCellColor(Sheet sheet) {
     if (_selectedCell == null) return null;
-    final row = sheet.rows.firstWhere(
-      (r) => r.id == _selectedCell!.rowId,
-      orElse: () => sheet.rows[_selectedCell!.rowIndex],
-    );
+    if (sheet.rows.isEmpty) return null;
+    final row =
+        sheet.rows.where((r) => r.id == _selectedCell!.rowId).firstOrNull;
+    if (row == null) return null;
     final cell = row.cells
         .where((c) => c.columnIndex == _selectedCell!.columnIndex)
         .firstOrNull;
@@ -450,7 +530,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       rowIndex: sheet.rows.length,
     );
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _insertRowAt(Sheet sheet, int index) async {
@@ -460,7 +540,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       rowIndex: index,
     );
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _deleteRow(Sheet sheet, String rowId) async {
@@ -473,7 +553,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
         _selectedCell = null;
       }
     });
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _deleteSelectedRows(Sheet sheet) async {
@@ -511,7 +591,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       _selectedRowIds.clear();
       _selectedCell = null;
     });
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _duplicateRow(Sheet sheet, SheetRow row) async {
@@ -537,13 +617,23 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       cells: cellInputs,
     );
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _reorderRow(Sheet sheet, int oldIndex, int newIndex) async {
-    // TODO: Implement row reordering in operations provider
-    // For now, this is handled by the ReorderableListView visual feedback
+    if (oldIndex == newIndex) return;
+
+    // Get the row at oldIndex
+    final row = sheet.rows.firstWhere((r) => r.rowIndex == oldIndex);
+
+    final operations = ref.read(sheetOperationsProvider.notifier);
+    await operations.reorderRow(
+      rowId: row.id,
+      newRowIndex: newIndex,
+    );
+
     setState(() => _hasUnsavedChanges = true);
+    _refresh();
   }
 
   Future<void> _updateCellValue(
@@ -572,7 +662,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       );
     }
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _updateCellFormula(Sheet sheet, String formula) async {
@@ -596,7 +686,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       );
     }
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _updateCellColor(Sheet sheet, String? color) async {
@@ -618,7 +708,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       );
     }
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _onFormulaSubmit(
@@ -647,7 +737,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
       );
     }
     setState(() => _hasUnsavedChanges = true);
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   // Sheet-level operations
@@ -655,7 +745,7 @@ class _SheetPageState extends ConsumerState<SheetPage> {
   Future<void> _createSheet() async {
     // Sheet creation is handled by the backend when first accessed
     // The sheetByTypeProvider will create it if it doesn't exist
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    _invalidateSheet();
   }
 
   Future<void> _saveChanges() async {
@@ -670,11 +760,19 @@ class _SheetPageState extends ConsumerState<SheetPage> {
   }
 
   void _refresh() {
-    ref.invalidate(sheetByTypeProvider(widget.sheetType));
+    if (widget.sheetType == SheetType.kahon) {
+      ref.invalidate(kahonSheetNotifierProvider);
+    } else {
+      ref.invalidate(inventorySheetNotifierProvider);
+    }
     setState(() {
       _selectedCell = null;
       _selectedRowIds.clear();
       _hasUnsavedChanges = false;
+    });
+    // Re-apply date filter after refresh
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _applyDateFilter();
     });
   }
 }
