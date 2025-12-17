@@ -7,17 +7,34 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/bill_count/data/datasources/bill_count_tables.dart';
+import '../../features/delivery/data/datasources/delivery_tables.dart';
+import '../../features/product/data/datasources/product_tables.dart';
+import '../../features/sales/data/datasources/sales_tables.dart';
+import '../../features/sheet/data/datasources/sheet_tables.dart';
+import '../../features/stock/data/datasources/stock_tables.dart';
+
 part 'app_database.g.dart';
 
 /// Provides the application database instance.
+///
+/// This provider is kept alive to prevent multiple database instances
+/// from being created when the provider is disposed and re-watched.
 ///
 /// Usage:
 /// ```dart
 /// final database = ref.watch(appDatabaseProvider);
 /// ```
-@riverpod
+@Riverpod(keepAlive: true)
 AppDatabase appDatabase(Ref ref) {
-  return AppDatabase();
+  final db = AppDatabase();
+
+  // Close database when app is terminated
+  ref.onDispose(() {
+    db.close();
+  });
+
+  return db;
 }
 
 /// Example table - replace with your actual tables
@@ -43,12 +60,40 @@ class SyncQueue extends Table {
 ///
 /// For offline sync, use the SyncQueue table to queue changes
 /// and sync them when the device is online.
-@DriftDatabase(tables: [SyncQueue])
+@DriftDatabase(tables: [
+  SyncQueue,
+  CachedProducts,
+  ProductCacheMeta,
+  CachedSales,
+  PendingSaleSync,
+  LocalStockAdjustments,
+  // Delivery tables
+  CachedDeliveries,
+  DeliveryCacheMeta,
+  PendingDeliverySync,
+  DeliveryStockAdjustments,
+  // Stock/Transfer tables
+  CachedTransfers,
+  TransferCacheMeta,
+  PendingTransferSync,
+  TransferStockAdjustments,
+  // Bill count tables
+  CachedBillCounts,
+  PendingBillCountSync,
+  BillCountCacheMeta,
+  // Sheet tables
+  CachedSheets,
+  SheetCacheMeta,
+  PendingSheetRowSync,
+  PendingSheetCellSync,
+  SheetRowIdMappings,
+  SheetCellIdMappings,
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -58,10 +103,46 @@ class AppDatabase extends _$AppDatabase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         // Handle migrations here
-        // Example:
-        // if (from < 2) {
-        //   await m.addColumn(table, column);
-        // }
+        if (from < 2) {
+          // Add product caching tables
+          await m.createTable(cachedProducts);
+          await m.createTable(productCacheMeta);
+        }
+        if (from < 3) {
+          // Add sales caching tables
+          await m.createTable(cachedSales);
+          await m.createTable(pendingSaleSync);
+          await m.createTable(localStockAdjustments);
+        }
+        if (from < 4) {
+          // Add delivery caching tables
+          await m.createTable(cachedDeliveries);
+          await m.createTable(deliveryCacheMeta);
+          await m.createTable(pendingDeliverySync);
+          await m.createTable(deliveryStockAdjustments);
+        }
+        if (from < 5) {
+          // Add transfer caching tables
+          await m.createTable(cachedTransfers);
+          await m.createTable(transferCacheMeta);
+          await m.createTable(pendingTransferSync);
+          await m.createTable(transferStockAdjustments);
+        }
+        if (from < 6) {
+          // Add bill count caching tables
+          await m.createTable(cachedBillCounts);
+          await m.createTable(pendingBillCountSync);
+          await m.createTable(billCountCacheMeta);
+        }
+        if (from < 7) {
+          // Add sheet caching tables
+          await m.createTable(cachedSheets);
+          await m.createTable(sheetCacheMeta);
+          await m.createTable(pendingSheetRowSync);
+          await m.createTable(pendingSheetCellSync);
+          await m.createTable(sheetRowIdMappings);
+          await m.createTable(sheetCellIdMappings);
+        }
       },
       beforeOpen: (details) async {
         // Run any initialization logic here

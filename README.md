@@ -4,16 +4,16 @@ This documentation is optimized for AI agent prompting and development assistanc
 
 ## Quick Reference
 
-| Aspect | Technology |
-|--------|------------|
-| State Management | Riverpod + riverpod_generator |
-| Routing | GoRouter + go_router_builder |
-| UI Components | shadcn_flutter + flutter_side_menu |
-| HTTP Client | Dio with interceptors |
-| Local Database | Drift (SQLite) |
-| Secure Storage | flutter_secure_storage |
-| Code Generation | freezed, json_serializable |
-| Environment | flutter_dotenv |
+| Aspect           | Technology                           |
+| ---------------- | ------------------------------------ |
+| State Management | Riverpod + riverpod_generator        |
+| Routing          | GoRouter + go_router_builder         |
+| UI Components    | Flutter Material + flutter_side_menu |
+| HTTP Client      | Dio with interceptors                |
+| Local Database   | Drift (SQLite)                       |
+| Secure Storage   | flutter_secure_storage               |
+| Code Generation  | freezed, json_serializable           |
+| Environment      | flutter_dotenv                       |
 
 ## Documentation Index
 

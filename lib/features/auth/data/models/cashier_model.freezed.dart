@@ -22,10 +22,14 @@ CashierModel _$CashierModelFromJson(Map<String, dynamic> json) {
 mixin _$CashierModel {
   String get id => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
+  @JsonKey(name: 'branchName')
   String get branchName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'businessId')
   String get businessId => throw _privateConstructorUsedError;
   List<String> get permissions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'createdAt')
   DateTime get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'updatedAt')
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this CashierModel to a JSON map.
@@ -47,11 +51,11 @@ abstract class $CashierModelCopyWith<$Res> {
   $Res call(
       {String id,
       String username,
-      String branchName,
-      String businessId,
+      @JsonKey(name: 'branchName') String branchName,
+      @JsonKey(name: 'businessId') String businessId,
       List<String> permissions,
-      DateTime createdAt,
-      DateTime updatedAt});
+      @JsonKey(name: 'createdAt') DateTime createdAt,
+      @JsonKey(name: 'updatedAt') DateTime updatedAt});
 }
 
 /// @nodoc
@@ -121,11 +125,11 @@ abstract class _$$CashierModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String username,
-      String branchName,
-      String businessId,
+      @JsonKey(name: 'branchName') String branchName,
+      @JsonKey(name: 'businessId') String businessId,
       List<String> permissions,
-      DateTime createdAt,
-      DateTime updatedAt});
+      @JsonKey(name: 'createdAt') DateTime createdAt,
+      @JsonKey(name: 'updatedAt') DateTime updatedAt});
 }
 
 /// @nodoc
@@ -188,11 +192,11 @@ class _$CashierModelImpl extends _CashierModel {
   const _$CashierModelImpl(
       {required this.id,
       required this.username,
-      required this.branchName,
-      required this.businessId,
+      @JsonKey(name: 'branchName') required this.branchName,
+      @JsonKey(name: 'businessId') required this.businessId,
       final List<String> permissions = const [],
-      required this.createdAt,
-      required this.updatedAt})
+      @JsonKey(name: 'createdAt') required this.createdAt,
+      @JsonKey(name: 'updatedAt') required this.updatedAt})
       : _permissions = permissions,
         super._();
 
@@ -204,8 +208,10 @@ class _$CashierModelImpl extends _CashierModel {
   @override
   final String username;
   @override
+  @JsonKey(name: 'branchName')
   final String branchName;
   @override
+  @JsonKey(name: 'businessId')
   final String businessId;
   final List<String> _permissions;
   @override
@@ -217,8 +223,10 @@ class _$CashierModelImpl extends _CashierModel {
   }
 
   @override
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
   @override
+  @JsonKey(name: 'updatedAt')
   final DateTime updatedAt;
 
   @override
@@ -276,13 +284,14 @@ class _$CashierModelImpl extends _CashierModel {
 
 abstract class _CashierModel extends CashierModel {
   const factory _CashierModel(
-      {required final String id,
-      required final String username,
-      required final String branchName,
-      required final String businessId,
-      final List<String> permissions,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$CashierModelImpl;
+          {required final String id,
+          required final String username,
+          @JsonKey(name: 'branchName') required final String branchName,
+          @JsonKey(name: 'businessId') required final String businessId,
+          final List<String> permissions,
+          @JsonKey(name: 'createdAt') required final DateTime createdAt,
+          @JsonKey(name: 'updatedAt') required final DateTime updatedAt}) =
+      _$CashierModelImpl;
   const _CashierModel._() : super._();
 
   factory _CashierModel.fromJson(Map<String, dynamic> json) =
@@ -293,14 +302,18 @@ abstract class _CashierModel extends CashierModel {
   @override
   String get username;
   @override
+  @JsonKey(name: 'branchName')
   String get branchName;
   @override
+  @JsonKey(name: 'businessId')
   String get businessId;
   @override
   List<String> get permissions;
   @override
+  @JsonKey(name: 'createdAt')
   DateTime get createdAt;
   @override
+  @JsonKey(name: 'updatedAt')
   DateTime get updatedAt;
 
   /// Create a copy of CashierModel
@@ -318,6 +331,7 @@ LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$LoginRequest {
   String get username => throw _privateConstructorUsedError;
+  @JsonKey(name: 'accessKey')
   String get accessKey => throw _privateConstructorUsedError;
 
   /// Serializes this LoginRequest to a JSON map.
@@ -336,7 +350,7 @@ abstract class $LoginRequestCopyWith<$Res> {
           LoginRequest value, $Res Function(LoginRequest) then) =
       _$LoginRequestCopyWithImpl<$Res, LoginRequest>;
   @useResult
-  $Res call({String username, String accessKey});
+  $Res call({String username, @JsonKey(name: 'accessKey') String accessKey});
 }
 
 /// @nodoc
@@ -378,7 +392,7 @@ abstract class _$$LoginRequestImplCopyWith<$Res>
       __$$LoginRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String username, String accessKey});
+  $Res call({String username, @JsonKey(name: 'accessKey') String accessKey});
 }
 
 /// @nodoc
@@ -413,7 +427,9 @@ class __$$LoginRequestImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$LoginRequestImpl implements _LoginRequest {
-  const _$LoginRequestImpl({required this.username, required this.accessKey});
+  const _$LoginRequestImpl(
+      {required this.username,
+      @JsonKey(name: 'accessKey') required this.accessKey});
 
   factory _$LoginRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginRequestImplFromJson(json);
@@ -421,6 +437,7 @@ class _$LoginRequestImpl implements _LoginRequest {
   @override
   final String username;
   @override
+  @JsonKey(name: 'accessKey')
   final String accessKey;
 
   @override
@@ -461,8 +478,9 @@ class _$LoginRequestImpl implements _LoginRequest {
 
 abstract class _LoginRequest implements LoginRequest {
   const factory _LoginRequest(
-      {required final String username,
-      required final String accessKey}) = _$LoginRequestImpl;
+          {required final String username,
+          @JsonKey(name: 'accessKey') required final String accessKey}) =
+      _$LoginRequestImpl;
 
   factory _LoginRequest.fromJson(Map<String, dynamic> json) =
       _$LoginRequestImpl.fromJson;
@@ -470,6 +488,7 @@ abstract class _LoginRequest implements LoginRequest {
   @override
   String get username;
   @override
+  @JsonKey(name: 'accessKey')
   String get accessKey;
 
   /// Create a copy of LoginRequest

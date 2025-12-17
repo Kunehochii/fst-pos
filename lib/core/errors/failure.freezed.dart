@@ -24,7 +24,9 @@ mixin _$Failure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) =>
@@ -35,7 +37,8 @@ mixin _$Failure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) =>
@@ -46,7 +49,8 @@ mixin _$Failure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),
@@ -208,7 +212,9 @@ class _$ServerFailureImpl implements ServerFailure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) {
@@ -222,7 +228,8 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) {
@@ -236,7 +243,8 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),
@@ -385,7 +393,9 @@ class _$NetworkFailureImpl implements NetworkFailure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) {
@@ -399,7 +409,8 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) {
@@ -413,7 +424,8 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),
@@ -557,7 +569,9 @@ class _$CacheFailureImpl implements CacheFailure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) {
@@ -571,7 +585,8 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) {
@@ -585,7 +600,8 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),
@@ -731,7 +747,9 @@ class _$AuthFailureImpl implements AuthFailure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) {
@@ -745,7 +763,8 @@ class _$AuthFailureImpl implements AuthFailure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) {
@@ -759,7 +778,8 @@ class _$AuthFailureImpl implements AuthFailure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),
@@ -836,7 +856,10 @@ abstract class _$$ValidationFailureImplCopyWith<$Res>
       __$$ValidationFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String message, Map<String, List<String>>? fieldErrors});
+  $Res call(
+      {String message,
+      Map<String, List<String>>? fieldErrors,
+      List<ValidationErrorDetail>? errors});
 }
 
 /// @nodoc
@@ -854,6 +877,7 @@ class __$$ValidationFailureImplCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
     Object? fieldErrors = freezed,
+    Object? errors = freezed,
   }) {
     return _then(_$ValidationFailureImpl(
       message: null == message
@@ -864,6 +888,10 @@ class __$$ValidationFailureImplCopyWithImpl<$Res>
           ? _value._fieldErrors
           : fieldErrors // ignore: cast_nullable_to_non_nullable
               as Map<String, List<String>>?,
+      errors: freezed == errors
+          ? _value._errors
+          : errors // ignore: cast_nullable_to_non_nullable
+              as List<ValidationErrorDetail>?,
     ));
   }
 }
@@ -872,8 +900,11 @@ class __$$ValidationFailureImplCopyWithImpl<$Res>
 
 class _$ValidationFailureImpl implements ValidationFailure {
   const _$ValidationFailureImpl(
-      {required this.message, final Map<String, List<String>>? fieldErrors})
-      : _fieldErrors = fieldErrors;
+      {required this.message,
+      final Map<String, List<String>>? fieldErrors,
+      final List<ValidationErrorDetail>? errors})
+      : _fieldErrors = fieldErrors,
+        _errors = errors;
 
   @override
   final String message;
@@ -887,9 +918,19 @@ class _$ValidationFailureImpl implements ValidationFailure {
     return EqualUnmodifiableMapView(value);
   }
 
+  final List<ValidationErrorDetail>? _errors;
+  @override
+  List<ValidationErrorDetail>? get errors {
+    final value = _errors;
+    if (value == null) return null;
+    if (_errors is EqualUnmodifiableListView) return _errors;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'Failure.validation(message: $message, fieldErrors: $fieldErrors)';
+    return 'Failure.validation(message: $message, fieldErrors: $fieldErrors, errors: $errors)';
   }
 
   @override
@@ -899,12 +940,16 @@ class _$ValidationFailureImpl implements ValidationFailure {
             other is _$ValidationFailureImpl &&
             (identical(other.message, message) || other.message == message) &&
             const DeepCollectionEquality()
-                .equals(other._fieldErrors, _fieldErrors));
+                .equals(other._fieldErrors, _fieldErrors) &&
+            const DeepCollectionEquality().equals(other._errors, _errors));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, message, const DeepCollectionEquality().hash(_fieldErrors));
+      runtimeType,
+      message,
+      const DeepCollectionEquality().hash(_fieldErrors),
+      const DeepCollectionEquality().hash(_errors));
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
@@ -923,11 +968,13 @@ class _$ValidationFailureImpl implements ValidationFailure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) {
-    return validation(message, fieldErrors);
+    return validation(message, fieldErrors, errors);
   }
 
   @override
@@ -937,11 +984,12 @@ class _$ValidationFailureImpl implements ValidationFailure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) {
-    return validation?.call(message, fieldErrors);
+    return validation?.call(message, fieldErrors, errors);
   }
 
   @override
@@ -951,13 +999,14 @@ class _$ValidationFailureImpl implements ValidationFailure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),
   }) {
     if (validation != null) {
-      return validation(message, fieldErrors);
+      return validation(message, fieldErrors, errors);
     }
     return orElse();
   }
@@ -1009,11 +1058,13 @@ class _$ValidationFailureImpl implements ValidationFailure {
 abstract class ValidationFailure implements Failure {
   const factory ValidationFailure(
       {required final String message,
-      final Map<String, List<String>>? fieldErrors}) = _$ValidationFailureImpl;
+      final Map<String, List<String>>? fieldErrors,
+      final List<ValidationErrorDetail>? errors}) = _$ValidationFailureImpl;
 
   @override
   String get message;
   Map<String, List<String>>? get fieldErrors;
+  List<ValidationErrorDetail>? get errors;
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
@@ -1100,7 +1151,9 @@ class _$UnknownFailureImpl implements UnknownFailure {
     required TResult Function(String message) cache,
     required TResult Function(String message) auth,
     required TResult Function(
-            String message, Map<String, List<String>>? fieldErrors)
+            String message,
+            Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)
         validation,
     required TResult Function(String message) unknown,
   }) {
@@ -1114,7 +1167,8 @@ class _$UnknownFailureImpl implements UnknownFailure {
     TResult? Function(String message)? network,
     TResult? Function(String message)? cache,
     TResult? Function(String message)? auth,
-    TResult? Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult? Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult? Function(String message)? unknown,
   }) {
@@ -1128,7 +1182,8 @@ class _$UnknownFailureImpl implements UnknownFailure {
     TResult Function(String message)? network,
     TResult Function(String message)? cache,
     TResult Function(String message)? auth,
-    TResult Function(String message, Map<String, List<String>>? fieldErrors)?
+    TResult Function(String message, Map<String, List<String>>? fieldErrors,
+            List<ValidationErrorDetail>? errors)?
         validation,
     TResult Function(String message)? unknown,
     required TResult orElse(),

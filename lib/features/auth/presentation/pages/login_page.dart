@@ -1,18 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../../../../core/errors/failure.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../providers/auth_provider.dart';
 
 /// Login page for cashier authentication.
 ///
-/// Features:
-/// - Username and access key input
-/// - Error handling with user-friendly messages
-/// - Loading state during login
-/// - Automatic redirect on successful login
+/// Features a modern, minimal design with:
+/// - Clean centered card layout
+/// - Subtle shadows and rounded corners
+/// - Primary color accents
+/// - Smooth loading states
+/// - Clear error feedback via toasts
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -24,7 +25,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _usernameController = TextEditingController();
   final _accessKeyController = TextEditingController();
   bool _isLoading = false;
-  bool _obscurePassword = true;
   String? _usernameError;
   String? _accessKeyError;
 
@@ -60,34 +60,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    // Check if login was successful
+    // Check if login failed (show error)
+    // On success, the router's refreshListenable will automatically redirect to home
     final authState = ref.read(authNotifierProvider);
     authState.whenOrNull(
-      data: (state) {
-        state.whenOrNull(
-          authenticated: (_, __) {
-            context.go(AppRoutes.home);
-          },
-        );
-      },
       error: (error, _) {
         final message = _getErrorMessage(error);
-        showToast(
-          context: context,
-          builder: (context, overlay) => SurfaceCard(
-            child: Basic(
-              leading: const Icon(LucideIcons.circleAlert),
-              title: const Text('Login Failed'),
-              subtitle: Text(message),
-              trailing: GhostButton(
-                density: ButtonDensity.icon,
-                onPressed: overlay.close,
-                child: const Icon(LucideIcons.x),
-              ),
-            ),
-          ),
-          location: ToastLocation.topCenter,
-          showDuration: const Duration(seconds: 4),
+        AppToast.error(
+          context,
+          title: 'Login Failed',
+          message: message,
         );
       },
     );
@@ -100,7 +82,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         network: (message) => message,
         cache: (message) => message,
         auth: (message) => message,
-        validation: (message, _) => message,
+        validation: (message, _, __) => message,
         unknown: (message) => message,
       );
     }
@@ -109,89 +91,115 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final destructiveColor = theme.colorScheme.destructive;
-
     return Scaffold(
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Card(
-              padding: const EdgeInsets.all(24),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.background,
+              AppColors.muted,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('FST POS').h2().textCenter(),
-                  const SizedBox(height: 8),
-                  const Text('Sign in to your cashier account')
-                      .muted()
-                      .textCenter(),
-                  const SizedBox(height: 24),
-                  // Username field
-                  const Text('Username').semiBold(),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _usernameController,
-                    placeholder: const Text('Enter your username'),
-                    features: [
-                      InputFeature.leading(
-                          const Icon(LucideIcons.user, size: 18)),
-                    ],
-                    onChanged: (_) {
-                      if (_usernameError != null) {
-                        setState(() => _usernameError = null);
-                      }
-                    },
+                  // Logo/Brand Section
+                  AppIconBox(
+                    icon: Icons.store,
+                    backgroundColor: AppColors.primary,
+                    iconColor: AppColors.primaryForeground,
+                    size: 72,
                   ),
-                  if (_usernameError != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      _usernameError!,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: destructiveColor,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  // Access Key field
-                  const Text('Access Key').semiBold(),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _accessKeyController,
-                    placeholder: const Text('Enter your access key'),
-                    obscureText: _obscurePassword,
-                    features: [
-                      InputFeature.leading(
-                          const Icon(LucideIcons.lock, size: 18)),
-                      InputFeature.passwordToggle(),
-                    ],
-                    onChanged: (_) {
-                      if (_accessKeyError != null) {
-                        setState(() => _accessKeyError = null);
-                      }
-                    },
-                  ),
-                  if (_accessKeyError != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      _accessKeyError!,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: destructiveColor,
-                      ),
-                    ),
-                  ],
                   const SizedBox(height: 24),
-                  // Sign In button
-                  PrimaryButton(
-                    onPressed: _isLoading ? null : _handleLogin,
-                    child: _isLoading
-                        ? const CircularProgressIndicator(size: 20)
-                        : const Text('Sign In'),
+                  Text(
+                    'FST POS',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.foreground,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Sign in to your cashier account',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors.mutedForeground,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  // Login Card
+                  AppCard(
+                    elevation: 1,
+                    padding: const EdgeInsets.all(28),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Username field
+                        AppTextField(
+                          controller: _usernameController,
+                          label: 'Username',
+                          hintText: 'Enter your username',
+                          prefixIcon: Icons.person_outline,
+                          errorText: _usernameError,
+                          onChanged: (_) {
+                            if (_usernameError != null) {
+                              setState(() => _usernameError = null);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        // Access Key field
+                        AppTextField(
+                          controller: _accessKeyController,
+                          label: 'Access Key',
+                          hintText: 'Enter your access key',
+                          prefixIcon: Icons.key_outlined,
+                          obscureText: true,
+                          showPasswordToggle: true,
+                          errorText: _accessKeyError,
+                          onChanged: (_) {
+                            if (_accessKeyError != null) {
+                              setState(() => _accessKeyError = null);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 28),
+                        // Sign In button
+                        AppButton.primary(
+                          onPressed: _isLoading ? null : _handleLogin,
+                          isLoading: _isLoading,
+                          isExpanded: true,
+                          icon: _isLoading
+                              ? null
+                              : const Icon(
+                                  Icons.arrow_forward,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                          child: Text(_isLoading ? 'Signing in...' : 'Sign In'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Footer text
+                  Text(
+                    'Secure cashier authentication',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.mutedForeground,
+                    ),
                   ),
                 ],
               ),

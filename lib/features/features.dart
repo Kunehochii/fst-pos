@@ -5,5 +5,18 @@
 /// - domain/     - Entities, repository interfaces, use cases
 /// - presentation/ - Pages, widgets, state management (providers)
 
+export 'attachment/attachment.dart';
 export 'auth/auth.dart';
+export 'bill_count/bill_count.dart';
+export 'delivery/delivery.dart';
+export 'expense/expense.dart';
 export 'home/home.dart';
+export 'printer/printer.dart';
+export 'product/product.dart';
+export 'profit/profit.dart';
+export 'sales/sales.dart';
+export 'sales_check/sales_check.dart';
+export 'settings/settings.dart';
+export 'sheet/sheet.dart';
+export 'shift/shift.dart';
+export 'stock/stock.dart';

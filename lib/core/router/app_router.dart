@@ -3,8 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/attachment/presentation/pages/attachment_page.dart';
 import '../../features/auth/auth.dart';
+import '../../features/bill_count/presentation/pages/bill_count_page.dart';
+import '../../features/delivery/presentation/pages/deliveries_page.dart';
+import '../../features/expense/presentation/pages/expense_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/profit/presentation/pages/profit_page.dart';
+import '../../features/sales/presentation/pages/sales_page.dart';
+import '../../features/sales_check/presentation/pages/sales_check_page.dart';
+import '../../features/settings/settings.dart';
+import '../../features/sheet/sheet.dart';
+import '../../features/shift/shift.dart';
+import '../../features/stock/presentation/pages/stock_page.dart';
 import '../../shared/widgets/main_layout.dart';
 
 part 'app_router.g.dart';
@@ -17,14 +28,19 @@ part 'app_router.g.dart';
 /// ```
 @riverpod
 GoRouter appRouter(Ref ref) {
-  final authState = ref.watch(authNotifierProvider);
+  // Use ref.read instead of ref.watch to avoid recreating the router
+  // The refreshListenable handles auth state changes
+  final authNotifier = _AuthStateNotifier(ref);
 
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
-    refreshListenable: _AuthStateNotifier(ref),
+    refreshListenable: authNotifier,
     redirect: (context, state) {
       final isLoggingIn = state.matchedLocation == AppRoutes.login;
+
+      // Read current auth state (don't watch - router uses refreshListenable)
+      final authState = ref.read(authNotifierProvider);
 
       // Handle loading state - don't redirect while loading
       final isLoading = authState.isLoading;
@@ -65,7 +81,18 @@ GoRouter appRouter(Ref ref) {
       // Shell route for the main layout with sidebar
       ShellRoute(
         builder: (context, state, child) {
-          return MainLayout(child: child);
+          // Don't apply shift guard on the shift page itself
+          // Users need to access it to time in
+          final isShiftPage = state.matchedLocation == AppRoutes.shift;
+
+          if (isShiftPage) {
+            return MainLayout(child: child);
+          }
+
+          // Wrap with ShiftGuard to require time-in before accessing features
+          return MainLayout(
+            child: ShiftGuard(child: child),
+          );
         },
         routes: [
           GoRoute(
@@ -73,6 +100,90 @@ GoRouter appRouter(Ref ref) {
             name: 'home',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: HomePage(),
+            ),
+          ),
+          GoRoute(
+            path: '/shift',
+            name: 'shift',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ShiftPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/settings',
+            name: 'settings',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SettingsPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/sales',
+            name: 'sales',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SalesPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/deliveries',
+            name: 'deliveries',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: DeliveriesPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/sales-check',
+            name: 'salesCheck',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SalesCheckPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/profit',
+            name: 'profit',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ProfitPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/stocks',
+            name: 'stocks',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: StockPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/expenses',
+            name: 'expenses',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ExpensePage(),
+            ),
+          ),
+          GoRoute(
+            path: '/bills',
+            name: 'bills',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: BillCountPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/kahon',
+            name: 'kahon',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: SheetPage(sheetType: SheetType.kahon),
+            ),
+          ),
+          GoRoute(
+            path: '/inventory',
+            name: 'inventory',
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: SheetPage(sheetType: SheetType.inventory),
+            ),
+          ),
+          GoRoute(
+            path: '/attachments',
+            name: 'attachments',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: AttachmentPage(),
             ),
           ),
           // Add more routes here following this pattern:
@@ -115,8 +226,21 @@ class _AuthStateNotifier extends ChangeNotifier {
 abstract class AppRoutes {
   static const login = '/login';
   static const home = '/';
-  static const products = '/products';
-  static const orders = '/orders';
-  static const customers = '/customers';
+
+  // Permission-based routes
+  static const sales = '/sales';
+  static const salesCheck = '/sales-check';
+  static const deliveries = '/deliveries';
+  static const stocks = '/stocks';
+  static const kahon = '/kahon';
+  static const inventory = '/inventory';
+  static const salesHistory = '/sales-history';
+  static const profit = '/profit';
+  static const bills = '/bills';
+  static const expenses = '/expenses';
+  static const attachments = '/attachments';
+
+  // Open to all cashiers
+  static const shift = '/shift';
   static const settings = '/settings';
 }

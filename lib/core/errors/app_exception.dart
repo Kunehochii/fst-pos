@@ -85,6 +85,41 @@ class CacheException extends AppException {
   }
 }
 
+/// Exception thrown for validation errors from NestJS.
+///
+/// NestJS validation errors follow this structure:
+/// ```json
+/// {
+///   "message": "Validation failed",
+///   "errors": [
+///     {
+///       "expected": "object",
+///       "code": "invalid_type",
+///       "path": ["fieldName"],
+///       "message": "Invalid input: expected object, received string"
+///     }
+///   ]
+/// }
+/// ```
+class ValidationException extends AppException {
+  final List<ValidationErrorDetail> errors;
+
+  const ValidationException({
+    super.message = 'Validation failed',
+    super.code = 'VALIDATION_ERROR',
+    super.originalError,
+    this.errors = const [],
+  });
+
+  @override
+  Failure toFailure() {
+    return Failure.validation(
+      message: message,
+      errors: errors,
+    );
+  }
+}
+
 /// Utility to convert Dio exceptions to AppExceptions.
 extension DioExceptionMapper on DioException {
   AppException toAppException() {
@@ -103,11 +138,35 @@ extension DioExceptionMapper on DioException {
         );
       case DioExceptionType.badResponse:
         final statusCode = response?.statusCode;
-        final message = _extractErrorMessage(response);
+        final data = response?.data;
 
+        // Parse NestJS error response structure
+        final errorInfo = _parseNestJsError(data);
+        final message = errorInfo.message;
+        final validationErrors = errorInfo.errors;
+
+        // Handle 401 Unauthorized
         if (statusCode == 401) {
           return AuthException(
             message: message ?? 'Authentication required',
+            originalError: this,
+          );
+        }
+
+        // Handle 400 Bad Request with validation errors
+        if (statusCode == 400 && validationErrors.isNotEmpty) {
+          return ValidationException(
+            message: message ?? 'Validation failed',
+            errors: validationErrors,
+            originalError: this,
+          );
+        }
+
+        // Handle 422 Unprocessable Entity (validation)
+        if (statusCode == 422) {
+          return ValidationException(
+            message: message ?? 'Validation failed',
+            errors: validationErrors,
             originalError: this,
           );
         }
@@ -130,11 +189,45 @@ extension DioExceptionMapper on DioException {
     }
   }
 
-  String? _extractErrorMessage(Response? response) {
-    if (response?.data is Map) {
-      final data = response!.data as Map;
-      return data['message']?.toString() ?? data['error']?.toString();
+  /// Parse NestJS error response structure.
+  ///
+  /// Handles the standard NestJS error format:
+  /// ```json
+  /// {
+  ///   "message": "Error message or Validation failed",
+  ///   "error": "Unauthorized",
+  ///   "statusCode": 401,
+  ///   "errors": [...]  // Optional validation errors array
+  /// }
+  /// ```
+  ({String? message, List<ValidationErrorDetail> errors}) _parseNestJsError(
+      dynamic data) {
+    if (data is! Map) {
+      return (message: data?.toString(), errors: <ValidationErrorDetail>[]);
     }
-    return null;
+
+    final map = data as Map<String, dynamic>;
+
+    // Extract message - prioritize 'message', fallback to 'error'
+    String? message = map['message']?.toString() ?? map['error']?.toString();
+
+    // Parse validation errors array if present
+    final List<ValidationErrorDetail> errors = [];
+    if (map['errors'] is List) {
+      for (final error in (map['errors'] as List)) {
+        if (error is Map<String, dynamic>) {
+          errors.add(ValidationErrorDetail.fromJson(error));
+        }
+      }
+    }
+
+    // If we have validation errors, build a combined message
+    if (errors.isNotEmpty && message == 'Validation failed') {
+      // Create a user-friendly message from validation errors
+      final errorMessages = errors.map((e) => e.message).join('; ');
+      message = 'Validation failed: $errorMessages';
+    }
+
+    return (message: message, errors: errors);
   }
 }

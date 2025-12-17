@@ -26,3 +26,6 @@ export 'errors/failure.dart';
 
 // Utils
 export 'utils/logger.dart';
+
+// Theme
+export 'theme/theme.dart';

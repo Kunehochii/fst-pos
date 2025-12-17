@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_endpoints.dart';
+import '../../../../core/utils/logger.dart';
 import '../models/cashier_model.dart';
 
 /// Remote data source for authentication API calls.
@@ -17,20 +18,47 @@ class AuthRemoteDataSource {
     required String username,
     required String accessKey,
   }) async {
+    AppLogger.auth('Attempting login', {'username': username});
+
     final response = await _dio.post(
       ApiEndpoints.auth.cashierLogin,
       data: LoginRequest(username: username, accessKey: accessKey).toJson(),
       options: Options(extra: {'skipAuth': true}),
     );
-    return LoginResponse.fromJson(response.data);
+
+    AppLogger.json('Parsing LoginResponse', response.data);
+
+    try {
+      final loginResponse = LoginResponse.fromJson(response.data);
+      AppLogger.auth('Login successful, token received');
+      return loginResponse;
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to parse LoginResponse', e, stackTrace);
+      rethrow;
+    }
   }
 
   /// Fetches the current cashier's profile.
   ///
   /// Requires a valid JWT token in the Authorization header.
   Future<CashierModel> getCashierProfile() async {
+    AppLogger.auth('Fetching cashier profile');
+
     final response = await _dio.get(ApiEndpoints.auth.cashierMe);
-    return CashierModel.fromJson(response.data);
+
+    AppLogger.json('Parsing CashierModel', response.data);
+
+    try {
+      final cashierModel = CashierModel.fromJson(response.data);
+      AppLogger.auth('Cashier profile parsed successfully', {
+        'id': cashierModel.id,
+        'username': cashierModel.username,
+      });
+      return cashierModel;
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to parse CashierModel', e, stackTrace);
+      rethrow;
+    }
   }
 
   /// Checks if the server is reachable.

@@ -4,9 +4,21 @@ import 'package:flutter/foundation.dart';
 
 import '../config/env_config.dart';
 
+/// Log level enum for filtering logs.
+enum LogLevel {
+  debug(0),
+  info(1),
+  warning(2),
+  error(3),
+  none(4);
+
+  const LogLevel(this.value);
+  final int value;
+}
+
 /// Application logger for consistent logging across the app.
 ///
-/// Only logs in debug mode (DEBUG_MODE=true in .env).
+/// Supports log levels for filtering in debug vs production.
 /// Uses dart:developer for structured logs visible in DevTools.
 ///
 /// Usage:
@@ -17,64 +29,31 @@ import '../config/env_config.dart';
 class AppLogger {
   AppLogger._();
 
-  static bool get _shouldLog => EnvConfig.debugMode || kDebugMode;
+  /// Minimum log level. Set to LogLevel.error in production.
+  static LogLevel minLevel =
+      (EnvConfig.debugMode || kDebugMode) ? LogLevel.debug : LogLevel.error;
+
+  static bool _shouldLog(LogLevel level) => level.value >= minLevel.value;
 
   /// Log debug information.
   static void debug(String message, [Map<String, dynamic>? data]) {
-    if (!_shouldLog) return;
+    if (!_shouldLog(LogLevel.debug)) return;
 
-    developer.log(
-      message,
-      name: 'DEBUG',
-      time: DateTime.now(),
-    );
-
-    if (data != null) {
-      developer.log(
-        data.toString(),
-        name: 'DEBUG_DATA',
-        time: DateTime.now(),
-      );
-    }
+    _log('DEBUG', message, data: data);
   }
 
   /// Log informational messages.
   static void info(String message, [Map<String, dynamic>? data]) {
-    if (!_shouldLog) return;
+    if (!_shouldLog(LogLevel.info)) return;
 
-    developer.log(
-      message,
-      name: 'INFO',
-      time: DateTime.now(),
-    );
-
-    if (data != null) {
-      developer.log(
-        data.toString(),
-        name: 'INFO_DATA',
-        time: DateTime.now(),
-      );
-    }
+    _log('INFO', message, data: data);
   }
 
   /// Log warnings.
   static void warning(String message, [Map<String, dynamic>? data]) {
-    if (!_shouldLog) return;
+    if (!_shouldLog(LogLevel.warning)) return;
 
-    developer.log(
-      message,
-      name: 'WARNING',
-      time: DateTime.now(),
-      level: 900,
-    );
-
-    if (data != null) {
-      developer.log(
-        data.toString(),
-        name: 'WARNING_DATA',
-        time: DateTime.now(),
-      );
-    }
+    _log('WARNING', message, data: data, level: 900);
   }
 
   /// Log errors with optional stack trace.
@@ -83,54 +62,82 @@ class AppLogger {
     Object? error,
     StackTrace? stackTrace,
   ]) {
-    // Always log errors, even in production
+    if (!_shouldLog(LogLevel.error)) return;
+
     developer.log(
-      message,
+      '❌ $message',
       name: 'ERROR',
       time: DateTime.now(),
       level: 1000,
       error: error,
       stackTrace: stackTrace,
     );
+
+    // Also print to console for visibility
+    if (kDebugMode) {
+      debugPrint('❌ ERROR: $message');
+      if (error != null) debugPrint('  Error: $error');
+      if (stackTrace != null) debugPrint('  Stack: $stackTrace');
+    }
   }
 
   /// Log API requests.
   static void apiRequest(String method, String url,
       [Map<String, dynamic>? data]) {
-    if (!_shouldLog) return;
+    if (!_shouldLog(LogLevel.debug)) return;
 
-    developer.log(
-      '→ $method $url',
-      name: 'API',
-      time: DateTime.now(),
-    );
-
-    if (data != null) {
-      developer.log(
-        'Request: $data',
-        name: 'API',
-        time: DateTime.now(),
-      );
-    }
+    _log('API', '→ $method $url', data: data);
   }
 
   /// Log API responses.
   static void apiResponse(String method, String url, int statusCode,
       [dynamic data]) {
-    if (!_shouldLog) return;
+    if (!_shouldLog(LogLevel.debug)) return;
 
+    final emoji = statusCode >= 200 && statusCode < 300 ? '✓' : '✗';
+    _log('API', '$emoji ← $method $url [$statusCode]');
+
+    if (data != null && _shouldLog(LogLevel.debug)) {
+      _log('API_RESPONSE', data.toString());
+    }
+  }
+
+  /// Log authentication events.
+  static void auth(String message, [Map<String, dynamic>? data]) {
+    if (!_shouldLog(LogLevel.info)) return;
+
+    _log('AUTH', '🔐 $message', data: data);
+  }
+
+  /// Log JSON parsing events (useful for debugging CheckedFromJsonException).
+  static void json(String message, [dynamic data]) {
+    if (!_shouldLog(LogLevel.debug)) return;
+
+    _log('JSON', '📄 $message');
+    if (data != null) {
+      _log('JSON_DATA', data.toString());
+    }
+  }
+
+  /// Internal log method.
+  static void _log(
+    String name,
+    String message, {
+    Map<String, dynamic>? data,
+    int level = 0,
+  }) {
     developer.log(
-      '← $method $url [$statusCode]',
-      name: 'API',
+      message,
+      name: name,
       time: DateTime.now(),
+      level: level,
     );
 
-    if (data != null) {
-      developer.log(
-        'Response: $data',
-        name: 'API',
-        time: DateTime.now(),
-      );
+    if (kDebugMode) {
+      debugPrint('[$name] $message');
+      if (data != null) {
+        debugPrint('[$name] Data: $data');
+      }
     }
   }
 }

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart' hide ThemeData, ThemeMode;
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'core/config/env_config.dart';
 import 'core/router/app_router.dart';
+import 'core/theme/app_theme.dart';
 
 /// Application entry point.
 ///
@@ -11,7 +11,7 @@ import 'core/router/app_router.dart';
 /// - Environment configuration from .env files
 /// - Riverpod for state management
 /// - GoRouter for navigation
-/// - shadcn_flutter theming
+/// - Material theming
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,9 +28,8 @@ void main() async {
 /// Root application widget.
 ///
 /// Sets up:
-/// - ShadcnApp for theming
+/// - MaterialApp for theming
 /// - GoRouter integration
-/// - ToastLayer for notifications
 /// - Theme configuration
 class FstPosApp extends ConsumerWidget {
   const FstPosApp({super.key});
@@ -39,17 +38,11 @@ class FstPosApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
-    return ShadcnApp.router(
+    return MaterialApp.router(
       title: 'FST POS',
-      themeMode: ThemeMode.system,
-      theme: ThemeData(
-        colorScheme: ColorSchemes.lightBlue,
-        radius: 0.5,
-      ),
-      darkTheme: ThemeData.dark(
-        colorScheme: ColorSchemes.darkBlue,
-        radius: 0.5,
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

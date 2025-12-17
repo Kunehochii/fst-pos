@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.fst_pos"
+    namespace = "com.ajaparicio.fst"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,10 +21,10 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.fst_pos"
+        applicationId = "com.ajaparicio.fst"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = flutter.minSdkVersion // Required for BLE, flutter_secure_storage, and other dependencies
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
