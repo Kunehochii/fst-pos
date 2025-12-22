@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/sale.dart';
 import '../providers/sales_provider.dart';
 
 /// Sales history widget with pagination and void functionality.
+///
+/// "Aura Daybreak" design:
+/// - Clean white cards with subtle borders
+/// - Orange accents for key information
+/// - Consistent spacing and typography
 class SalesHistoryWidget extends ConsumerStatefulWidget {
   const SalesHistoryWidget({super.key});
 
@@ -33,12 +39,24 @@ class _SalesHistoryWidgetState extends ConsumerState<SalesHistoryWidget>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Active'),
-            Tab(text: 'Voided'),
-          ],
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            border: Border(
+              bottom: BorderSide(color: AppColors.border, width: 1),
+            ),
+          ),
+          child: TabBar(
+            controller: _tabController,
+            labelColor: AppColors.primary,
+            unselectedLabelColor: AppColors.mutedForeground,
+            indicatorColor: AppColors.primary,
+            indicatorWeight: 2,
+            tabs: const [
+              Tab(text: 'Active'),
+              Tab(text: 'Voided'),
+            ],
+          ),
         ),
         Expanded(
           child: TabBarView(
@@ -61,73 +79,119 @@ class _ActiveSalesTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final salesState = ref.watch(salesHistoryNotifierProvider);
 
-    return salesState.when(
-      data: (state) {
-        if (state is SalesListLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return Container(
+      color: AppColors.background,
+      child: salesState.when(
+        data: (state) {
+          if (state is SalesListLoading) {
+            return Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            );
+          }
 
-        if (state is SalesListError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: ${state.failure.toString()}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.read(salesHistoryNotifierProvider.notifier).refresh();
-                  },
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final loaded = state as SalesListLoaded;
-        if (loaded.sales.isEmpty) {
-          return const Center(
-            child: Text('No sales yet'),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            await ref.read(salesHistoryNotifierProvider.notifier).refresh();
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is ScrollEndNotification &&
-                  notification.metrics.extentAfter < 200 &&
-                  loaded.hasMore &&
-                  !loaded.isLoadingMore) {
-                ref.read(salesHistoryNotifierProvider.notifier).loadMore();
-              }
-              return false;
-            },
-            child: ListView.builder(
-              itemCount: loaded.sales.length + (loaded.isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index >= loaded.sales.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator(),
+          if (state is SalesListError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: AppColors.destructive,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error: ${state.failure.toString()}',
+                    style: TextStyle(color: AppColors.foreground),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.read(salesHistoryNotifierProvider.notifier).refresh();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.primaryForeground,
                     ),
-                  );
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final loaded = state as SalesListLoaded;
+          if (loaded.sales.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.receipt_long_outlined,
+                    size: 48,
+                    color: AppColors.mutedForeground,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No sales yet',
+                    style: TextStyle(
+                      color: AppColors.mutedForeground,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: () async {
+              await ref.read(salesHistoryNotifierProvider.notifier).refresh();
+            },
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification is ScrollEndNotification &&
+                    notification.metrics.extentAfter < 200 &&
+                    loaded.hasMore &&
+                    !loaded.isLoadingMore) {
+                  ref.read(salesHistoryNotifierProvider.notifier).loadMore();
                 }
-                return _SaleListTile(
-                  sale: loaded.sales[index],
-                  showVoidButton: true,
-                );
+                return false;
               },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: loaded.sales.length + (loaded.isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index >= loaded.sales.length) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    );
+                  }
+                  return _SaleListTile(
+                    sale: loaded.sales[index],
+                    showVoidButton: true,
+                  );
+                },
+              ),
             ),
+          );
+        },
+        loading: () => Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+        error: (error, _) => Center(
+          child: Text(
+            'Error: $error',
+            style: TextStyle(color: AppColors.destructive),
           ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(child: Text('Error: $error')),
+        ),
+      ),
     );
   }
 }
@@ -139,73 +203,119 @@ class _VoidedSalesTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final salesState = ref.watch(voidedSalesNotifierProvider);
 
-    return salesState.when(
-      data: (state) {
-        if (state is SalesListLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return Container(
+      color: AppColors.background,
+      child: salesState.when(
+        data: (state) {
+          if (state is SalesListLoading) {
+            return Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            );
+          }
 
-        if (state is SalesListError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: ${state.failure.toString()}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    ref.read(voidedSalesNotifierProvider.notifier).refresh();
-                  },
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final loaded = state as SalesListLoaded;
-        if (loaded.sales.isEmpty) {
-          return const Center(
-            child: Text('No voided sales'),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            await ref.read(voidedSalesNotifierProvider.notifier).refresh();
-          },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is ScrollEndNotification &&
-                  notification.metrics.extentAfter < 200 &&
-                  loaded.hasMore &&
-                  !loaded.isLoadingMore) {
-                ref.read(voidedSalesNotifierProvider.notifier).loadMore();
-              }
-              return false;
-            },
-            child: ListView.builder(
-              itemCount: loaded.sales.length + (loaded.isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index >= loaded.sales.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator(),
+          if (state is SalesListError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: AppColors.destructive,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error: ${state.failure.toString()}',
+                    style: TextStyle(color: AppColors.foreground),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.read(voidedSalesNotifierProvider.notifier).refresh();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.primaryForeground,
                     ),
-                  );
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final loaded = state as SalesListLoaded;
+          if (loaded.sales.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.cancel_outlined,
+                    size: 48,
+                    color: AppColors.mutedForeground,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No voided sales',
+                    style: TextStyle(
+                      color: AppColors.mutedForeground,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: () async {
+              await ref.read(voidedSalesNotifierProvider.notifier).refresh();
+            },
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification is ScrollEndNotification &&
+                    notification.metrics.extentAfter < 200 &&
+                    loaded.hasMore &&
+                    !loaded.isLoadingMore) {
+                  ref.read(voidedSalesNotifierProvider.notifier).loadMore();
                 }
-                return _SaleListTile(
-                  sale: loaded.sales[index],
-                  showVoidButton: false,
-                );
+                return false;
               },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: loaded.sales.length + (loaded.isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index >= loaded.sales.length) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    );
+                  }
+                  return _SaleListTile(
+                    sale: loaded.sales[index],
+                    showVoidButton: false,
+                  );
+                },
+              ),
             ),
+          );
+        },
+        loading: () => Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+        error: (error, _) => Center(
+          child: Text(
+            'Error: $error',
+            style: TextStyle(color: AppColors.destructive),
           ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(child: Text('Error: $error')),
+        ),
+      ),
     );
   }
 }
@@ -225,84 +335,117 @@ class _SaleListTile extends ConsumerWidget {
     final voidState = ref.watch(voidSaleNotifierProvider);
     final isVoiding = voidState is VoidSaleProcessing;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: InkWell(
-        onTap: () => _showSaleDetails(context, sale),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              // Sale info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '₱${sale.totalAmount.toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${sale.totalItems} items • ${sale.paymentMethod.displayName}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          dateFormat.format(sale.createdAt),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+        border: Border.all(color: AppColors.border, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _showSaleDetails(context, sale),
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          hoverColor: AppColors.accent,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                // Sale info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '₱${sale.totalAmount.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
                         ),
-                        if (!sale.isSynced) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange[100],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              'Pending sync',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                    color: Colors.orange[800],
-                                    fontSize: 10,
-                                  ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '${sale.totalItems} items • ${sale.paymentMethod.displayName}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.foreground,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Text(
+                            dateFormat.format(sale.createdAt),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.mutedForeground,
                             ),
                           ),
+                          if (!sale.isSynced) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    AppColors.warning.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                'Pending sync',
+                                style: TextStyle(
+                                  color: AppColors.warning,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+                // Void button
+                if (showVoidButton)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.muted,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ],
-                ),
-              ),
-              // Void button
-              if (showVoidButton)
-                IconButton(
-                  icon: isVoiding
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.cancel_outlined),
-                  onPressed: isVoiding
-                      ? null
-                      : () => _showVoidConfirmation(context, ref, sale),
-                  tooltip: 'Void sale',
-                ),
-            ],
+                    child: IconButton(
+                      icon: isVoiding
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.destructive,
+                              ),
+                            )
+                          : Icon(
+                              Icons.cancel_outlined,
+                              color: AppColors.destructive,
+                            ),
+                      onPressed: isVoiding
+                          ? null
+                          : () => _showVoidConfirmation(context, ref, sale),
+                      tooltip: 'Void sale',
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -313,14 +456,23 @@ class _SaleListTile extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        minChildSize: 0.3,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) => _SaleDetailsSheet(
-          sale: sale,
-          scrollController: scrollController,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.3,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (context, scrollController) => _SaleDetailsSheet(
+            sale: sale,
+            scrollController: scrollController,
+          ),
         ),
       ),
     );
@@ -330,13 +482,27 @@ class _SaleListTile extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Void Sale'),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        ),
+        title: Text(
+          'Void Sale',
+          style: TextStyle(
+            color: AppColors.foreground,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Text(
           'Are you sure you want to void this sale of ₱${sale.totalAmount.toStringAsFixed(0)}?\n\nThis will restore the stock for all items.',
+          style: TextStyle(color: AppColors.mutedForeground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.mutedForeground,
+            ),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
@@ -345,7 +511,8 @@ class _SaleListTile extends ConsumerWidget {
               ref.read(voidSaleNotifierProvider.notifier).voidSale(sale.id);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: AppColors.destructive,
+              foregroundColor: Colors.white,
             ),
             child: const Text('Void Sale'),
           ),
@@ -368,7 +535,7 @@ class _SaleDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MMMM d, yyyy HH:mm');
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,25 +547,30 @@ class _SaleDetailsSheet extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: AppColors.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
           Text(
             'Sale Details',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.foreground,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             dateFormat.format(sale.createdAt),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.mutedForeground,
+            ),
           ),
-          const Divider(height: 24),
+          const SizedBox(height: 16),
+          Divider(color: AppColors.border, height: 1),
+          const SizedBox(height: 16),
 
           // Items
           Expanded(
@@ -408,7 +580,7 @@ class _SaleDetailsSheet extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = sale.saleItems[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Row(
                     children: [
                       Expanded(
@@ -417,24 +589,28 @@ class _SaleDetailsSheet extends StatelessWidget {
                           children: [
                             Text(
                               item.product?.name ?? 'Product',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.foreground,
+                              ),
                             ),
+                            const SizedBox(height: 4),
                             Text(
                               '${item.variantDisplayName} • ${item.quantityDisplay}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.mutedForeground,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       Text(
                         '₱${item.totalPrice.toStringAsFixed(0)}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
+                        ),
                       ),
                     ],
                   ),
@@ -444,15 +620,17 @@ class _SaleDetailsSheet extends StatelessWidget {
           ),
 
           // Summary
-          const Divider(),
+          Divider(color: AppColors.border, height: 1),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Total',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.foreground,
                 ),
               ),
               Text(
@@ -460,31 +638,40 @@ class _SaleDetailsSheet extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: AppColors.primary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Payment Method'),
-              Text(sale.paymentMethod.displayName),
+              Text(
+                'Payment Method',
+                style: TextStyle(color: AppColors.mutedForeground),
+              ),
+              Text(
+                sale.paymentMethod.displayName,
+                style: TextStyle(color: AppColors.foreground),
+              ),
             ],
           ),
           if (sale.isVoid && sale.voidedAt != null) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Voided',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(
+                    color: AppColors.destructive,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Text(
                   dateFormat.format(sale.voidedAt!),
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(color: AppColors.destructive),
                 ),
               ],
             ),

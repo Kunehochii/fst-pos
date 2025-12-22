@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/cart_item.dart';
 import '../providers/sales_provider.dart';
 
 /// Full-screen page for adding a product to the cart.
+///
+/// "Aura Daybreak" design:
+/// - Clean white background with subtle shadows
+/// - Orange accents for selection and CTAs
+/// - Consistent border and spacing patterns
 class AddToCartPage extends ConsumerStatefulWidget {
   final Product product;
 
@@ -151,14 +157,36 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
     final hasSackPrices = widget.product.sackPrices.isNotEmpty;
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.product.name),
+        backgroundColor: AppColors.card,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.close, color: AppColors.foreground),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          widget.product.name,
+          style: TextStyle(
+            color: AppColors.foreground,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: _canAddToCart() ? _addToCart : null,
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              disabledForegroundColor: AppColors.mutedForeground,
+            ),
             child: const Text('Add'),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: AppColors.border),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -168,14 +196,16 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
             // Pricing type selection
             Text(
               'Select Variant',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.foreground,
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: 10,
+              runSpacing: 10,
               children: [
                 // Per kilo option
                 if (hasPerKilo)
@@ -224,13 +254,29 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
               // Per kilo specific options
               if (_selectedPriceType == CartPriceType.perKilo) ...[
                 // Gantang toggle
-                Card(
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    border: Border.all(color: AppColors.border, width: 1),
+                  ),
                   child: SwitchListTile(
-                    title: const Text('Gantang'),
+                    title: Text(
+                      'Gantang',
+                      style: TextStyle(
+                        color: AppColors.foreground,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     subtitle: Text(
                       'Multiply price by 2.25 (₱${(_unitPrice).toStringAsFixed(0)})',
+                      style: TextStyle(
+                        color: AppColors.mutedForeground,
+                        fontSize: 12,
+                      ),
                     ),
                     value: _isGantang,
+                    activeColor: AppColors.primary,
                     onChanged: (value) {
                       setState(() {
                         _isGantang = value;
@@ -245,26 +291,18 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: ChoiceChip(
-                        label: const Text('Set by Quantity'),
-                        selected: !_setByPrice,
-                        onSelected: (selected) {
-                          if (selected) {
-                            setState(() => _setByPrice = false);
-                          }
-                        },
+                      child: _ChoiceChipButton(
+                        label: 'Set by Quantity',
+                        isSelected: !_setByPrice,
+                        onTap: () => setState(() => _setByPrice = false),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: ChoiceChip(
-                        label: const Text('Set by Price'),
-                        selected: _setByPrice,
-                        onSelected: (selected) {
-                          if (selected) {
-                            setState(() => _setByPrice = true);
-                          }
-                        },
+                      child: _ChoiceChipButton(
+                        label: 'Set by Price',
+                        isSelected: _setByPrice,
+                        onTap: () => setState(() => _setByPrice = true),
                       ),
                     ),
                   ],
@@ -273,14 +311,10 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
 
                 // Input field based on mode
                 if (_setByPrice)
-                  TextField(
+                  _StyledTextField(
                     controller: _priceController,
-                    decoration: InputDecoration(
-                      labelText: 'Price (₱)',
-                      border: const OutlineInputBorder(),
-                      helperText:
-                          'Quantity: ${_quantity.toStringAsFixed(2)} kg',
-                    ),
+                    label: 'Price (₱)',
+                    helperText: 'Quantity: ${_quantity.toStringAsFixed(2)} kg',
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
@@ -292,14 +326,11 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                     },
                   )
                 else
-                  TextField(
+                  _StyledTextField(
                     controller: _quantityController,
-                    decoration: InputDecoration(
-                      labelText: 'Quantity (kg)',
-                      border: const OutlineInputBorder(),
-                      helperText:
-                          'Available: ${_availableStock.toStringAsFixed(2)} kg',
-                    ),
+                    label: 'Quantity (kg)',
+                    helperText:
+                        'Available: ${_availableStock.toStringAsFixed(2)} kg',
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
@@ -318,7 +349,11 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                 // Quick options for per kilo
                 Text(
                   'Quick Add',
-                  style: Theme.of(context).textTheme.titleSmall,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.mutedForeground,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -327,9 +362,9 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                   children: [
                     // Whole numbers
                     ...List.generate(5, (i) => i + 1).map(
-                      (kg) => ActionChip(
-                        label: Text('$kg kg'),
-                        onPressed: () => _addQuickQuantity(kg.toDouble()),
+                      (kg) => _QuickAddChip(
+                        label: '$kg kg',
+                        onTap: () => _addQuickQuantity(kg.toDouble()),
                       ),
                     ),
                   ],
@@ -341,22 +376,19 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                   children: [
                     // Decimals
                     ...[0.1, 0.25, 0.5, 0.75].map(
-                      (kg) => ActionChip(
-                        label: Text('$kg kg'),
-                        onPressed: () => _addQuickQuantity(kg),
+                      (kg) => _QuickAddChip(
+                        label: '$kg kg',
+                        onTap: () => _addQuickQuantity(kg),
                       ),
                     ),
                   ],
                 ),
               ] else ...[
                 // Sack quantity input
-                TextField(
+                _StyledTextField(
                   controller: _quantityController,
-                  decoration: InputDecoration(
-                    labelText: 'Quantity (sacks)',
-                    border: const OutlineInputBorder(),
-                    helperText: 'Available: ${_availableStock.toInt()} sacks',
-                  ),
+                  label: 'Quantity (sacks)',
+                  helperText: 'Available: ${_availableStock.toInt()} sacks',
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -374,12 +406,24 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
               const SizedBox(height: 24),
 
               // Discounted price section
-              Card(
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                  border: Border.all(color: AppColors.border, width: 1),
+                ),
                 child: Column(
                   children: [
                     SwitchListTile(
-                      title: const Text('Apply Discount'),
+                      title: Text(
+                        'Apply Discount',
+                        style: TextStyle(
+                          color: AppColors.foreground,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       value: _isDiscounted,
+                      activeColor: AppColors.primary,
                       onChanged: (value) {
                         setState(() {
                           _isDiscounted = value;
@@ -393,15 +437,12 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                     if (_isDiscounted)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                        child: TextField(
+                        child: _StyledTextField(
                           controller: _discountController,
-                          decoration: InputDecoration(
-                            labelText: 'Discounted Price per Unit',
-                            border: const OutlineInputBorder(),
-                            prefixText: '₱',
-                            helperText:
-                                'Original: ₱${_unitPrice.toStringAsFixed(0)}',
-                          ),
+                          label: 'Discounted Price per Unit',
+                          prefixText: '₱',
+                          helperText:
+                              'Original: ₱${_unitPrice.toStringAsFixed(0)}',
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
                           inputFormatters: [
@@ -430,10 +471,13 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: AppColors.card,
+        border: Border(
+          top: BorderSide(color: AppColors.border, width: 1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -454,30 +498,38 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                       _selectedPriceType == CartPriceType.perKilo
                           ? '${_quantity.toStringAsFixed(2)} kg'
                           : '${_quantity.toInt()} ${_quantity == 1 ? 'sack' : 'sacks'}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: TextStyle(
+                        color: AppColors.foreground,
+                        fontSize: 14,
+                      ),
                     ),
                     if (_isGantang)
                       Text(
                         'Gantang applied',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     if (_isDiscounted && _discountedPrice > 0)
                       Text(
                         'Discounted: ₱${_discountedPrice.toStringAsFixed(0)}/unit',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.green,
-                            ),
+                        style: TextStyle(
+                          color: AppColors.success,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                   ],
                 ),
                 Text(
                   '₱${_totalPrice.toStringAsFixed(0)}',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
                 ),
               ],
             ),
@@ -490,7 +542,14 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
                 icon: const Icon(Icons.add_shopping_cart),
                 label: const Text('Add to Cart'),
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.primaryForeground,
+                  disabledBackgroundColor: AppColors.muted,
+                  disabledForegroundColor: AppColors.mutedForeground,
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                  ),
                 ),
               ),
             ),
@@ -574,54 +633,201 @@ class _PricingCard extends StatelessWidget {
 
     return InkWell(
       onTap: isOutOfStock ? null : onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppColors.radiusSm),
       child: Container(
         width: 120,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primaryContainer
-              : isOutOfStock
-                  ? Colors.grey[200]
-                  : null,
+          color: isOutOfStock ? AppColors.muted : AppColors.card,
           border: Border.all(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Colors.grey[300]!,
+            color: isSelected ? AppColors.primary : AppColors.border,
             width: isSelected ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: isOutOfStock ? Colors.grey : null,
-                  ),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: isOutOfStock
+                    ? AppColors.mutedForeground
+                    : AppColors.foreground,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isOutOfStock
-                        ? Colors.grey
-                        : Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: TextStyle(
+                fontSize: 14,
+                color: isOutOfStock
+                    ? AppColors.mutedForeground
+                    : AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               isOutOfStock
                   ? 'Out of stock'
                   : 'Stock: ${stock % 1 == 0 ? stock.toInt() : stock.toStringAsFixed(2)}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isOutOfStock ? Colors.red : Colors.grey[600],
-                  ),
+              style: TextStyle(
+                fontSize: 11,
+                color: isOutOfStock
+                    ? AppColors.destructive
+                    : AppColors.mutedForeground,
+              ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Choice chip button for "Aura Daybreak" design
+class _ChoiceChipButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _ChoiceChipButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : AppColors.muted,
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.border,
+            width: 1,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: isSelected
+                  ? AppColors.primaryForeground
+                  : AppColors.foreground,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Quick add chip for "Aura Daybreak" design
+class _QuickAddChip extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _QuickAddChip({
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          border: Border.all(color: AppColors.border, width: 1),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: AppColors.foreground,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Styled text field for "Aura Daybreak" design
+class _StyledTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String? helperText;
+  final String? prefixText;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final ValueChanged<String>? onChanged;
+
+  const _StyledTextField({
+    required this.controller,
+    required this.label,
+    this.helperText,
+    this.prefixText,
+    this.keyboardType,
+    this.inputFormatters,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      onChanged: onChanged,
+      style: TextStyle(color: AppColors.foreground),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: AppColors.mutedForeground),
+        helperText: helperText,
+        helperStyle: TextStyle(color: AppColors.mutedForeground, fontSize: 11),
+        prefixText: prefixText,
+        prefixStyle: TextStyle(color: AppColors.foreground),
+        filled: true,
+        fillColor: AppColors.muted,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          borderSide: BorderSide(color: AppColors.border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          borderSide: BorderSide(color: AppColors.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          borderSide: BorderSide(color: AppColors.primary, width: 2),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
         ),
       ),
     );

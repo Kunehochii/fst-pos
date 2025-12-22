@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/cart_item.dart';
 import '../../domain/entities/payment_method.dart';
 import '../providers/sales_provider.dart';
 import 'receipt_preview.dart';
 
 /// Checkout page for completing a sale.
+///
+/// "Aura Daybreak" design:
+/// - Clean white cards for sections
+/// - Orange accent for primary actions
+/// - Consistent borders and shadows
 class CheckoutPage extends ConsumerStatefulWidget {
   const CheckoutPage({super.key});
 
@@ -51,12 +57,33 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     });
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Checkout'),
+        backgroundColor: AppColors.card,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.foreground),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Checkout',
+          style: TextStyle(
+            color: AppColors.foreground,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: AppColors.border),
+        ),
       ),
       body: cartState.isEmpty
-          ? const Center(
-              child: Text('Cart is empty'),
+          ? Center(
+              child: Text(
+                'Cart is empty',
+                style: TextStyle(color: AppColors.mutedForeground),
+              ),
             )
           : Column(
               children: [
@@ -68,77 +95,133 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                       // Items section
                       Text(
                         'Order Summary',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      ...cartState.items.map(
-                        (item) => _OrderItemTile(item: item),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.card,
+                          borderRadius:
+                              BorderRadius.circular(AppColors.radiusSm),
+                          border: Border.all(color: AppColors.border, width: 1),
+                        ),
+                        child: Column(
+                          children: cartState.items
+                              .asMap()
+                              .entries
+                              .map((entry) => Column(
+                                    children: [
+                                      _OrderItemTile(item: entry.value),
+                                      if (entry.key <
+                                          cartState.items.length - 1)
+                                        Divider(
+                                            height: 1, color: AppColors.border),
+                                    ],
+                                  ))
+                              .toList(),
+                        ),
                       ),
-                      const Divider(height: 32),
+                      const SizedBox(height: 24),
 
                       // Payment method section
                       Text(
                         'Payment Method',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      const SizedBox(height: 8),
-                      DropdownButtonFormField<PaymentMethod>(
-                        value: _paymentMethod,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
                         ),
-                        items: PaymentMethod.values.map((method) {
-                          return DropdownMenuItem(
-                            value: method,
-                            child: Text(method.displayName),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              _paymentMethod = value;
-                              if (value != PaymentMethod.cash) {
-                                _cashTendered = 0;
-                                _cashTenderedController.clear();
-                              }
-                            });
-                          }
-                        },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.muted,
+                          borderRadius:
+                              BorderRadius.circular(AppColors.radiusSm),
+                          border: Border.all(color: AppColors.border, width: 1),
+                        ),
+                        child: DropdownButtonFormField<PaymentMethod>(
+                          value: _paymentMethod,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                          ),
+                          dropdownColor: AppColors.card,
+                          style: TextStyle(
+                            color: AppColors.foreground,
+                            fontSize: 14,
+                          ),
+                          items: PaymentMethod.values.map((method) {
+                            return DropdownMenuItem(
+                              value: method,
+                              child: Text(method.displayName),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _paymentMethod = value;
+                                if (value != PaymentMethod.cash) {
+                                  _cashTendered = 0;
+                                  _cashTenderedController.clear();
+                                }
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
 
                       // Cash tendered section (only for cash)
                       if (_paymentMethod == PaymentMethod.cash) ...[
                         Text(
                           'Cash Tendered',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: _cashTenderedController,
-                          decoration: const InputDecoration(
-                            labelText: 'Amount',
-                            prefixText: '₱',
-                            border: OutlineInputBorder(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.foreground,
                           ),
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _cashTendered = double.tryParse(value) ?? 0;
-                            });
-                          },
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.muted,
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                            border:
+                                Border.all(color: AppColors.border, width: 1),
+                          ),
+                          child: TextField(
+                            controller: _cashTenderedController,
+                            style: TextStyle(color: AppColors.foreground),
+                            decoration: InputDecoration(
+                              labelText: 'Amount',
+                              labelStyle:
+                                  TextStyle(color: AppColors.mutedForeground),
+                              prefixText: '₱',
+                              prefixStyle:
+                                  TextStyle(color: AppColors.foreground),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[\d.]')),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                _cashTendered = double.tryParse(value) ?? 0;
+                              });
+                            },
+                          ),
                         ),
                         const SizedBox(height: 16),
 
@@ -148,10 +231,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                           runSpacing: 8,
                           children: [
                             // Exact amount
-                            ActionChip(
-                              label: Text(
-                                  'Exact (₱${cartState.totalPrice.toStringAsFixed(0)})'),
-                              onPressed: () {
+                            _QuickCashChip(
+                              label:
+                                  'Exact (₱${cartState.totalPrice.toStringAsFixed(0)})',
+                              onTap: () {
                                 setState(() {
                                   _cashTendered = cartState.totalPrice;
                                   _cashTenderedController.text =
@@ -161,9 +244,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                             // Round up options
                             ..._getRoundUpOptions(cartState.totalPrice).map(
-                              (amount) => ActionChip(
-                                label: Text('₱$amount'),
-                                onPressed: () {
+                              (amount) => _QuickCashChip(
+                                label: '₱$amount',
+                                onTap: () {
                                   setState(() {
                                     _cashTendered = amount.toDouble();
                                     _cashTenderedController.text =
@@ -178,36 +261,44 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
                         // Change display
                         if (_cashTendered > 0)
-                          Card(
-                            color: _cashTendered >= cartState.totalPrice
-                                ? Colors.green[50]
-                                : Colors.red[50],
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Change',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    '₱${(_cashTendered - cartState.totalPrice).toStringAsFixed(0)}',
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          _cashTendered >= cartState.totalPrice
-                                              ? Colors.green
-                                              : Colors.red,
-                                    ),
-                                  ),
-                                ],
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: _cashTendered >= cartState.totalPrice
+                                  ? AppColors.success.withValues(alpha: 0.1)
+                                  : AppColors.destructive
+                                      .withValues(alpha: 0.1),
+                              borderRadius:
+                                  BorderRadius.circular(AppColors.radiusSm),
+                              border: Border.all(
+                                color: _cashTendered >= cartState.totalPrice
+                                    ? AppColors.success
+                                    : AppColors.destructive,
+                                width: 1,
                               ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Change',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.foreground,
+                                  ),
+                                ),
+                                Text(
+                                  '₱${(_cashTendered - cartState.totalPrice).toStringAsFixed(0)}',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: _cashTendered >= cartState.totalPrice
+                                        ? AppColors.success
+                                        : AppColors.destructive,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                       ],
@@ -219,10 +310,13 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: AppColors.card,
+                    border: Border(
+                      top: BorderSide(color: AppColors.border, width: 1),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 8,
                         offset: const Offset(0, -2),
                       ),
@@ -237,18 +331,19 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                           children: [
                             Text(
                               'Total',
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.foreground,
+                              ),
                             ),
                             Text(
                               '₱${cartState.totalPrice.toStringAsFixed(0)}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
                             ),
                           ],
                         ),
@@ -275,7 +370,16 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   : 'Finish Sale',
                             ),
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.primaryForeground,
+                              disabledBackgroundColor: AppColors.muted,
+                              disabledForegroundColor:
+                                  AppColors.mutedForeground,
                               padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(AppColors.radiusSm),
+                              ),
                             ),
                           ),
                         ),
@@ -338,7 +442,7 @@ class _OrderItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -348,29 +452,77 @@ class _OrderItemTile extends StatelessWidget {
               children: [
                 Text(
                   item.product.name,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.foreground,
+                  ),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   '${item.variantDisplayName} • ${item.quantityDisplay}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.mutedForeground,
+                  ),
                 ),
                 if (item.isDiscounted && item.discountedPrice != null)
-                  Text(
-                    '₱${item.discountedPrice!.toStringAsFixed(0)} / unit (discounted)',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.green,
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      '₱${item.discountedPrice!.toStringAsFixed(0)} / unit (discounted)',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.success,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
               ],
             ),
           ),
           Text(
             '₱${item.totalPrice.toStringAsFixed(0)}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.foreground,
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Quick cash chip for "Aura Daybreak" design
+class _QuickCashChip extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _QuickCashChip({
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          border: Border.all(color: AppColors.border, width: 1),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: AppColors.foreground,
+          ),
+        ),
       ),
     );
   }
