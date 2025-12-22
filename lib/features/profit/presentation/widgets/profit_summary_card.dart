@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../domain/entities/grouped_profit.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/profit_summary.dart';
 
 /// Card widget displaying profit summary totals.
+///
+/// Follows the "Aura Daybreak" design with:
+/// - Pure white card with subtle border and shadow
+/// - Emerald green for profit values
+/// - Clean section separators
 class ProfitSummaryCard extends StatelessWidget {
   final ProfitSummary summary;
   final bool isOfflineData;
@@ -17,16 +22,24 @@ class ProfitSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
 
-    return Card(
-      margin: const EdgeInsets.all(8),
-      color: isOfflineData
-          ? theme.colorScheme.errorContainer.withOpacity(0.3)
-          : theme.colorScheme.primaryContainer.withOpacity(0.3),
+    return Container(
+      margin: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,21 +47,43 @@ class ProfitSummaryCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Profit Summary',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.success.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                      ),
+                      child: Icon(
+                        Icons.analytics_outlined,
+                        size: 20,
+                        color: AppColors.success,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Profit Summary',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ],
                 ),
                 if (isOfflineData)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 10,
+                      vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.error,
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.warning.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppColors.warning.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -56,14 +91,15 @@ class ProfitSummaryCard extends StatelessWidget {
                         Icon(
                           Icons.cloud_off,
                           size: 14,
-                          color: theme.colorScheme.onError,
+                          color: AppColors.warning,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           'Offline',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onError,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.warning,
                           ),
                         ),
                       ],
@@ -73,26 +109,30 @@ class ProfitSummaryCard extends StatelessWidget {
             ),
 
             if (isOfflineData) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.warning.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                  border: Border.all(
+                    color: AppColors.warning.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Row(
                   children: [
                     Icon(
-                      Icons.warning_amber_rounded,
-                      color: theme.colorScheme.error,
-                      size: 20,
+                      Icons.info_outline,
+                      color: AppColors.warning,
+                      size: 18,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'Showing locally cached sales only. Connect to internet for latest data.',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onErrorContainer,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.foreground.withValues(alpha: 0.8),
                         ),
                       ),
                     ),
@@ -101,7 +141,7 @@ class ProfitSummaryCard extends StatelessWidget {
               ),
             ],
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
             // Total profit - big number
             Center(
@@ -109,57 +149,82 @@ class ProfitSummaryCard extends StatelessWidget {
                 children: [
                   Text(
                     currencyFormat.format(summary.totalProfit),
-                    style: theme.textTheme.headlineLarge?.copyWith(
+                    style: TextStyle(
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: Colors.green.shade700,
+                      color: AppColors.success,
                     ),
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     'Total Profit',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.mutedForeground,
                     ),
                   ),
                 ],
               ),
             ),
 
-            const Divider(height: 24),
+            const SizedBox(height: 20),
 
-            // Stats row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatItem(
-                  context,
-                  'Transactions',
-                  summary.transactionCount.toString(),
-                  Icons.receipt_long,
-                ),
-                _buildStatItem(
-                  context,
-                  'Quantity',
-                  _formatQuantity(summary.totalQuantity),
-                  Icons.inventory,
-                ),
-                _buildStatItem(
-                  context,
-                  'Avg Profit',
-                  currencyFormat.format(summary.averageProfit),
-                  Icons.analytics,
-                ),
-              ],
+            // Divider
+            Container(
+              height: 1,
+              color: AppColors.border,
+            ),
+
+            const SizedBox(height: 20),
+
+            // Stats row with table-like borders
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.border),
+                borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      'Transactions',
+                      summary.transactionCount.toString(),
+                      Icons.receipt_long_outlined,
+                    ),
+                  ),
+                  Container(width: 1, height: 70, color: AppColors.border),
+                  Expanded(
+                    child: _buildStatItem(
+                      'Quantity',
+                      _formatQuantity(summary.totalQuantity),
+                      Icons.inventory_2_outlined,
+                    ),
+                  ),
+                  Container(width: 1, height: 70, color: AppColors.border),
+                  Expanded(
+                    child: _buildStatItem(
+                      'Avg Profit',
+                      currencyFormat.format(summary.averageProfit),
+                      Icons.trending_up_outlined,
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             // Payment breakdown if there's data
             if (summary.paymentTotals.total > 0) ...[
-              const Divider(height: 24),
+              const SizedBox(height: 20),
               Text(
                 'Profit by Payment Method',
-                style: theme.textTheme.titleSmall,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
               ),
-              const SizedBox(height: 8),
-              _buildPaymentBreakdown(context, currencyFormat),
+              const SizedBox(height: 12),
+              _buildPaymentBreakdown(currencyFormat),
             ],
           ],
         ),
@@ -167,103 +232,114 @@ class ProfitSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-  ) {
-    final theme = Theme.of(context);
-
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: theme.colorScheme.primary,
-          size: 24,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+  Widget _buildStatItem(String label, String value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: AppColors.primary,
+            size: 22,
           ),
-        ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: AppColors.foreground,
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.mutedForeground,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildPaymentBreakdown(
-    BuildContext context,
-    NumberFormat currencyFormat,
-  ) {
-    final theme = Theme.of(context);
+  Widget _buildPaymentBreakdown(NumberFormat currencyFormat) {
     final paymentTotals = summary.paymentTotals;
 
-    return Row(
-      children: [
-        if (paymentTotals.hasCash)
-          Expanded(
-            child: _buildPaymentItem(
-              theme,
-              'Cash',
-              currencyFormat.format(paymentTotals.cash),
-              Icons.payments,
-              Colors.green,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      ),
+      child: Row(
+        children: [
+          if (paymentTotals.hasCash)
+            Expanded(
+              child: _buildPaymentItem(
+                'Cash',
+                currencyFormat.format(paymentTotals.cash),
+                Icons.payments_outlined,
+                AppColors.success,
+              ),
             ),
-          ),
-        if (paymentTotals.hasCheck)
-          Expanded(
-            child: _buildPaymentItem(
-              theme,
-              'Check',
-              currencyFormat.format(paymentTotals.check),
-              Icons.money,
-              Colors.blue,
+          if (paymentTotals.hasCash &&
+              (paymentTotals.hasCheck || paymentTotals.hasBankTransfer))
+            Container(width: 1, height: 60, color: AppColors.border),
+          if (paymentTotals.hasCheck)
+            Expanded(
+              child: _buildPaymentItem(
+                'Check',
+                currencyFormat.format(paymentTotals.check),
+                Icons.money_outlined,
+                AppColors.info,
+              ),
             ),
-          ),
-        if (paymentTotals.hasBankTransfer)
-          Expanded(
-            child: _buildPaymentItem(
-              theme,
-              'Bank',
-              currencyFormat.format(paymentTotals.bankTransfer),
-              Icons.account_balance,
-              Colors.purple,
+          if (paymentTotals.hasCheck && paymentTotals.hasBankTransfer)
+            Container(width: 1, height: 60, color: AppColors.border),
+          if (paymentTotals.hasBankTransfer)
+            Expanded(
+              child: _buildPaymentItem(
+                'Bank',
+                currencyFormat.format(paymentTotals.bankTransfer),
+                Icons.account_balance_outlined,
+                AppColors.chart5,
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildPaymentItem(
-    ThemeData theme,
     String label,
     String value,
     IconData icon,
     Color color,
   ) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.foreground,
+            ),
           ),
-        ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall,
-        ),
-      ],
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              color: AppColors.mutedForeground,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
