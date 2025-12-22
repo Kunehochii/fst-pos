@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../providers/bill_count_provider.dart';
 import '../widgets/bill_count_date_selector.dart';
 import '../widgets/bill_count_summary_card.dart';
@@ -81,23 +83,38 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bill Count'),
+        title: Text(
+          'Bill Count',
+          style: TextStyle(
+            color: AppColors.foreground,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: AppColors.card,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         actions: [
           if (!_isEditing)
             IconButton(
               icon: const Icon(Icons.edit),
               tooltip: 'Edit',
+              color: AppColors.mutedForeground,
               onPressed: _startEditing,
             ),
           if (_isEditing) ...[
-            TextButton(
+            AppButton.ghost(
               onPressed: _cancelEditing,
+              small: true,
               child: const Text('Cancel'),
             ),
-            TextButton(
+            const SizedBox(width: 8),
+            AppButton.primary(
               onPressed: _saveBillCount,
+              small: true,
+              icon: const Icon(Icons.save, size: 16),
               child: const Text('Save'),
             ),
+            const SizedBox(width: 8),
           ],
         ],
       ),
@@ -121,17 +138,27 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
           Expanded(
             child: billCountState.when(
               data: (state) => _buildContent(context, state, inputState),
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(
+                child: AppLoadingIndicator(message: 'Loading bill count...'),
+              ),
               error: (error, _) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline,
-                        size: 48, color: Colors.red),
+                    AppIconBox(
+                      icon: Icons.error_outline,
+                      backgroundColor:
+                          AppColors.destructive.withValues(alpha: 0.1),
+                      iconColor: AppColors.destructive,
+                      size: 64,
+                    ),
                     const SizedBox(height: 16),
-                    Text('Error: $error'),
+                    Text(
+                      'Error: $error',
+                      style: TextStyle(color: AppColors.mutedForeground),
+                    ),
                     const SizedBox(height: 16),
-                    ElevatedButton(
+                    AppButton.primary(
                       onPressed: () {
                         ref.invalidate(billCountNotifierProvider);
                       },
@@ -153,19 +180,14 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
     BillInputState inputState,
   ) {
     if (state is BillCountLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: AppLoadingIndicator(message: 'Loading...'),
+      );
     }
 
     if (state is BillCountSaving) {
       return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Saving bill count...'),
-          ],
-        ),
+        child: AppLoadingIndicator(message: 'Saving bill count...'),
       );
     }
 
@@ -174,11 +196,19 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            AppIconBox(
+              icon: Icons.error_outline,
+              backgroundColor: AppColors.destructive.withValues(alpha: 0.1),
+              iconColor: AppColors.destructive,
+              size: 64,
+            ),
             const SizedBox(height: 16),
-            Text(state.failure.message),
+            Text(
+              state.failure.message,
+              style: TextStyle(color: AppColors.mutedForeground),
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            AppButton.primary(
               onPressed: () {
                 ref.read(billCountNotifierProvider.notifier).refresh();
               },
@@ -199,55 +229,75 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Input Form
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: BillInputForm(
-                    billAmounts: inputState.billAmounts,
-                    beginningBalance: inputState.beginningBalance,
-                    showBeginningBalance: inputState.showBeginningBalance,
-                    onBeginningBalanceChanged: (value) {
-                      ref
-                          .read(billInputNotifierProvider.notifier)
-                          .setBeginningBalance(value);
-                    },
-                    onShowBeginningBalanceChanged: (value) {
-                      ref
-                          .read(billInputNotifierProvider.notifier)
-                          .setShowBeginningBalance(value);
-                    },
-                    onBillAmountChanged: (type, amount) {
-                      ref
-                          .read(billInputNotifierProvider.notifier)
-                          .setBillAmount(type, amount);
-                    },
-                    enabled: true,
-                  ),
+              AppCard(
+                padding: const EdgeInsets.all(20),
+                elevation: 1,
+                child: BillInputForm(
+                  billAmounts: inputState.billAmounts,
+                  beginningBalance: inputState.beginningBalance,
+                  showBeginningBalance: inputState.showBeginningBalance,
+                  onBeginningBalanceChanged: (value) {
+                    ref
+                        .read(billInputNotifierProvider.notifier)
+                        .setBeginningBalance(value);
+                  },
+                  onShowBeginningBalanceChanged: (value) {
+                    ref
+                        .read(billInputNotifierProvider.notifier)
+                        .setShowBeginningBalance(value);
+                  },
+                  onBillAmountChanged: (type, amount) {
+                    ref
+                        .read(billInputNotifierProvider.notifier)
+                        .setBillAmount(type, amount);
+                  },
+                  enabled: true,
                 ),
               ),
 
               const SizedBox(height: 16),
 
               // Bills Total Preview
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Bills Total',
-                        style: Theme.of(context).textTheme.titleMedium,
+              AppCard(
+                padding: const EdgeInsets.all(20),
+                elevation: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.account_balance_wallet,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Bills Total',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.foreground,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '₱${inputState.billsTotal.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
                       ),
-                      Text(
-                        '₱${inputState.billsTotal.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -261,30 +311,34 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.receipt_long_outlined,
-                size: 64,
-                color: Theme.of(context).colorScheme.outline,
+              AppIconBox(
+                icon: Icons.receipt_long_outlined,
+                backgroundColor: AppColors.muted,
+                iconColor: AppColors.mutedForeground,
+                size: 80,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               Text(
                 'No bill count for this date',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Tap the edit button to add one',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                'Tap the button below to add one',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.mutedForeground,
+                ),
               ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
+              const SizedBox(height: 28),
+              AppButton.primary(
                 onPressed: _startEditing,
-                icon: const Icon(Icons.add),
-                label: const Text('Add Bill Count'),
+                icon: const Icon(Icons.add, size: 18),
+                child: const Text('Add Bill Count'),
               ),
             ],
           ),
