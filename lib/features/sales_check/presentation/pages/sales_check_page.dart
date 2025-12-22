@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_card.dart';
 import '../../domain/entities/grouped_sale.dart';
 import '../providers/sales_check_provider.dart';
 import '../widgets/grouped_sales_list.dart';
@@ -47,13 +50,29 @@ class _SalesCheckPageState extends ConsumerState<SalesCheckPage>
   @override
   Widget build(BuildContext context) {
     final salesState = ref.watch(salesCheckNotifierProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Sales Check'),
+        backgroundColor: AppColors.card,
+        foregroundColor: AppColors.foreground,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        title: Text(
+          'Sales Check',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: AppColors.foreground,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_alt_off : Icons.filter_alt),
+            icon: Icon(
+              _showFilters ? Icons.filter_alt_off : Icons.filter_alt,
+              color:
+                  _showFilters ? AppColors.primary : AppColors.mutedForeground,
+            ),
             tooltip: _showFilters ? 'Hide Filters' : 'Show Filters',
             onPressed: () {
               setState(() {
@@ -62,21 +81,38 @@ class _SalesCheckPageState extends ConsumerState<SalesCheckPage>
             },
           ),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: AppColors.mutedForeground),
             tooltip: 'Refresh',
             onPressed: () {
               ref.read(salesCheckNotifierProvider.notifier).refresh();
             },
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabs: SalesCheckViewType.values.map((type) {
-            return Tab(
-              text: type.displayName,
-            );
-          }).toList(),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: AppColors.border, width: 1),
+              ),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              labelColor: AppColors.primary,
+              unselectedLabelColor: AppColors.mutedForeground,
+              indicatorColor: AppColors.primary,
+              indicatorWeight: 2,
+              labelStyle: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              tabs: SalesCheckViewType.values.map((type) {
+                return Tab(
+                  text: type.displayName,
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
       body: Column(
@@ -105,40 +141,72 @@ class _SalesCheckPageState extends ConsumerState<SalesCheckPage>
   }
 
   Widget _buildContent(SalesCheckState state) {
-    if (state is SalesCheckLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    final theme = Theme.of(context);
 
-    if (state is SalesCheckError) {
+    if (state is SalesCheckLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Theme.of(context).colorScheme.error,
-            ),
+            const CircularProgressIndicator(color: AppColors.primary),
             const SizedBox(height: 16),
             Text(
-              'Error loading sales',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              state.failure.toString(),
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () {
-                ref.read(salesCheckNotifierProvider.notifier).refresh();
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              'Loading sales data...',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.mutedForeground,
+              ),
             ),
           ],
+        ),
+      );
+    }
+
+    if (state is SalesCheckError) {
+      return Center(
+        child: AppCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.destructive.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppColors.radiusLg),
+                ),
+                child: const Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: AppColors.destructive,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Error loading sales',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.foreground,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.failure.toString(),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.mutedForeground,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              AppButton.primary(
+                onPressed: () {
+                  ref.read(salesCheckNotifierProvider.notifier).refresh();
+                },
+                icon: const Icon(Icons.refresh, size: 18),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -164,11 +232,32 @@ class _SalesCheckPageState extends ConsumerState<SalesCheckPage>
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                viewType.description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.muted,
+                  borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: AppColors.mutedForeground,
                     ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        viewType.description,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.mutedForeground,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -186,35 +275,53 @@ class _SalesCheckPageState extends ConsumerState<SalesCheckPage>
   }
 
   Widget _buildError(Object error) {
+    final theme = Theme.of(context);
+
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Something went wrong',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            error.toString(),
-            style: Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {
-              ref.read(salesCheckNotifierProvider.notifier).refresh();
-            },
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
-          ),
-        ],
+      child: AppCard(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.destructive.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(AppColors.radiusLg),
+              ),
+              child: const Icon(
+                Icons.error_outline,
+                size: 48,
+                color: AppColors.destructive,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Something went wrong',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.foreground,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.mutedForeground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            AppButton.primary(
+              onPressed: () {
+                ref.read(salesCheckNotifierProvider.notifier).refresh();
+              },
+              icon: const Icon(Icons.refresh, size: 18),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
       ),
     );
   }

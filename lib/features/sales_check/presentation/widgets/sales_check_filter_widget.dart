@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_card.dart';
+import '../../../../shared/widgets/app_text_field.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/sales_check_filter.dart';
 import '../providers/sales_check_provider.dart';
@@ -36,88 +39,155 @@ class _SalesCheckFilterWidgetState
     _startDate = filter.startDate?.toLocal();
     _endDate = filter.endDate?.toLocal();
 
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with reset button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Filters',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+    return AppCard(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with reset button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    ),
+                    child: const Icon(
+                      Icons.filter_list,
+                      size: 18,
+                      color: AppColors.primary,
+                    ),
                   ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Filters',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                ],
+              ),
+              if (filter.hasFilters)
+                TextButton.icon(
+                  onPressed: () {
+                    ref
+                        .read(salesCheckFilterNotifierProvider.notifier)
+                        .resetFilters();
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.destructive,
+                  ),
+                  icon: const Icon(Icons.refresh, size: 16),
+                  label: const Text('Reset'),
                 ),
-                if (filter.hasFilters)
-                  TextButton.icon(
-                    onPressed: () {
-                      ref
-                          .read(salesCheckFilterNotifierProvider.notifier)
-                          .resetFilters();
-                    },
-                    icon: const Icon(Icons.refresh, size: 18),
-                    label: const Text('Reset'),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
+            ],
+          ),
+          const SizedBox(height: 16),
 
-            // Date range picker
-            _buildDateRangePicker(context),
-            const SizedBox(height: 12),
+          // Divider
+          Container(
+            height: 1,
+            color: AppColors.border,
+          ),
+          const SizedBox(height: 16),
 
-            // Search field
-            _buildSearchField(),
-            const SizedBox(height: 12),
+          // Date range picker
+          _buildDateRangePicker(context),
+          const SizedBox(height: 16),
 
-            // Filter chips row
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                _buildPriceTypeChip(filter),
-                _buildSackTypeChip(filter),
-                _buildDiscountedChip(filter),
-              ],
-            ),
-          ],
-        ),
+          // Search field
+          _buildSearchField(),
+          const SizedBox(height: 16),
+
+          // Filter chips row
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildPriceTypeChip(filter),
+              _buildSackTypeChip(filter),
+              _buildDiscountedChip(filter),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildDateRangePicker(BuildContext context) {
     final dateFormat = DateFormat('MMM d, yyyy');
+    final hasDateRange = _startDate != null && _endDate != null;
 
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => _selectDateRange(context),
-            icon: const Icon(Icons.calendar_today, size: 18),
-            label: Text(
-              _startDate != null && _endDate != null
-                  ? '${dateFormat.format(_startDate!)} - ${dateFormat.format(_endDate!)}'
-                  : 'Select Date Range',
-              overflow: TextOverflow.ellipsis,
+    return Container(
+      decoration: BoxDecoration(
+        color: hasDateRange
+            ? AppColors.primary.withOpacity(0.05)
+            : AppColors.muted,
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+        border: Border.all(
+          color: hasDateRange
+              ? AppColors.primary.withOpacity(0.3)
+              : AppColors.border,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () => _selectDateRange(context),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      size: 18,
+                      color: hasDateRange
+                          ? AppColors.primary
+                          : AppColors.mutedForeground,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        hasDateRange
+                            ? '${dateFormat.format(_startDate!)} - ${dateFormat.format(_endDate!)}'
+                            : 'Select Date Range',
+                        style: TextStyle(
+                          color: hasDateRange
+                              ? AppColors.foreground
+                              : AppColors.mutedForeground,
+                          fontWeight: hasDateRange
+                              ? FontWeight.w500
+                              : FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-        if (_startDate != null || _endDate != null)
-          IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              ref
-                  .read(salesCheckFilterNotifierProvider.notifier)
-                  .setDateRange(null, null);
-            },
-          ),
-      ],
+          if (hasDateRange)
+            IconButton(
+              icon: const Icon(Icons.clear,
+                  size: 18, color: AppColors.mutedForeground),
+              onPressed: () {
+                ref
+                    .read(salesCheckFilterNotifierProvider.notifier)
+                    .setDateRange(null, null);
+              },
+            ),
+        ],
+      ),
     );
   }
 
@@ -168,25 +238,21 @@ class _SalesCheckFilterWidgetState
   }
 
   Widget _buildSearchField() {
-    return TextField(
+    return AppTextField(
       controller: _searchController,
-      decoration: InputDecoration(
-        hintText: 'Search product...',
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: _searchController.text.isNotEmpty
-            ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  _searchController.clear();
-                  ref
-                      .read(salesCheckFilterNotifierProvider.notifier)
-                      .setProductSearch(null);
-                },
-              )
-            : null,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
+      hintText: 'Search product...',
+      prefixIcon: Icons.search,
+      suffixIcon: _searchController.text.isNotEmpty
+          ? IconButton(
+              icon: const Icon(Icons.clear, size: 18),
+              onPressed: () {
+                _searchController.clear();
+                ref
+                    .read(salesCheckFilterNotifierProvider.notifier)
+                    .setProductSearch(null);
+              },
+            )
+          : null,
       onChanged: (value) {
         ref
             .read(salesCheckFilterNotifierProvider.notifier)
@@ -196,12 +262,27 @@ class _SalesCheckFilterWidgetState
   }
 
   Widget _buildPriceTypeChip(SalesCheckFilter filter) {
+    final isSelected = filter.priceType != null;
     return FilterChip(
       label: Text(filter.priceType?.displayName ?? 'All Types'),
-      selected: filter.priceType != null,
+      selected: isSelected,
       onSelected: (_) => _showPriceTypeDialog(),
-      avatar:
-          filter.priceType != null ? const Icon(Icons.check, size: 18) : null,
+      avatar: isSelected
+          ? const Icon(Icons.check,
+              size: 16, color: AppColors.primaryForeground)
+          : null,
+      backgroundColor: AppColors.muted,
+      selectedColor: AppColors.primary,
+      labelStyle: TextStyle(
+        color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+      side: BorderSide(
+        color: isSelected ? AppColors.primary : AppColors.border,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      ),
     );
   }
 
@@ -209,12 +290,25 @@ class _SalesCheckFilterWidgetState
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Price Type'),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        ),
+        title: Text(
+          'Price Type',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.foreground,
+              ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              title: const Text('All'),
+            _buildDialogOption(
+              context: context,
+              title: 'All',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).priceType == null,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
@@ -222,8 +316,12 @@ class _SalesCheckFilterWidgetState
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Text('Sack'),
+            _buildDialogOption(
+              context: context,
+              title: 'Sack',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).priceType ==
+                      PriceTypeFilter.sack,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
@@ -231,8 +329,12 @@ class _SalesCheckFilterWidgetState
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Text('Per Kilo'),
+            _buildDialogOption(
+              context: context,
+              title: 'Per Kilo',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).priceType ==
+                      PriceTypeFilter.kilo,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
@@ -247,12 +349,27 @@ class _SalesCheckFilterWidgetState
   }
 
   Widget _buildSackTypeChip(SalesCheckFilter filter) {
+    final isSelected = filter.sackType != null;
     return FilterChip(
       label: Text(filter.sackType?.displayName ?? 'All Sacks'),
-      selected: filter.sackType != null,
+      selected: isSelected,
       onSelected: (_) => _showSackTypeDialog(),
-      avatar:
-          filter.sackType != null ? const Icon(Icons.check, size: 18) : null,
+      avatar: isSelected
+          ? const Icon(Icons.check,
+              size: 16, color: AppColors.primaryForeground)
+          : null,
+      backgroundColor: AppColors.muted,
+      selectedColor: AppColors.primary,
+      labelStyle: TextStyle(
+        color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+      side: BorderSide(
+        color: isSelected ? AppColors.primary : AppColors.border,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      ),
     );
   }
 
@@ -260,12 +377,25 @@ class _SalesCheckFilterWidgetState
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sack Type'),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        ),
+        title: Text(
+          'Sack Type',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.foreground,
+              ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              title: const Text('All'),
+            _buildDialogOption(
+              context: context,
+              title: 'All',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).sackType == null,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
@@ -274,8 +404,11 @@ class _SalesCheckFilterWidgetState
               },
             ),
             ...SackType.values.map(
-              (type) => ListTile(
-                title: Text(type.displayName),
+              (type) => _buildDialogOption(
+                context: context,
+                title: type.displayName,
+                isSelected:
+                    ref.read(salesCheckFilterNotifierProvider).sackType == type,
                 onTap: () {
                   ref
                       .read(salesCheckFilterNotifierProvider.notifier)
@@ -292,6 +425,7 @@ class _SalesCheckFilterWidgetState
 
   Widget _buildDiscountedChip(SalesCheckFilter filter) {
     final isDiscounted = filter.isDiscounted;
+    final isSelected = isDiscounted != null;
 
     return FilterChip(
       label: Text(
@@ -301,9 +435,24 @@ class _SalesCheckFilterWidgetState
                 ? 'Discounted: Yes'
                 : 'Discounted: No',
       ),
-      selected: isDiscounted != null,
+      selected: isSelected,
       onSelected: (_) => _showDiscountedDialog(),
-      avatar: isDiscounted != null ? const Icon(Icons.check, size: 18) : null,
+      avatar: isSelected
+          ? const Icon(Icons.check,
+              size: 16, color: AppColors.primaryForeground)
+          : null,
+      backgroundColor: AppColors.muted,
+      selectedColor: AppColors.primary,
+      labelStyle: TextStyle(
+        color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+      side: BorderSide(
+        color: isSelected ? AppColors.primary : AppColors.border,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      ),
     );
   }
 
@@ -311,12 +460,26 @@ class _SalesCheckFilterWidgetState
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Discounted'),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        ),
+        title: Text(
+          'Discounted',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.foreground,
+              ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              title: const Text('All'),
+            _buildDialogOption(
+              context: context,
+              title: 'All',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).isDiscounted ==
+                      null,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
@@ -324,8 +487,12 @@ class _SalesCheckFilterWidgetState
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Text('Discounted Only'),
+            _buildDialogOption(
+              context: context,
+              title: 'Discounted Only',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).isDiscounted ==
+                      true,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
@@ -333,14 +500,58 @@ class _SalesCheckFilterWidgetState
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Text('Non-Discounted Only'),
+            _buildDialogOption(
+              context: context,
+              title: 'Non-Discounted Only',
+              isSelected:
+                  ref.read(salesCheckFilterNotifierProvider).isDiscounted ==
+                      false,
               onTap: () {
                 ref
                     .read(salesCheckFilterNotifierProvider.notifier)
                     .setDiscounted(false);
                 Navigator.pop(context);
               },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogOption({
+    required BuildContext context,
+    required String title,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppColors.radiusSm),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.primary.withOpacity(0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.transparent,
+          ),
+        ),
+        child: Row(
+          children: [
+            if (isSelected) ...[
+              const Icon(Icons.check, size: 18, color: AppColors.primary),
+              const SizedBox(width: 12),
+            ],
+            Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? AppColors.primary : AppColors.foreground,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
             ),
           ],
         ),
