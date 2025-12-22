@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../domain/entities/sheet.dart';
 import '../providers/sheet_provider.dart';
 import 'color_picker.dart';
@@ -146,37 +147,23 @@ class SheetToolbar extends StatelessWidget {
           ],
 
           // Add row button
-          ElevatedButton.icon(
+          AppButton.primary(
             onPressed: onAddRow,
             icon: const Icon(Icons.add, size: 18),
-            label: const Text('Add Row'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.primaryForeground,
-            ),
+            small: true,
+            child: const Text('Add Row'),
           ),
 
           const SizedBox(width: 8),
 
           // Save button
           if (hasChanges)
-            ElevatedButton.icon(
+            AppButton.secondary(
               onPressed: isSaving ? null : onSave,
-              icon: isSaving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.primaryForeground,
-                      ),
-                    )
-                  : const Icon(Icons.save, size: 18),
-              label: Text(isSaving ? 'Saving...' : 'Save'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondary,
-                foregroundColor: AppColors.secondaryForeground,
-              ),
+              isLoading: isSaving,
+              icon: const Icon(Icons.save, size: 18),
+              small: true,
+              child: Text(isSaving ? 'Saving...' : 'Save'),
             ),
 
           const SizedBox(width: 8),
@@ -297,9 +284,15 @@ class _FormulaBarState extends State<FormulaBar> {
                 hintText: widget.cellAddress != null
                     ? 'Enter value or formula for ${widget.cellAddress}'
                     : 'Select a cell to edit',
+                filled: true,
+                fillColor: AppColors.muted,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                  borderSide: const BorderSide(color: AppColors.ring, width: 2),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,

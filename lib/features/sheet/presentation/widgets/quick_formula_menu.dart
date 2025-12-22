@@ -88,8 +88,8 @@ class QuickFormulaMenu extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: enabled ? Colors.white : AppColors.muted,
-          borderRadius: BorderRadius.circular(6),
+          color: enabled ? AppColors.card : AppColors.muted,
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
           border: Border.all(color: AppColors.border),
         ),
         child: Row(
@@ -100,18 +100,20 @@ class QuickFormulaMenu extends StatelessWidget {
               size: 18,
               color: enabled ? AppColors.foreground : AppColors.mutedForeground,
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 6),
             Text(
               'Formula',
               style: TextStyle(
                 fontSize: 14,
+                fontWeight: FontWeight.w500,
                 color:
                     enabled ? AppColors.foreground : AppColors.mutedForeground,
               ),
             ),
+            const SizedBox(width: 4),
             Icon(
-              Icons.arrow_drop_down,
-              size: 20,
+              Icons.keyboard_arrow_down,
+              size: 18,
               color: enabled ? AppColors.foreground : AppColors.mutedForeground,
             ),
           ],
