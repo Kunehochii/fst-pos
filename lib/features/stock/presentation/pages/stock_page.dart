@@ -739,11 +739,10 @@ class _StockPageState extends ConsumerState<StockPage>
 
     if (printers.isEmpty) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('No printer connected. Please connect a printer first.'),
-        ),
+      AppToast.warning(
+        context,
+        title: 'No Printer',
+        message: 'No printer connected. Please connect a printer first.',
       );
       return;
     }
@@ -785,8 +784,10 @@ class _StockPageState extends ConsumerState<StockPage>
         );
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Stock report sent to printer')),
+    AppToast.success(
+      context,
+      title: 'Printed',
+      message: 'Stock report sent to printer',
     );
   }
 

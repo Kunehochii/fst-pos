@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/cart_item.dart';
 import '../providers/sales_provider.dart';
@@ -595,19 +596,10 @@ class _AddToCartPageState extends ConsumerState<AddToCartPage> {
     ref.read(cartNotifierProvider.notifier).addItem(cartItem);
     Navigator.of(context).pop();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${widget.product.name} added to cart'),
-        duration: const Duration(seconds: 2),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            ref
-                .read(cartNotifierProvider.notifier)
-                .removeItem(cartItem.cartItemId);
-          },
-        ),
-      ),
+    AppToast.success(
+      context,
+      title: 'Added to Cart',
+      message: '${widget.product.name} added to cart',
     );
   }
 }

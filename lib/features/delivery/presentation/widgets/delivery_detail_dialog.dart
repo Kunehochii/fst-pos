@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../domain/entities/delivery.dart';
 import '../providers/delivery_provider.dart';
 
@@ -416,17 +417,19 @@ class DeliveryDetailDialog extends ConsumerWidget {
 
       if (context.mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              success
-                  ? 'Delivery deleted successfully'
-                  : 'Failed to delete delivery',
-            ),
-            backgroundColor:
-                success ? AppColors.success : AppColors.destructive,
-          ),
-        );
+        if (success) {
+          AppToast.success(
+            context,
+            title: 'Deleted',
+            message: 'Delivery deleted successfully',
+          );
+        } else {
+          AppToast.error(
+            context,
+            title: 'Error',
+            message: 'Failed to delete delivery',
+          );
+        }
       }
     }
   }

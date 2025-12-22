@@ -59,18 +59,16 @@ class _BillCountPageState extends ConsumerState<BillCountPage> {
 
     if (success && mounted) {
       setState(() => _isEditing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Bill count saved successfully'),
-          backgroundColor: Colors.green,
-        ),
+      AppToast.success(
+        context,
+        title: 'Success',
+        message: 'Bill count saved successfully',
       );
     } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to save bill count'),
-          backgroundColor: Colors.red,
-        ),
+      AppToast.error(
+        context,
+        title: 'Error',
+        message: 'Failed to save bill count',
       );
     }
   }

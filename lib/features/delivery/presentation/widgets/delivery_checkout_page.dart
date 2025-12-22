@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../domain/entities/delivery_cart_item.dart';
 import '../providers/delivery_provider.dart';
 
@@ -52,23 +53,27 @@ class _DeliveryCheckoutPageState extends ConsumerState<DeliveryCheckoutPage> {
         ref.read(deliveryCartNotifierProvider.notifier).clearCart();
 
         // Show success and pop back
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.isOffline
-                ? 'Delivery saved offline. Will sync when online.'
-                : 'Delivery created successfully!'),
-            backgroundColor: next.isOffline ? Colors.orange : Colors.green,
-          ),
-        );
+        if (next.isOffline) {
+          AppToast.warning(
+            context,
+            title: 'Saved Offline',
+            message: 'Delivery saved offline. Will sync when online.',
+          );
+        } else {
+          AppToast.success(
+            context,
+            title: 'Success',
+            message: 'Delivery created successfully!',
+          );
+        }
 
         // Pop back to deliveries page
         Navigator.of(context).popUntil((route) => route.isFirst);
       } else if (next is CreateDeliveryError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.failure.userMessage),
-            backgroundColor: Colors.red,
-          ),
+        AppToast.error(
+          context,
+          title: 'Error',
+          message: next.failure.userMessage,
         );
       }
     });
