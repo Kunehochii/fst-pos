@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../../../printer/domain/entities/printer_device.dart';
 import '../../../printer/domain/entities/receipt_line.dart' as esc_pos;
 import '../../../printer/presentation/providers/printer_provider.dart';
@@ -54,10 +55,24 @@ class _StockPageState extends ConsumerState<StockPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Stock Management'),
+        backgroundColor: AppColors.card,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Stock Management',
+          style: TextStyle(
+            color: AppColors.foreground,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: AppColors.primary,
+          unselectedLabelColor: AppColors.mutedForeground,
+          indicatorColor: AppColors.primary,
+          indicatorWeight: 3,
           tabs: const [
             Tab(text: 'Print Stock'),
             Tab(text: 'Transfer'),
@@ -100,7 +115,19 @@ class _StockPageState extends ConsumerState<StockPage>
 
     return Container(
       padding: const EdgeInsets.all(16),
-      color: AppColors.card,
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        border: Border(
+          bottom: BorderSide(color: AppColors.border),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           Expanded(
@@ -121,10 +148,10 @@ class _StockPageState extends ConsumerState<StockPage>
             ),
           ),
           const SizedBox(width: 16),
-          ElevatedButton.icon(
+          AppButton.primary(
             onPressed: _loadStatistics,
-            icon: const Icon(Icons.search),
-            label: const Text('Load'),
+            icon: const Icon(Icons.search, size: 18),
+            child: const Text('Load'),
           ),
         ],
       ),
@@ -137,34 +164,53 @@ class _StockPageState extends ConsumerState<StockPage>
     required DateFormat dateFormat,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.border),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+        hoverColor: AppColors.accent,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.muted,
+            border: Border.all(color: AppColors.border),
+            borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.calendar_today,
+                size: 18,
                 color: AppColors.mutedForeground,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              dateFormat.format(date),
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.mutedForeground,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      dateFormat.format(date),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -208,29 +254,81 @@ class _StockPageState extends ConsumerState<StockPage>
 
   Widget _buildStatisticsContent(StockStatisticsState state) {
     if (state is StockStatisticsInitial) {
-      return const Center(
-        child: Text('Select a date range and click Load'),
-      );
-    }
-
-    if (state is StockStatisticsLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (state is StockStatisticsError) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            AppIconBox(
+              icon: Icons.calendar_month,
+              backgroundColor: AppColors.muted,
+              iconColor: AppColors.mutedForeground,
+              size: 64,
+            ),
             const SizedBox(height: 16),
-            Text('Error: ${state.failure.message}'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadStatistics,
-              child: const Text('Retry'),
+            const Text(
+              'Select a date range and click Load',
+              style: TextStyle(
+                color: AppColors.mutedForeground,
+                fontSize: 16,
+              ),
             ),
           ],
+        ),
+      );
+    }
+
+    if (state is StockStatisticsLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: AppColors.primary),
+            SizedBox(height: 16),
+            Text(
+              'Loading statistics...',
+              style: TextStyle(color: AppColors.mutedForeground),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (state is StockStatisticsError) {
+      return Center(
+        child: AppCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppIconBox(
+                icon: Icons.error_outline,
+                backgroundColor: AppColors.destructive.withValues(alpha: 0.1),
+                iconColor: AppColors.destructive,
+                size: 64,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Error loading statistics',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.failure.message,
+                style: TextStyle(color: AppColors.mutedForeground),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              AppButton.primary(
+                onPressed: _loadStatistics,
+                icon: const Icon(Icons.refresh, size: 18),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -239,8 +337,26 @@ class _StockPageState extends ConsumerState<StockPage>
       final stats = state.statistics;
 
       if (!stats.hasData) {
-        return const Center(
-          child: Text('No stock data for the selected date range'),
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppIconBox(
+                icon: Icons.inventory_2_outlined,
+                backgroundColor: AppColors.muted,
+                iconColor: AppColors.mutedForeground,
+                size: 64,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'No stock data for the selected date range',
+                style: TextStyle(
+                  color: AppColors.mutedForeground,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
         );
       }
 
@@ -250,11 +366,42 @@ class _StockPageState extends ConsumerState<StockPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Date range display
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.calendar_today),
-                title: Text(stats.dateRange),
-                subtitle: const Text('Selected Date Range'),
+            AppCard(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  AppIconBox(
+                    icon: Icons.calendar_today,
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                    iconColor: AppColors.primary,
+                    size: 48,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Selected Date Range',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.mutedForeground,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          stats.dateRange,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.foreground,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
@@ -286,40 +433,30 @@ class _StockPageState extends ConsumerState<StockPage>
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: AppButton.secondary(
                     onPressed: () => _printStatistics(stats, regularOnly: true),
-                    icon: const Icon(Icons.print),
-                    label: const Text('Print Regular'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                    icon: const Icon(Icons.print, size: 18),
+                    child: const Text('Print Regular'),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: AppButton.secondary(
                     onPressed: () => _printStatistics(stats, plasticOnly: true),
-                    icon: const Icon(Icons.print),
-                    label: const Text('Print Plastic'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                    icon: const Icon(Icons.print, size: 18),
+                    child: const Text('Print Plastic'),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
+              child: AppButton.primary(
                 onPressed: () => _printStatistics(stats),
-                icon: const Icon(Icons.print),
-                label: const Text('Print All'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                ),
+                icon: const Icon(Icons.print, size: 18),
+                isExpanded: true,
+                child: const Text('Print All'),
               ),
             ),
           ],
@@ -336,109 +473,253 @@ class _StockPageState extends ConsumerState<StockPage>
     required StockTotals totals,
     required List<String> printerLines,
   }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Header row
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            decoration: BoxDecoration(
+              color: AppColors.muted,
+              borderRadius: BorderRadius.circular(8),
             ),
-            const Divider(),
-            // Header row
-            Row(
+            child: Row(
               children: [
-                const Expanded(
-                    flex: 3,
-                    child: Text('Product',
-                        style: TextStyle(fontWeight: FontWeight.bold))),
                 Expanded(
-                    flex: 1,
-                    child: Text('Sold',
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(
-                    flex: 1,
-                    child: Text('Kahon',
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(
-                    flex: 1,
-                    child: Text('Other',
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(
-                    flex: 1,
-                    child: Text('Total',
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
-              ],
-            ),
-            const Divider(),
-            // Product rows
-            ...products.map((p) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    children: [
-                      Expanded(flex: 3, child: Text(p.productName)),
-                      Expanded(
-                          flex: 1,
-                          child: Text(p.sold.toStringAsFixed(0),
-                              textAlign: TextAlign.right)),
-                      Expanded(
-                          flex: 1,
-                          child: Text(p.transferredKahon.toStringAsFixed(0),
-                              textAlign: TextAlign.right)),
-                      Expanded(
-                          flex: 1,
-                          child: Text(p.otherTransfers.toStringAsFixed(0),
-                              textAlign: TextAlign.right)),
-                      Expanded(
-                          flex: 1,
-                          child: Text(p.total.toStringAsFixed(0),
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold))),
-                    ],
+                  flex: 3,
+                  child: Text(
+                    'Product',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: AppColors.foreground,
+                    ),
                   ),
-                )),
-            const Divider(),
-            // Totals row
-            Row(
-              children: [
-                const Expanded(
-                    flex: 3,
-                    child: Text('TOTAL',
-                        style: TextStyle(fontWeight: FontWeight.bold))),
+                ),
                 Expanded(
-                    flex: 1,
-                    child: Text(totals.sold.toStringAsFixed(0),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
+                  flex: 1,
+                  child: Text(
+                    'Sold',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                ),
                 Expanded(
-                    flex: 1,
-                    child: Text(totals.transferredKahon.toStringAsFixed(0),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
+                  flex: 1,
+                  child: Text(
+                    'Kahon',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                ),
                 Expanded(
-                    flex: 1,
-                    child: Text(totals.otherTransfers.toStringAsFixed(0),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
+                  flex: 1,
+                  child: Text(
+                    'Other',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                ),
                 Expanded(
-                    flex: 1,
-                    child: Text(totals.total.toStringAsFixed(0),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontWeight: FontWeight.bold))),
+                  flex: 1,
+                  child: Text(
+                    'Total',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          // Product rows
+          ...products.asMap().entries.map((entry) {
+            final index = entry.key;
+            final p = entry.value;
+            return Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              decoration: BoxDecoration(
+                color: index.isEven
+                    ? Colors.transparent
+                    : AppColors.muted.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      p.productName,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      p.sold.toStringAsFixed(0),
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      p.transferredKahon.toStringAsFixed(0),
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      p.otherTransfers.toStringAsFixed(0),
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      p.total.toStringAsFixed(0),
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 8),
+          // Totals row
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(8),
+              border:
+                  Border.all(color: AppColors.secondary.withValues(alpha: 0.1)),
+            ),
+            child: Row(
+              children: [
+                const Expanded(
+                  flex: 3,
+                  child: Text(
+                    'TOTAL',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    totals.sold.toStringAsFixed(0),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    totals.transferredKahon.toStringAsFixed(0),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    totals.otherTransfers.toStringAsFixed(0),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    totals.total.toStringAsFixed(0),
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -519,16 +800,17 @@ class _StockPageState extends ConsumerState<StockPage>
     return Column(
       children: [
         // Search bar
-        Padding(
+        Container(
           padding: const EdgeInsets.all(16),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Search products...',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            border: Border(
+              bottom: BorderSide(color: AppColors.border),
             ),
+          ),
+          child: AppTextField(
+            hintText: 'Search products...',
+            prefixIcon: Icons.search,
             onChanged: (value) {
               ref
                   .read(productListNotifierProvider.notifier)
@@ -541,38 +823,80 @@ class _StockPageState extends ConsumerState<StockPage>
           child: productListState.when(
             data: (state) {
               if (state is ProductListLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                );
               }
 
               if (state is ProductListError) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Error: ${state.failure.message}'),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(productListNotifierProvider.notifier)
-                              .refresh();
-                        },
-                        child: const Text('Retry'),
-                      ),
-                    ],
+                  child: AppCard(
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppIconBox(
+                          icon: Icons.error_outline,
+                          backgroundColor:
+                              AppColors.destructive.withValues(alpha: 0.1),
+                          iconColor: AppColors.destructive,
+                          size: 64,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error: ${state.failure.message}',
+                          style:
+                              const TextStyle(color: AppColors.mutedForeground),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        AppButton.primary(
+                          onPressed: () {
+                            ref
+                                .read(productListNotifierProvider.notifier)
+                                .refresh();
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
 
               final loaded = state as ProductListLoaded;
               if (loaded.products.isEmpty) {
-                return const Center(child: Text('No products found'));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppIconBox(
+                        icon: Icons.inventory_2_outlined,
+                        backgroundColor: AppColors.muted,
+                        iconColor: AppColors.mutedForeground,
+                        size: 64,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'No products found',
+                        style: TextStyle(color: AppColors.mutedForeground),
+                      ),
+                    ],
+                  ),
+                );
               }
 
               return _buildProductGrid(loaded.products);
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Center(child: Text('Error: $error')),
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            ),
+            error: (error, _) => Center(
+              child: Text(
+                'Error: $error',
+                style: const TextStyle(color: AppColors.destructive),
+              ),
+            ),
           ),
         ),
       ],
@@ -585,8 +909,8 @@ class _StockPageState extends ConsumerState<StockPage>
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 1.0,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
@@ -597,55 +921,58 @@ class _StockPageState extends ConsumerState<StockPage>
   }
 
   Widget _buildProductCard(Product product) {
-    return InkWell(
+    return AppCard(
       onTap: () => _showTransferDialog(product),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Product icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: _getCategoryColor(product.category).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                _getCategoryIcon(product.category),
-                color: _getCategoryColor(product.category),
-              ),
+      elevation: 0,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Product icon
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: _getCategoryColor(product.category).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
             ),
-            const SizedBox(height: 8),
-            // Product name
-            Text(
-              product.name,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-              ),
+            child: Icon(
+              _getCategoryIcon(product.category),
+              color: _getCategoryColor(product.category),
+              size: 24,
             ),
-            const SizedBox(height: 4),
-            // Stock info
-            Text(
+          ),
+          const SizedBox(height: 10),
+          // Product name
+          Text(
+            product.name,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: AppColors.foreground,
+            ),
+          ),
+          const SizedBox(height: 4),
+          // Stock info
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: AppColors.muted,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
               _getStockInfo(product),
               style: const TextStyle(
-                fontSize: 10,
+                fontSize: 11,
                 color: AppColors.mutedForeground,
+                fontWeight: FontWeight.w500,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -653,11 +980,11 @@ class _StockPageState extends ConsumerState<StockPage>
   Color _getCategoryColor(ProductCategory category) {
     switch (category) {
       case ProductCategory.normal:
-        return Colors.blue;
+        return AppColors.info;
       case ProductCategory.asin:
-        return Colors.green;
+        return AppColors.success;
       case ProductCategory.plastic:
-        return Colors.orange;
+        return AppColors.primary;
     }
   }
 

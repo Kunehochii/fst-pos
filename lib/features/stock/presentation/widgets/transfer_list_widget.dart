@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../../domain/entities/transfer.dart';
 import '../providers/stock_provider.dart';
 
@@ -46,58 +47,118 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      color: AppColors.muted,
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        border: Border(
+          bottom: BorderSide(color: AppColors.border),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           // Date range
           Row(
             children: [
               Expanded(
-                child: InkWell(
-                  onTap: () => _selectDate(isStart: true),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.border),
-                      borderRadius: BorderRadius.circular(8),
-                      color: AppColors.card,
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_today, size: 18),
-                        const SizedBox(width: 8),
-                        Text(_startDate != null
-                            ? dateFormat.format(_startDate!)
-                            : 'Start Date'),
-                      ],
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _selectDate(isStart: true),
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.border),
+                        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                        color: AppColors.card,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: AppColors.mutedForeground,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _startDate != null
+                                  ? dateFormat.format(_startDate!)
+                                  : 'Start Date',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: _startDate != null
+                                    ? AppColors.foreground
+                                    : AppColors.mutedForeground,
+                                fontWeight: _startDate != null
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text('to'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  'to',
+                  style: TextStyle(
+                    color: AppColors.mutedForeground,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
               Expanded(
-                child: InkWell(
-                  onTap: () => _selectDate(isStart: false),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.border),
-                      borderRadius: BorderRadius.circular(8),
-                      color: AppColors.card,
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_today, size: 18),
-                        const SizedBox(width: 8),
-                        Text(_endDate != null
-                            ? dateFormat.format(_endDate!)
-                            : 'End Date'),
-                      ],
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _selectDate(isStart: false),
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.border),
+                        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                        color: AppColors.card,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: AppColors.mutedForeground,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _endDate != null
+                                  ? dateFormat.format(_endDate!)
+                                  : 'End Date',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: _endDate != null
+                                    ? AppColors.foreground
+                                    : AppColors.mutedForeground,
+                                fontWeight: _endDate != null
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -109,47 +170,66 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
           Row(
             children: [
               Expanded(
-                child: DropdownButtonFormField<TransferType?>(
-                  value: _selectedType,
-                  decoration: InputDecoration(
-                    labelText: 'Transfer Type',
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.card,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.muted,
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    border: Border.all(color: AppColors.border),
                   ),
-                  items: [
-                    const DropdownMenuItem(
-                        value: null, child: Text('All Types')),
-                    ...TransferType.values.map((type) => DropdownMenuItem(
-                          value: type,
-                          child: Text(type.displayName),
-                        )),
-                  ],
-                  onChanged: (value) {
-                    setState(() => _selectedType = value);
-                    ref
-                        .read(transferListNotifierProvider.notifier)
-                        .setTypeFilter(value);
-                  },
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<TransferType?>(
+                      value: _selectedType,
+                      isExpanded: true,
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.mutedForeground,
+                      ),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.foreground,
+                      ),
+                      hint: const Text(
+                        'All Types',
+                        style: TextStyle(
+                          color: AppColors.mutedForeground,
+                          fontSize: 14,
+                        ),
+                      ),
+                      items: [
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text('All Types'),
+                        ),
+                        ...TransferType.values.map((type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type.displayName),
+                            )),
+                      ],
+                      onChanged: (value) {
+                        setState(() => _selectedType = value);
+                        ref
+                            .read(transferListNotifierProvider.notifier)
+                            .setTypeFilter(value);
+                      },
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(Icons.search),
+              _buildIconButton(
+                icon: Icons.search,
                 tooltip: 'Apply Filters',
                 onPressed: _applyFilters,
+                color: AppColors.primary,
               ),
-              IconButton(
-                icon: const Icon(Icons.clear),
+              _buildIconButton(
+                icon: Icons.clear,
                 tooltip: 'Clear Filters',
                 onPressed: _clearFilters,
               ),
-              IconButton(
-                icon: const Icon(Icons.refresh),
+              _buildIconButton(
+                icon: Icons.refresh,
                 tooltip: 'Refresh',
                 onPressed: () {
                   ref.read(transferListNotifierProvider.notifier).refresh();
@@ -162,6 +242,36 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
     );
   }
 
+  Widget _buildIconButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onPressed,
+    Color? color,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(8),
+        child: Tooltip(
+          message: tooltip,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color?.withValues(alpha: 0.1) ?? AppColors.muted,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: color ?? AppColors.mutedForeground,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSyncIndicator() {
     final pendingSyncCount = ref.watch(pendingTransferSyncCountProvider);
 
@@ -170,15 +280,30 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
         if (count == 0) return const SizedBox.shrink();
 
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          color: Colors.orange.shade100,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.warning.withValues(alpha: 0.1),
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.warning.withValues(alpha: 0.3),
+              ),
+            ),
+          ),
           child: Row(
             children: [
-              const Icon(Icons.cloud_upload, size: 18, color: Colors.orange),
-              const SizedBox(width: 8),
+              Icon(
+                Icons.cloud_upload_outlined,
+                size: 18,
+                color: AppColors.warning,
+              ),
+              const SizedBox(width: 10),
               Text(
                 '$count transfer(s) pending sync',
-                style: const TextStyle(color: Colors.orange),
+                style: TextStyle(
+                  color: AppColors.warning,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
@@ -191,41 +316,90 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
 
   Widget _buildTransferList(TransferListState state) {
     if (state is TransferListLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (state is TransferListError) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Error: ${state.failure.message}'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () =>
-                  ref.read(transferListNotifierProvider.notifier).refresh(),
-              child: const Text('Retry'),
+            CircularProgressIndicator(color: AppColors.primary),
+            SizedBox(height: 16),
+            Text(
+              'Loading transfers...',
+              style: TextStyle(color: AppColors.mutedForeground),
             ),
           ],
         ),
       );
     }
 
+    if (state is TransferListError) {
+      return Center(
+        child: AppCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppIconBox(
+                icon: Icons.error_outline,
+                backgroundColor: AppColors.destructive.withValues(alpha: 0.1),
+                iconColor: AppColors.destructive,
+                size: 64,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Error loading transfers',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.failure.message,
+                style: const TextStyle(color: AppColors.mutedForeground),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              AppButton.primary(
+                onPressed: () =>
+                    ref.read(transferListNotifierProvider.notifier).refresh(),
+                icon: const Icon(Icons.refresh, size: 18),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (state is TransferListLoaded) {
       if (state.transfers.isEmpty) {
-        return const Center(
+        return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.swap_horiz, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
-              Text('No transfers found'),
-              SizedBox(height: 8),
-              Text(
+              AppIconBox(
+                icon: Icons.swap_horiz,
+                backgroundColor: AppColors.muted,
+                iconColor: AppColors.mutedForeground,
+                size: 72,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'No transfers found',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
                 'Transfers will appear here when you move stock',
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(
+                  color: AppColors.mutedForeground,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
@@ -236,6 +410,7 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
         onRefresh: () async {
           await ref.read(transferListNotifierProvider.notifier).refresh();
         },
+        color: AppColors.primary,
         child: ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: state.transfers.length,
@@ -253,107 +428,161 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
   Widget _buildTransferCard(Transfer transfer) {
     final dateFormat = DateFormat('MMM dd, yyyy HH:mm');
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: _getTypeColor(transfer.type).withOpacity(0.2),
-            borderRadius: BorderRadius.circular(8),
+    return AppCard(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          // Type icon
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: _getTypeColor(transfer.type).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+            ),
+            child: Icon(
+              _getTypeIcon(transfer.type),
+              color: _getTypeColor(transfer.type),
+              size: 24,
+            ),
           ),
-          child: Icon(
-            _getTypeIcon(transfer.type),
-            color: _getTypeColor(transfer.type),
-          ),
-        ),
-        title: Text(
-          transfer.product?.name ?? 'Unknown Product',
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Row(
+          const SizedBox(width: 14),
+          // Details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: _getTypeColor(transfer.type).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    transfer.type.displayName,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: _getTypeColor(transfer.type),
-                      fontWeight: FontWeight.w500,
-                    ),
+                Text(
+                  transfer.product?.name ?? 'Unknown Product',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: AppColors.foreground,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color:
+                            _getTypeColor(transfer.type).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        transfer.type.displayName,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: _getTypeColor(transfer.type),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppColors.muted,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        transfer.priceTypeDisplay,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.mutedForeground,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: AppColors.mutedForeground,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      dateFormat.format(transfer.createdAt),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Quantity
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
                 Text(
-                  transfer.priceTypeDisplay,
-                  style: TextStyle(
-                    fontSize: 11,
+                  '${transfer.quantity.toStringAsFixed(transfer.quantity == transfer.quantity.toInt() ? 0 : 1)}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.secondary,
+                  ),
+                ),
+                Text(
+                  transfer.isSackPrice ? 'sacks' : 'kg',
+                  style: const TextStyle(
+                    fontSize: 12,
                     color: AppColors.mutedForeground,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              dateFormat.format(transfer.createdAt),
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.mutedForeground,
-              ),
-            ),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              '${transfer.quantity.toStringAsFixed(transfer.quantity == transfer.quantity.toInt() ? 0 : 1)}',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              transfer.isSackPrice ? 'sacks' : 'kg',
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.mutedForeground,
-              ),
-            ),
-          ],
-        ),
-        isThreeLine: true,
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildErrorState(String error) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, size: 48, color: Colors.red),
-          const SizedBox(height: 16),
-          Text('Error: $error'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(transferListNotifierProvider.notifier).refresh(),
-            child: const Text('Retry'),
-          ),
-        ],
+      child: AppCard(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppIconBox(
+              icon: Icons.error_outline,
+              backgroundColor: AppColors.destructive.withValues(alpha: 0.1),
+              iconColor: AppColors.destructive,
+              size: 64,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Error: $error',
+              style: const TextStyle(color: AppColors.mutedForeground),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            AppButton.primary(
+              onPressed: () =>
+                  ref.read(transferListNotifierProvider.notifier).refresh(),
+              icon: const Icon(Icons.refresh, size: 18),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -361,13 +590,13 @@ class _TransferListWidgetState extends ConsumerState<TransferListWidget> {
   Color _getTypeColor(TransferType type) {
     switch (type) {
       case TransferType.kahon:
-        return Colors.blue;
+        return AppColors.info;
       case TransferType.ownConsumption:
-        return Colors.orange;
+        return AppColors.primary;
       case TransferType.returnToWarehouse:
-        return Colors.green;
+        return AppColors.success;
       case TransferType.repack:
-        return Colors.purple;
+        return const Color(0xFF8B5CF6); // Purple from chart colors
     }
   }
 
