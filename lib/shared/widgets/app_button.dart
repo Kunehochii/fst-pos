@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 
-/// Primary filled button with consistent styling.
+/// Multi-variant button with "Aura Daybreak" styling.
 ///
-/// Use for main call-to-action buttons.
+/// Features:
+/// - Primary: Vivid Orange with white text (main CTAs, "Pay" buttons)
+/// - Secondary: Outlined with gray border, gray wash on hover
+/// - Ghost: Text only with gray wash on hover
+/// - Destructive: Rose/red for delete actions
+/// - Distinct "pressed" state (darker or inset) for tactile feedback
 ///
 /// Example:
 /// ```dart
 /// AppButton.primary(
 ///   onPressed: () => print('Pressed'),
-///   child: Text('Submit'),
+///   child: Text('Pay Now'),
 /// )
 /// ```
 class AppButton extends StatelessWidget {
@@ -21,15 +26,18 @@ class AppButton extends StatelessWidget {
     this.isExpanded = false,
     this.variant = _ButtonVariant.primary,
     this.icon,
+    this.size = _ButtonSize.medium,
   });
 
-  /// Creates a primary filled button.
+  /// Creates a primary filled button (Vivid Orange).
+  /// Use for main call-to-action buttons like "Pay", "Submit", etc.
   factory AppButton.primary({
     required VoidCallback? onPressed,
     required Widget child,
     bool isLoading = false,
     bool isExpanded = false,
     Widget? icon,
+    bool small = false,
   }) {
     return AppButton._(
       onPressed: onPressed,
@@ -38,16 +46,19 @@ class AppButton extends StatelessWidget {
       isExpanded: isExpanded,
       variant: _ButtonVariant.primary,
       icon: icon,
+      size: small ? _ButtonSize.small : _ButtonSize.medium,
     );
   }
 
   /// Creates a secondary outlined button.
+  /// Use for secondary actions like "Cancel", "Back", etc.
   factory AppButton.secondary({
     required VoidCallback? onPressed,
     required Widget child,
     bool isLoading = false,
     bool isExpanded = false,
     Widget? icon,
+    bool small = false,
   }) {
     return AppButton._(
       onPressed: onPressed,
@@ -56,16 +67,19 @@ class AppButton extends StatelessWidget {
       isExpanded: isExpanded,
       variant: _ButtonVariant.secondary,
       icon: icon,
+      size: small ? _ButtonSize.small : _ButtonSize.medium,
     );
   }
 
   /// Creates a ghost/text button with no background.
+  /// Use for tertiary actions like "Skip", "Learn more", etc.
   factory AppButton.ghost({
     required VoidCallback? onPressed,
     required Widget child,
     bool isLoading = false,
     bool isExpanded = false,
     Widget? icon,
+    bool small = false,
   }) {
     return AppButton._(
       onPressed: onPressed,
@@ -74,16 +88,19 @@ class AppButton extends StatelessWidget {
       isExpanded: isExpanded,
       variant: _ButtonVariant.ghost,
       icon: icon,
+      size: small ? _ButtonSize.small : _ButtonSize.medium,
     );
   }
 
-  /// Creates a destructive/danger button.
+  /// Creates a destructive/danger button (Rose red).
+  /// Use for delete, remove, or other destructive actions.
   factory AppButton.destructive({
     required VoidCallback? onPressed,
     required Widget child,
     bool isLoading = false,
     bool isExpanded = false,
     Widget? icon,
+    bool small = false,
   }) {
     return AppButton._(
       onPressed: onPressed,
@@ -92,6 +109,7 @@ class AppButton extends StatelessWidget {
       isExpanded: isExpanded,
       variant: _ButtonVariant.destructive,
       icon: icon,
+      size: small ? _ButtonSize.small : _ButtonSize.medium,
     );
   }
 
@@ -101,6 +119,25 @@ class AppButton extends StatelessWidget {
   final bool isExpanded;
   final _ButtonVariant variant;
   final Widget? icon;
+  final _ButtonSize size;
+
+  EdgeInsetsGeometry get _padding {
+    switch (size) {
+      case _ButtonSize.small:
+        return const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+      case _ButtonSize.medium:
+        return const EdgeInsets.symmetric(horizontal: 24, vertical: 14);
+    }
+  }
+
+  double get _fontSize {
+    switch (size) {
+      case _ButtonSize.small:
+        return 13;
+      case _ButtonSize.medium:
+        return 15;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,16 +185,31 @@ class AppButton extends StatelessWidget {
       case _ButtonVariant.primary:
         return ElevatedButton(
           onPressed: isLoading ? null : onPressed,
+          style: ElevatedButton.styleFrom(
+            padding: _padding,
+            textStyle:
+                TextStyle(fontSize: _fontSize, fontWeight: FontWeight.w500),
+          ),
           child: child,
         );
       case _ButtonVariant.secondary:
         return OutlinedButton(
           onPressed: isLoading ? null : onPressed,
+          style: OutlinedButton.styleFrom(
+            padding: _padding,
+            textStyle:
+                TextStyle(fontSize: _fontSize, fontWeight: FontWeight.w500),
+          ),
           child: child,
         );
       case _ButtonVariant.ghost:
         return TextButton(
           onPressed: isLoading ? null : onPressed,
+          style: TextButton.styleFrom(
+            padding: _padding,
+            textStyle:
+                TextStyle(fontSize: _fontSize, fontWeight: FontWeight.w500),
+          ),
           child: child,
         );
       case _ButtonVariant.destructive:
@@ -166,6 +218,18 @@ class AppButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.destructive,
             foregroundColor: AppColors.destructiveForeground,
+            padding: _padding,
+            textStyle:
+                TextStyle(fontSize: _fontSize, fontWeight: FontWeight.w500),
+          ).copyWith(
+            backgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.pressed) ||
+                  states.contains(WidgetState.hovered)) {
+                // Darker rose on hover/press
+                return const Color(0xFFE11D48);
+              }
+              return AppColors.destructive;
+            }),
           ),
           child: child,
         );
@@ -187,3 +251,5 @@ class AppButton extends StatelessWidget {
 }
 
 enum _ButtonVariant { primary, secondary, ghost, destructive }
+
+enum _ButtonSize { small, medium }

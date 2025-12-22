@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
 
-/// Application color palette extracted from the FST design system.
+/// Application color palette based on the "Aura Daybreak" design system.
 ///
-/// These colors are derived from the admin dashboard's globals.css
-/// and converted from OKLCH to Flutter Color format.
+/// This light mode design is inspired by modern productivity tools
+/// (Linear, Stripe, AirBnB) prioritizing openness, breathability,
+/// and shadows/borders for depth definition.
 ///
 /// Use these colors for:
 /// - Custom widgets
@@ -13,23 +14,25 @@ import 'package:flutter/widgets.dart';
 /// For themed components, use Theme.of(context).colorScheme instead.
 abstract final class AppColors {
   // ==========================================================================
-  // PRIMARY COLORS - Deep Navy Blue
+  // PRIMARY COLORS - Vivid Orange (Action/CTA)
   // ==========================================================================
 
-  /// Primary brand color - Deep Navy Blue
-  /// oklch(0.35 0.18 250) → RGB
-  static const Color primary = Color(0xFF1A3A6E);
+  /// Primary brand color - Vivid Orange
+  /// Used for: CTAs, "Pay" buttons, active navigation states
+  static const Color primary = Color(0xFFF97316);
 
   /// Primary foreground - White text on primary
   static const Color primaryForeground = Color(0xFFFFFFFF);
 
+  /// Primary hover/pressed state - Darker orange
+  static const Color primaryHover = Color(0xFFEA580C);
+
   // ==========================================================================
-  // SECONDARY COLORS - Vibrant Teal/Cyan
+  // SECONDARY COLORS - Deep Navy (Text emphasis)
   // ==========================================================================
 
-  /// Secondary accent color - Vibrant Teal/Cyan
-  /// oklch(0.65 0.15 195) → RGB
-  static const Color secondary = Color(0xFF2BA5A5);
+  /// Secondary color - Deep Navy for emphasis
+  static const Color secondary = Color(0xFF1E293B);
 
   /// Secondary foreground - White text on secondary
   static const Color secondaryForeground = Color(0xFFFFFFFF);
@@ -38,23 +41,24 @@ abstract final class AppColors {
   // BACKGROUND & FOREGROUND
   // ==========================================================================
 
-  /// Main background color - Clean white
-  /// oklch(0.995 0 0) → RGB
-  static const Color background = Color(0xFFFDFDFD);
+  /// Main background color - Cool White / Light Gray
+  /// Slightly off-white to reduce glare
+  static const Color background = Color(0xFFF3F4F6);
 
-  /// Main foreground/text color - Near black
-  /// oklch(0.145 0 0) → RGB
-  static const Color foreground = Color(0xFF171717);
+  /// Main foreground/text color - Deep Navy / Charcoal
+  /// High contrast against light background
+  static const Color foreground = Color(0xFF0F172A);
 
   // ==========================================================================
   // CARD COLORS
   // ==========================================================================
 
-  /// Card background - Pure white
+  /// Card background - Pure White
+  /// Content cards are pure white for separation
   static const Color card = Color(0xFFFFFFFF);
 
   /// Card foreground/text color
-  static const Color cardForeground = Color(0xFF171717);
+  static const Color cardForeground = Color(0xFF0F172A);
 
   // ==========================================================================
   // POPOVER COLORS
@@ -64,39 +68,35 @@ abstract final class AppColors {
   static const Color popover = Color(0xFFFFFFFF);
 
   /// Popover foreground/text color
-  static const Color popoverForeground = Color(0xFF171717);
+  static const Color popoverForeground = Color(0xFF0F172A);
 
   // ==========================================================================
   // MUTED COLORS
   // ==========================================================================
 
-  /// Muted background - Subtle blue tint
-  /// oklch(0.97 0.005 250) → RGB
-  static const Color muted = Color(0xFFF5F5F7);
+  /// Muted background - Slate 100 (Inputs/Hover states)
+  static const Color muted = Color(0xFFF1F5F9);
 
-  /// Muted foreground/text color
-  /// oklch(0.5 0 0) → RGB
-  static const Color mutedForeground = Color(0xFF737373);
+  /// Muted foreground/text color - Slate 500
+  /// For labels and metadata
+  static const Color mutedForeground = Color(0xFF64748B);
 
   // ==========================================================================
   // ACCENT COLORS
   // ==========================================================================
 
-  /// Accent background
-  /// oklch(0.95 0.02 250) → RGB
-  static const Color accent = Color(0xFFEEEFF4);
+  /// Accent background - Light gray wash for hover states
+  static const Color accent = Color(0xFFF1F5F9);
 
   /// Accent foreground/text color
-  /// oklch(0.25 0.1 250) → RGB
-  static const Color accentForeground = Color(0xFF1E2A4A);
+  static const Color accentForeground = Color(0xFF0F172A);
 
   // ==========================================================================
   // DESTRUCTIVE COLORS
   // ==========================================================================
 
-  /// Destructive/error color - Red
-  /// oklch(0.577 0.245 27.325) → RGB
-  static const Color destructive = Color(0xFFDC2626);
+  /// Destructive/error color - Rose
+  static const Color destructive = Color(0xFFF43F5E);
 
   /// Destructive foreground - White text
   static const Color destructiveForeground = Color(0xFFFFFFFF);
@@ -105,82 +105,69 @@ abstract final class AppColors {
   // BORDER & INPUT COLORS
   // ==========================================================================
 
-  /// Border color - Subtle blue tint
-  /// oklch(0.92 0.01 250) → RGB
-  static const Color border = Color(0xFFE5E5EB);
+  /// Border color - Pale Gray
+  /// Essential for defining structure without heavy backgrounds
+  static const Color border = Color(0xFFE2E8F0);
 
-  /// Input border/background color
-  /// oklch(0.94 0.01 250) → RGB
-  static const Color input = Color(0xFFEBEBF0);
+  /// Input border/background color - Gray for unfocused state
+  static const Color input = Color(0xFFF1F5F9);
 
-  /// Focus ring color - Matches primary
+  /// Focus ring color - Vivid Orange
   static const Color ring = primary;
 
   // ==========================================================================
-  // SIDEBAR COLORS - Deep Navy Blue theme
+  // SIDEBAR COLORS - White with Orange accents (Aura Daybreak)
   // ==========================================================================
 
-  /// Sidebar background - Deep Navy
-  /// oklch(0.25 0.12 250) → RGB
-  static const Color sidebar = Color(0xFF0F1E3D);
+  /// Sidebar background - White
+  static const Color sidebar = Color(0xFFFFFFFF);
 
-  /// Sidebar text color - Light
-  /// oklch(0.92 0.02 250) → RGB
-  static const Color sidebarForeground = Color(0xFFE5E7F0);
+  /// Sidebar text color - Deep Navy
+  static const Color sidebarForeground = Color(0xFF0F172A);
 
-  /// Sidebar primary accent
-  /// oklch(0.45 0.2 250) → RGB
-  static const Color sidebarPrimary = Color(0xFF2952A3);
+  /// Sidebar primary accent - Vivid Orange (selected item)
+  static const Color sidebarPrimary = Color(0xFFF97316);
 
   /// Sidebar primary foreground
   static const Color sidebarPrimaryForeground = Color(0xFFFFFFFF);
 
-  /// Sidebar accent/hover background
-  /// oklch(0.32 0.1 250) → RGB
-  static const Color sidebarAccent = Color(0xFF1A2E52);
+  /// Sidebar accent/hover background - Light gray wash
+  static const Color sidebarAccent = Color(0xFFF1F5F9);
 
   /// Sidebar accent foreground
-  /// oklch(0.95 0.01 250) → RGB
-  static const Color sidebarAccentForeground = Color(0xFFF0F1F5);
+  static const Color sidebarAccentForeground = Color(0xFF0F172A);
 
-  /// Sidebar border color
-  /// oklch(0.35 0.08 250) → RGB
-  static const Color sidebarBorder = Color(0xFF2A3F66);
+  /// Sidebar border color - Pale Gray (stronger separator)
+  static const Color sidebarBorder = Color(0xFFE2E8F0);
 
-  /// Sidebar focus ring color
-  /// oklch(0.55 0.2 250) → RGB
-  static const Color sidebarRing = Color(0xFF4169B3);
+  /// Sidebar focus ring color - Orange
+  static const Color sidebarRing = Color(0xFFF97316);
 
   // ==========================================================================
   // CHART COLORS
   // ==========================================================================
 
-  /// Chart color 1 - Blue
-  /// oklch(0.45 0.2 250) → RGB
-  static const Color chart1 = Color(0xFF2952A3);
+  /// Chart color 1 - Navy (primary data line)
+  static const Color chart1 = Color(0xFF1E293B);
 
-  /// Chart color 2 - Teal
-  /// oklch(0.65 0.15 195) → RGB
-  static const Color chart2 = Color(0xFF2BA5A5);
+  /// Chart color 2 - Orange (accent data line)
+  static const Color chart2 = Color(0xFFF97316);
 
-  /// Chart color 3 - Green
-  /// oklch(0.7 0.18 145) → RGB
-  static const Color chart3 = Color(0xFF34B870);
+  /// Chart color 3 - Emerald
+  static const Color chart3 = Color(0xFF10B981);
 
-  /// Chart color 4 - Orange
-  /// oklch(0.65 0.2 40) → RGB
-  static const Color chart4 = Color(0xFFD97B2A);
+  /// Chart color 4 - Blue
+  static const Color chart4 = Color(0xFF3B82F6);
 
   /// Chart color 5 - Purple
-  /// oklch(0.55 0.22 320) → RGB
-  static const Color chart5 = Color(0xFFA855B8);
+  static const Color chart5 = Color(0xFF8B5CF6);
 
   // ==========================================================================
   // SEMANTIC COLORS
   // ==========================================================================
 
-  /// Success color - Green
-  static const Color success = Color(0xFF22C55E);
+  /// Success color - Emerald
+  static const Color success = Color(0xFF10B981);
 
   /// Success foreground
   static const Color successForeground = Color(0xFFFFFFFF);

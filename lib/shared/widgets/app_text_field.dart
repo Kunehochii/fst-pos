@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 
-/// Styled text input field with consistent theming.
+/// Styled text input field with "Aura Daybreak" theming.
 ///
 /// Features:
+/// - Gray background (muted) that turns white on focus
+/// - Orange focus ring
 /// - Label above input
 /// - Leading/trailing icons
 /// - Error state
@@ -38,6 +40,7 @@ class AppTextField extends StatefulWidget {
     this.autofocus = false,
     this.maxLines = 1,
     this.minLines,
+    this.focusNode,
   });
 
   final TextEditingController? controller;
@@ -56,6 +59,7 @@ class AppTextField extends StatefulWidget {
   final bool autofocus;
   final int? maxLines;
   final int? minLines;
+  final FocusNode? focusNode;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -63,11 +67,30 @@ class AppTextField extends StatefulWidget {
 
 class _AppTextFieldState extends State<AppTextField> {
   bool _obscurePassword = true;
+  bool _isFocused = false;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
     _obscurePassword = widget.obscureText;
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode.addListener(_handleFocusChange);
+  }
+
+  @override
+  void dispose() {
+    if (widget.focusNode == null) {
+      _focusNode.removeListener(_handleFocusChange);
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  void _handleFocusChange() {
+    setState(() {
+      _isFocused = _focusNode.hasFocus;
+    });
   }
 
   @override
@@ -89,9 +112,9 @@ class _AppTextFieldState extends State<AppTextField> {
         ],
         TextField(
           controller: widget.controller,
-          obscureText: widget.showPasswordToggle
-              ? _obscurePassword
-              : widget.obscureText,
+          focusNode: _focusNode,
+          obscureText:
+              widget.showPasswordToggle ? _obscurePassword : widget.obscureText,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
           onChanged: widget.onChanged,
@@ -103,6 +126,9 @@ class _AppTextFieldState extends State<AppTextField> {
           decoration: InputDecoration(
             hintText: widget.hintText,
             errorText: widget.errorText,
+            // Gray background -> White on focus
+            filled: true,
+            fillColor: _isFocused ? AppColors.card : AppColors.muted,
             prefixIcon: widget.prefixIcon != null
                 ? Icon(
                     widget.prefixIcon,
