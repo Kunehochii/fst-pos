@@ -9,6 +9,7 @@ import '../../data/datasources/delivery_local_datasource.dart';
 import '../../data/datasources/delivery_remote_datasource.dart';
 import '../../data/repositories/delivery_repository_impl.dart';
 import '../../domain/entities/delivery.dart';
+import '../../domain/entities/delivery_cart_item.dart';
 import '../../domain/repositories/delivery_repository.dart';
 
 part 'delivery_provider.g.dart';
@@ -272,6 +273,122 @@ Future<Delivery?> deliveryById(Ref ref, String deliveryId) async {
     return delivery;
   } on StateError {
     return null;
+  }
+}
+
+// ============================================================================
+// DELIVERY CART STATE
+// ============================================================================
+
+/// Delivery cart state containing all items to be delivered.
+class DeliveryCartState {
+  final List<DeliveryCartItem> items;
+  final String driverName;
+  final DateTime deliveryTime;
+
+  DeliveryCartState({
+    this.items = const [],
+    this.driverName = '',
+    DateTime? deliveryTime,
+  }) : deliveryTime = deliveryTime ?? DateTime.now();
+
+  /// Total number of items.
+  int get itemCount => items.length;
+
+  /// Whether cart is empty.
+  bool get isEmpty => items.isEmpty;
+
+  /// Whether cart has items.
+  bool get isNotEmpty => items.isNotEmpty;
+
+  /// Total quantity across all items.
+  double get totalQuantity {
+    return items.fold(0.0, (sum, item) => sum + item.quantity);
+  }
+
+  DeliveryCartState copyWith({
+    List<DeliveryCartItem>? items,
+    String? driverName,
+    DateTime? deliveryTime,
+  }) {
+    return DeliveryCartState(
+      items: items ?? this.items,
+      driverName: driverName ?? this.driverName,
+      deliveryTime: deliveryTime ?? this.deliveryTime,
+    );
+  }
+}
+
+/// Delivery cart notifier for managing cart state.
+@riverpod
+class DeliveryCartNotifier extends _$DeliveryCartNotifier {
+  @override
+  DeliveryCartState build() => DeliveryCartState();
+
+  /// Add an item to cart.
+  void addItem(DeliveryCartItem item) {
+    state = state.copyWith(items: [...state.items, item]);
+  }
+
+  /// Remove an item from cart by its unique cart item ID.
+  void removeItem(String cartItemId) {
+    state = state.copyWith(
+      items:
+          state.items.where((item) => item.cartItemId != cartItemId).toList(),
+    );
+  }
+
+  /// Update an item in the cart.
+  void updateItem(String cartItemId, DeliveryCartItem updatedItem) {
+    state = state.copyWith(
+      items: state.items.map((item) {
+        if (item.cartItemId == cartItemId) {
+          return updatedItem;
+        }
+        return item;
+      }).toList(),
+    );
+  }
+
+  /// Clear all items from cart.
+  void clearCart() {
+    state = DeliveryCartState();
+  }
+
+  /// Set driver name.
+  void setDriverName(String name) {
+    state = state.copyWith(driverName: name);
+  }
+
+  /// Set delivery time.
+  void setDeliveryTime(DateTime time) {
+    state = state.copyWith(deliveryTime: time);
+  }
+
+  /// Convert cart items to CreateDeliveryDto.
+  CreateDeliveryDto toDto() {
+    return CreateDeliveryDto(
+      driverName: state.driverName,
+      deliveryTimeStart: state.deliveryTime.toUtc(),
+      deliveryItems: state.items.map((item) {
+        return CreateDeliveryItemDto(
+          productId: item.product.id,
+          sackPrice: item.sackPriceId != null
+              ? SackPriceDto(
+                  id: item.sackPriceId!,
+                  quantity: item.quantity,
+                  type: item.sackType!,
+                )
+              : null,
+          perKiloPrice: item.perKiloPriceId != null
+              ? PerKiloPriceDto(
+                  id: item.perKiloPriceId!,
+                  quantity: item.quantity,
+                )
+              : null,
+        );
+      }).toList(),
+    );
   }
 }
 
