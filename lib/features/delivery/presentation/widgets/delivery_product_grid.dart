@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../product/domain/entities/product.dart';
-import '../providers/sales_provider.dart';
+import '../providers/delivery_provider.dart';
 
-/// Grid of products for selection.
+/// Grid of products for delivery selection.
 ///
 /// Uses "Aura Daybreak" design with white cards, subtle borders,
 /// and soft shadows for a clean, modern appearance.
-class ProductGrid extends ConsumerWidget {
+class DeliveryProductGrid extends ConsumerWidget {
   final List<Product> products;
   final Function(Product) onProductTap;
 
-  const ProductGrid({
+  const DeliveryProductGrid({
     super.key,
     required this.products,
     required this.onProductTap,
@@ -32,7 +32,7 @@ class ProductGrid extends ConsumerWidget {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return ProductCard(
+        return DeliveryProductCard(
           product: product,
           onTap: () => onProductTap(product),
         );
@@ -41,18 +41,17 @@ class ProductGrid extends ConsumerWidget {
   }
 }
 
-/// Individual product card in the grid.
+/// Individual product card in the grid for delivery.
 ///
 /// "Aura Daybreak" style:
 /// - White tile with rounded corners
 /// - Subtle border and soft shadow
-/// - Orange border ring when selected (in cart)
-/// - No overlay on images unless selected/out of stock
-class ProductCard extends ConsumerWidget {
+/// - Primary border ring when selected (in cart)
+class DeliveryProductCard extends ConsumerWidget {
   final Product product;
   final VoidCallback onTap;
 
-  const ProductCard({
+  const DeliveryProductCard({
     super.key,
     required this.product,
     required this.onTap,
@@ -60,7 +59,7 @@ class ProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartState = ref.watch(cartNotifierProvider);
+    final cartState = ref.watch(deliveryCartNotifierProvider);
 
     // Check if product is in cart
     final cartItemsForProduct =
@@ -158,34 +157,24 @@ class ProductCard extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    // Stock warning overlay
-                    if (!product.hasStock)
-                      Positioned.fill(
-                        child: Container(
-                          color: AppColors.foreground.withValues(alpha: 0.7),
-                          child: Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.destructive,
-                                borderRadius:
-                                    BorderRadius.circular(AppColors.radiusSm),
-                              ),
-                              child: const Text(
-                                'OUT OF STOCK',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ),
-                          ),
+                    // Delivery indicator
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.card.withValues(alpha: 0.9),
+                          borderRadius:
+                              BorderRadius.circular(AppColors.radiusSm),
+                        ),
+                        child: Icon(
+                          Icons.local_shipping,
+                          size: 16,
+                          color: AppColors.primary,
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -198,25 +187,42 @@ class ProductCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Product name
                       Text(
                         product.name,
                         style: TextStyle(
-                          color: AppColors.foreground,
-                          fontWeight: FontWeight.w600,
                           fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      if (product.lowestPrice != null)
-                        Text(
-                          'From ₱${product.lowestPrice!.toStringAsFixed(0)}',
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
+                      // Price info
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (product.perKiloPrice != null)
+                            Text(
+                              '₱${product.perKiloPrice!.price.toStringAsFixed(0)}/kg',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          if (product.sackPrices.isNotEmpty)
+                            Text(
+                              product.sackPrices.length == 1
+                                  ? '₱${product.sackPrices.first.price.toStringAsFixed(0)}/${product.sackPrices.first.type.displayName}'
+                                  : '${product.sackPrices.length} sack types',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.mutedForeground,
+                              ),
+                            ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

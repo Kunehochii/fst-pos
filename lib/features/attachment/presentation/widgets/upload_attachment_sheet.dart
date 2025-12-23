@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../shared/widgets/widgets.dart';
 import '../../domain/entities/attachment.dart';
 
 /// Bottom sheet for uploading attachments.
@@ -209,11 +210,10 @@ class _UploadAttachmentSheetState extends State<UploadAttachmentSheet> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to access camera: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppToast.error(
+          context,
+          title: 'Camera Error',
+          message: 'Failed to access camera: $e',
         );
       }
     }
@@ -234,11 +234,10 @@ class _UploadAttachmentSheetState extends State<UploadAttachmentSheet> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to access gallery: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppToast.error(
+          context,
+          title: 'Gallery Error',
+          message: 'Failed to access gallery: $e',
         );
       }
     }
@@ -261,11 +260,10 @@ class _UploadAttachmentSheetState extends State<UploadAttachmentSheet> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Upload failed: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppToast.error(
+          context,
+          title: 'Upload Failed',
+          message: 'Upload failed: $e',
         );
       }
     } finally {

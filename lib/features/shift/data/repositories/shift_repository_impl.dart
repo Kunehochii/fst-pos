@@ -1,6 +1,7 @@
+// ignore_for_file: unused_element
+
 import 'package:dio/dio.dart';
 
-import '../../../../core/errors/app_exception.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/employee.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../domain/entities/sheet.dart';
 
 /// Color picker popover for cell background colors.
@@ -18,10 +19,11 @@ class CellColorPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 220,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(AppColors.radiusMd),
+        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -59,11 +61,9 @@ class CellColorPicker extends StatelessWidget {
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
-            child: TextButton(
+            child: AppButton.ghost(
               onPressed: () => onColorSelected(null),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.destructive,
-              ),
+              small: true,
               child: const Text('Clear Color'),
             ),
           ),
@@ -96,11 +96,20 @@ class _ColorButton extends StatelessWidget {
         height: 28,
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(6),
           border: Border.all(
             color: isSelected ? AppColors.primary : AppColors.border,
             width: isSelected ? 2 : 1,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.3),
+                    blurRadius: 4,
+                    spreadRadius: 0,
+                  ),
+                ]
+              : null,
         ),
         child: isSelected
             ? const Icon(
@@ -148,8 +157,8 @@ class ColorPickerButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: enabled ? Colors.white : AppColors.muted,
-          borderRadius: BorderRadius.circular(6),
+          color: enabled ? AppColors.card : AppColors.muted,
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
           border: Border.all(color: AppColors.border),
         ),
         child: Row(
@@ -162,7 +171,7 @@ class ColorPickerButton extends StatelessWidget {
                 color: currentColor != null && isValidHexColor(currentColor!)
                     ? Color(int.parse(currentColor!.substring(1), radix: 16) +
                         0xFF000000)
-                    : Colors.white,
+                    : AppColors.card,
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(color: AppColors.border),
               ),

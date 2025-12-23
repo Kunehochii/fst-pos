@@ -4,7 +4,11 @@ import 'app_colors.dart';
 
 /// Application theme configuration for Material Design.
 ///
-/// Provides a cohesive theme matching the FST design system.
+/// Implements the "Aura Daybreak" design system:
+/// - Cool White / Light Gray backgrounds
+/// - Vivid Orange CTAs and accents
+/// - Deep Navy text for high contrast
+/// - Soft diffused shadows and crisp borders
 ///
 /// Usage:
 /// ```dart
@@ -13,12 +17,13 @@ import 'app_colors.dart';
 /// )
 /// ```
 abstract final class AppTheme {
-  /// Light theme based on FST design system.
+  /// Light theme based on "Aura Daybreak" design system.
   ///
   /// Features:
-  /// - Deep Navy Blue primary color
-  /// - Vibrant Teal secondary color
-  /// - Clean white backgrounds
+  /// - Vivid Orange primary color for CTAs
+  /// - Cool White/Light Gray backgrounds
+  /// - Deep Navy/Charcoal text
+  /// - Soft diffused shadows
   /// - Consistent border radius
   static ThemeData get light {
     return ThemeData(
@@ -45,10 +50,11 @@ abstract final class AppTheme {
         ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.card,
         foregroundColor: AppColors.foreground,
         elevation: 0,
         centerTitle: false,
+        surfaceTintColor: Colors.transparent,
         titleTextStyle: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -68,6 +74,17 @@ abstract final class AppTheme {
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),
+        ).copyWith(
+          // Distinct "pressed" state with slightly darker background
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.pressed)) {
+              return AppColors.primaryHover;
+            }
+            if (states.contains(WidgetState.hovered)) {
+              return AppColors.primaryHover;
+            }
+            return AppColors.primary;
+          }),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -82,6 +99,15 @@ abstract final class AppTheme {
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),
+        ).copyWith(
+          // Light gray wash on hover
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered) ||
+                states.contains(WidgetState.pressed)) {
+              return AppColors.accent;
+            }
+            return Colors.transparent;
+          }),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -95,24 +121,33 @@ abstract final class AppTheme {
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),
+        ).copyWith(
+          // Light gray wash on hover
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered) ||
+                states.contains(WidgetState.pressed)) {
+              return AppColors.accent;
+            }
+            return Colors.transparent;
+          }),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.background,
+        fillColor: AppColors.muted, // Gray background unfocused
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppColors.radiusSm),
-          borderSide: BorderSide(color: AppColors.border),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppColors.radiusSm),
-          borderSide: BorderSide(color: AppColors.border),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppColors.radiusSm),
-          borderSide: BorderSide(color: AppColors.primary, width: 2),
+          borderSide: BorderSide(color: AppColors.ring, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppColors.radiusSm),

@@ -142,12 +142,12 @@ class _UpdateEmployeesModalState extends State<UpdateEmployeesModal> {
               Container(
                 margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withOpacity(0.1),
+                  color: AppColors.info.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(AppColors.radiusSm),
                   border: Border.all(
-                    color: AppColors.secondary.withOpacity(0.3),
+                    color: AppColors.info.withOpacity(0.2),
                   ),
                 ),
                 child: Row(
@@ -155,15 +155,16 @@ class _UpdateEmployeesModalState extends State<UpdateEmployeesModal> {
                     Icon(
                       Icons.info_outline,
                       size: 18,
-                      color: AppColors.secondary,
+                      color: AppColors.info,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'The first selected employee will be the designated Cashier',
                         style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.secondary,
+                          color: AppColors.info,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -275,24 +276,26 @@ class _UpdateEmployeesModalState extends State<UpdateEmployeesModal> {
   }) {
     return InkWell(
       onTap: () => _toggleEmployee(employee),
+      borderRadius: BorderRadius.circular(AppColors.radiusSm),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? isCashier
-                  ? AppColors.secondary.withOpacity(0.15)
-                  : AppColors.primary.withOpacity(0.08)
-              : AppColors.background,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(AppColors.radiusSm),
           border: Border.all(
-            color: isSelected
-                ? isCashier
-                    ? AppColors.secondary
-                    : AppColors.primary.withOpacity(0.3)
-                : AppColors.border,
-            width: isSelected && isCashier ? 2 : 1,
+            color: isSelected ? AppColors.primary : AppColors.border,
+            width: isSelected ? 2 : 1,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../shared/widgets/widgets.dart';
 import '../../domain/entities/attachment.dart';
 import '../providers/attachment_provider.dart';
 import '../widgets/attachment_date_selector.dart';
@@ -168,18 +169,16 @@ class AttachmentPage extends ConsumerWidget {
 
             if (context.mounted) {
               if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Attachment uploaded successfully'),
-                    backgroundColor: Colors.green,
-                  ),
+                AppToast.success(
+                  context,
+                  title: 'Success',
+                  message: 'Attachment uploaded successfully',
                 );
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Failed to upload attachment'),
-                    backgroundColor: Colors.red,
-                  ),
+                AppToast.error(
+                  context,
+                  title: 'Error',
+                  message: 'Failed to upload attachment',
                 );
               }
             }
@@ -220,16 +219,19 @@ class AttachmentPage extends ConsumerWidget {
                   .deleteAttachment(attachment.id);
 
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      success
-                          ? 'Attachment deleted'
-                          : 'Failed to delete attachment',
-                    ),
-                    backgroundColor: success ? Colors.orange : Colors.red,
-                  ),
-                );
+                if (success) {
+                  AppToast.success(
+                    context,
+                    title: 'Deleted',
+                    message: 'Attachment deleted',
+                  );
+                } else {
+                  AppToast.error(
+                    context,
+                    title: 'Error',
+                    message: 'Failed to delete attachment',
+                  );
+                }
               }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),

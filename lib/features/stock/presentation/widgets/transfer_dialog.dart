@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../domain/entities/transfer.dart';
 import '../providers/stock_provider.dart';
@@ -41,28 +42,38 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
     ref.listen(createTransferNotifierProvider, (previous, next) {
       if (next is CreateTransferSuccess) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Transfer created: ${next.transfer.quantity} ${_getUnitLabel()}'),
-            backgroundColor: Colors.green,
-          ),
+        AppToast.success(
+          context,
+          title: 'Transfer Created',
+          message:
+              '${next.transfer.quantity} ${_getUnitLabel()} transferred successfully',
         );
         ref.read(createTransferNotifierProvider.notifier).reset();
       } else if (next is CreateTransferError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${next.failure.message}'),
-            backgroundColor: Colors.red,
-          ),
+        AppToast.error(
+          context,
+          title: 'Transfer Failed',
+          message: next.failure.message,
         );
       }
     });
 
     return Dialog(
+      backgroundColor: Colors.transparent,
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
-        padding: const EdgeInsets.all(24),
+        constraints: const BoxConstraints(maxWidth: 420, maxHeight: 620),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(AppColors.radiusLg),
+          border: Border.all(color: AppColors.border),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
         child: Form(
           key: _formKey,
           child: Column(
@@ -70,46 +81,69 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Row(
-                children: [
-                  Icon(
-                    Icons.swap_horiz,
-                    color: AppColors.primary,
-                    size: 28,
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppColors.border),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Transfer Stock',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                ),
+                child: Row(
+                  children: [
+                    AppIconBox(
+                      icon: Icons.swap_horiz,
+                      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                      iconColor: AppColors.primary,
+                      size: 44,
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Transfer Stock',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.foreground,
+                            ),
                           ),
-                        ),
-                        Text(
-                          widget.product.name,
-                          style: TextStyle(
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.product.name,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.mutedForeground,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: const Icon(
+                            Icons.close,
+                            size: 20,
                             color: AppColors.mutedForeground,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 24),
 
               // Scrollable content
               Flexible(
                 child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,22 +151,30 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
                       // Transfer type selection
                       const Text(
                         'Transfer Type',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: AppColors.foreground,
+                        ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       _buildTransferTypeSelector(),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
 
                       // Price selection (sack or per kilo)
                       _buildPriceSelection(),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
 
                       // Quantity input
                       const Text(
                         'Quantity',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: AppColors.foreground,
+                        ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       TextFormField(
                         controller: _quantityController,
                         keyboardType: const TextInputType.numberWithOptions(
@@ -141,11 +183,59 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^\d+\.?\d{0,2}')),
                         ],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: AppColors.foreground,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Enter quantity',
+                          hintStyle: const TextStyle(
+                            color: AppColors.mutedForeground,
+                          ),
                           suffixText: _getUnitLabel(),
+                          suffixStyle: const TextStyle(
+                            color: AppColors.mutedForeground,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          filled: true,
+                          fillColor: AppColors.muted,
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                            borderSide: const BorderSide(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                            borderSide: const BorderSide(
+                              color: AppColors.destructive,
+                              width: 1,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                            borderSide: const BorderSide(
+                              color: AppColors.destructive,
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
                           ),
                         ),
                         validator: (value) {
@@ -164,7 +254,7 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
 
                       // Stock info
                       _buildStockInfo(),
@@ -172,34 +262,37 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
 
               // Action buttons (outside scrollable area)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: createState is CreateTransferLoading
-                        ? null
-                        : () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: AppColors.border),
                   ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: createState is CreateTransferLoading
-                        ? null
-                        : _canSubmit()
-                            ? _submitTransfer
-                            : null,
-                    child: createState is CreateTransferLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Transfer'),
-                  ),
-                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    AppButton.ghost(
+                      onPressed: createState is CreateTransferLoading
+                          ? null
+                          : () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(width: 12),
+                    AppButton.primary(
+                      onPressed: createState is CreateTransferLoading
+                          ? null
+                          : _canSubmit()
+                              ? _submitTransfer
+                              : null,
+                      isLoading: createState is CreateTransferLoading,
+                      icon: const Icon(Icons.swap_horiz, size: 18),
+                      child: const Text('Transfer'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -214,18 +307,36 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
       runSpacing: 8,
       children: TransferType.values.map((type) {
         final isSelected = _selectedType == type;
-        return ChoiceChip(
-          label: Text(type.displayName),
-          selected: isSelected,
-          onSelected: (selected) {
-            setState(() {
-              _selectedType = selected ? type : null;
-            });
-          },
-          selectedColor: AppColors.primary.withOpacity(0.2),
-          labelStyle: TextStyle(
-            color: isSelected ? AppColors.primary : null,
-            fontWeight: isSelected ? FontWeight.bold : null,
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                _selectedType = isSelected ? null : type;
+              });
+            },
+            borderRadius: BorderRadius.circular(AppColors.radiusSm),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.primary.withValues(alpha: 0.1)
+                    : AppColors.muted,
+                borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                border: Border.all(
+                  color: isSelected ? AppColors.primary : AppColors.border,
+                  width: isSelected ? 2 : 1,
+                ),
+              ),
+              child: Text(
+                type.displayName,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? AppColors.primary : AppColors.foreground,
+                ),
+              ),
+            ),
           ),
         );
       }).toList(),
@@ -238,9 +349,32 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
     final hasPerKiloPrice = product.perKiloPrice != null;
 
     if (!hasSackPrices && !hasPerKiloPrice) {
-      return const Text(
-        'No pricing available for this product',
-        style: TextStyle(color: Colors.red),
+      return Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.destructive.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppColors.radiusSm),
+          border: Border.all(
+            color: AppColors.destructive.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              color: AppColors.destructive,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'No pricing available for this product',
+              style: TextStyle(
+                color: AppColors.destructive,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -249,9 +383,13 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
       children: [
         const Text(
           'Select Price Type',
-          style: TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: AppColors.foreground,
+          ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
 
         // Sack prices
         if (hasSackPrices) ...[
@@ -292,52 +430,74 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 2 : 1,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelected ? AppColors.primary : AppColors.border,
+              width: isSelected ? 2 : 1,
+            ),
+            borderRadius: BorderRadius.circular(AppColors.radiusSm),
+            color: isSelected
+                ? AppColors.primary.withValues(alpha: 0.05)
+                : AppColors.card,
           ),
-          borderRadius: BorderRadius.circular(8),
-          color: isSelected ? AppColors.primary.withOpacity(0.05) : null,
-        ),
-        child: Row(
-          children: [
-            Icon(
-              isSelected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_unchecked,
-              color: isSelected ? AppColors.primary : AppColors.mutedForeground,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected ? AppColors.primary : null,
-                    ),
+          child: Row(
+            children: [
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected ? AppColors.primary : AppColors.border,
+                    width: isSelected ? 2 : 1.5,
                   ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.mutedForeground,
-                    ),
-                  ),
-                ],
+                  color: isSelected ? AppColors.primary : Colors.transparent,
+                ),
+                child: isSelected
+                    ? const Icon(
+                        Icons.check,
+                        size: 14,
+                        color: AppColors.primaryForeground,
+                      )
+                    : null,
               ),
-            ),
-          ],
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.w500,
+                        fontSize: 14,
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.foreground,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -345,18 +505,30 @@ class _TransferDialogState extends ConsumerState<TransferDialog> {
 
   Widget _buildStockInfo() {
     final maxStock = _getMaxStock();
-    return Row(
-      children: [
-        Icon(Icons.info_outline, size: 16, color: AppColors.mutedForeground),
-        const SizedBox(width: 8),
-        Text(
-          'Available: ${maxStock.toStringAsFixed(maxStock == maxStock.toInt() ? 0 : 1)} ${_getUnitLabel()}',
-          style: TextStyle(
-            fontSize: 12,
-            color: AppColors.mutedForeground,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 16,
+            color: AppColors.info,
           ),
-        ),
-      ],
+          const SizedBox(width: 8),
+          Text(
+            'Available: ${maxStock.toStringAsFixed(maxStock == maxStock.toInt() ? 0 : 1)} ${_getUnitLabel()}',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.info,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

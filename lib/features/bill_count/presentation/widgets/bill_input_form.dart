@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/bill_count.dart';
 
 /// Widget for inputting bill amounts.
+///
+/// Styled with "Aura Daybreak" design:
+/// - Clean white inputs with subtle borders
+/// - Orange accent for interactive elements
+/// - Deep Navy text for high contrast
+/// - Tactile button feedback
 class BillInputForm extends StatelessWidget {
   final Map<BillType, int> billAmounts;
   final double beginningBalance;
@@ -31,25 +38,57 @@ class BillInputForm extends StatelessWidget {
       children: [
         // Beginning Balance Section
         _buildBeginningBalanceSection(context),
-        const SizedBox(height: 16),
-        const Divider(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+
+        // Divider
+        Container(
+          height: 1,
+          color: AppColors.border,
+        ),
+        const SizedBox(height: 20),
 
         // Bills Section Header
-        Text(
-          'Bill Count',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
               ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Enter the number of each bill denomination',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
+              child: Icon(
+                Icons.payments_outlined,
+                color: AppColors.secondary,
+                size: 18,
               ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Bill Count',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Enter the number of each bill denomination',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
 
         // Bill Input Fields
         ...BillType.values.map((type) => _buildBillInputRow(context, type)),
@@ -63,40 +102,102 @@ class BillInputForm extends StatelessWidget {
       children: [
         Row(
           children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.account_balance_wallet_outlined,
+                color: AppColors.primary,
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 'Beginning Balance',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  'Include in calculation',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                Switch(
-                  value: showBeginningBalance,
-                  onChanged: enabled ? onShowBeginningBalanceChanged : null,
-                ),
-              ],
+            // Toggle switch
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.muted,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Include',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.mutedForeground,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  SizedBox(
+                    height: 20,
+                    child: Switch(
+                      value: showBeginningBalance,
+                      onChanged: enabled ? onShowBeginningBalanceChanged : null,
+                      activeTrackColor:
+                          AppColors.primary.withValues(alpha: 0.5),
+                      activeThumbColor: AppColors.primary,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         TextFormField(
           enabled: enabled,
           initialValue: beginningBalance > 0 ? beginningBalance.toString() : '',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: AppColors.foreground,
+          ),
           decoration: InputDecoration(
             hintText: 'Enter beginning balance',
+            hintStyle: TextStyle(
+              color: AppColors.mutedForeground,
+              fontWeight: FontWeight.normal,
+            ),
             prefixText: '₱ ',
-            border: const OutlineInputBorder(),
+            prefixStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+            ),
             filled: true,
-            fillColor: enabled
-                ? null
-                : Theme.of(context).colorScheme.surfaceContainerHighest,
+            fillColor: enabled ? AppColors.muted : AppColors.border,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              borderSide: BorderSide(color: AppColors.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              borderSide: BorderSide(color: AppColors.primary, width: 2),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [
@@ -116,48 +217,103 @@ class BillInputForm extends StatelessWidget {
     final totalValue = type.value * amount;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         children: [
           // Bill type label
-          SizedBox(
+          Container(
             width: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: type == BillType.peso1
+                  ? AppColors.secondary.withValues(alpha: 0.1)
+                  : AppColors.muted,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: type == BillType.peso1
+                    ? AppColors.secondary.withValues(alpha: 0.2)
+                    : AppColors.border,
+              ),
+            ),
             child: Text(
               type.displayName,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: type == BillType.peso1
-                        ? Theme.of(context).colorScheme.secondary
-                        : null,
-                  ),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: type == BillType.peso1
+                    ? AppColors.secondary
+                    : AppColors.foreground,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
 
+          const SizedBox(width: 12),
+
           // Decrement button
-          IconButton(
-            icon: const Icon(Icons.remove_circle_outline),
-            onPressed: enabled && amount > 0
-                ? () => onBillAmountChanged(type, amount - 1)
-                : null,
-            color: Theme.of(context).colorScheme.error,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: enabled && amount > 0
+                  ? () => onBillAmountChanged(type, amount - 1)
+                  : null,
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: enabled && amount > 0
+                      ? AppColors.destructive.withValues(alpha: 0.1)
+                      : AppColors.muted,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: enabled && amount > 0
+                        ? AppColors.destructive.withValues(alpha: 0.2)
+                        : AppColors.border,
+                  ),
+                ),
+                child: Icon(
+                  Icons.remove,
+                  size: 18,
+                  color: enabled && amount > 0
+                      ? AppColors.destructive
+                      : AppColors.mutedForeground,
+                ),
+              ),
+            ),
           ),
+
+          const SizedBox(width: 8),
 
           // Amount input
           SizedBox(
-            width: 80,
+            width: 70,
             child: TextFormField(
               enabled: enabled,
               key: ValueKey('${type.name}_$amount'),
               initialValue: amount.toString(),
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.foreground,
+              ),
               decoration: InputDecoration(
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                border: const OutlineInputBorder(),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 filled: true,
-                fillColor: enabled
-                    ? null
-                    : Theme.of(context).colorScheme.surfaceContainerHighest,
+                fillColor: enabled ? AppColors.card : AppColors.muted,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColors.primary, width: 2),
+                ),
               ),
               keyboardType: TextInputType.number,
               inputFormatters: [
@@ -170,23 +326,61 @@ class BillInputForm extends StatelessWidget {
             ),
           ),
 
+          const SizedBox(width: 8),
+
           // Increment button
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed:
-                enabled ? () => onBillAmountChanged(type, amount + 1) : null,
-            color: Theme.of(context).colorScheme.primary,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap:
+                  enabled ? () => onBillAmountChanged(type, amount + 1) : null,
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: enabled
+                      ? AppColors.primary.withValues(alpha: 0.1)
+                      : AppColors.muted,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: enabled
+                        ? AppColors.primary.withValues(alpha: 0.2)
+                        : AppColors.border,
+                  ),
+                ),
+                child: Icon(
+                  Icons.add,
+                  size: 18,
+                  color:
+                      enabled ? AppColors.primary : AppColors.mutedForeground,
+                ),
+              ),
+            ),
           ),
+
+          const SizedBox(width: 12),
 
           // Total value
           Expanded(
-            child: Text(
-              '= ₱${totalValue.toStringAsFixed(0)}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-              textAlign: TextAlign.right,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: totalValue > 0
+                    ? AppColors.primary.withValues(alpha: 0.05)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '= ₱${totalValue.toStringAsFixed(0)}',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: totalValue > 0
+                      ? AppColors.primary
+                      : AppColors.mutedForeground,
+                ),
+                textAlign: TextAlign.right,
+              ),
             ),
           ),
         ],

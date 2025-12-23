@@ -283,6 +283,25 @@ final deliveryListNotifierProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$DeliveryListNotifier = AutoDisposeAsyncNotifier<DeliveryListState>;
+String _$deliveryCartNotifierHash() =>
+    r'178968324af781ac337927f8a49750f33e854b86';
+
+/// Delivery cart notifier for managing cart state.
+///
+/// Copied from [DeliveryCartNotifier].
+@ProviderFor(DeliveryCartNotifier)
+final deliveryCartNotifierProvider = AutoDisposeNotifierProvider<
+    DeliveryCartNotifier, DeliveryCartState>.internal(
+  DeliveryCartNotifier.new,
+  name: r'deliveryCartNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deliveryCartNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DeliveryCartNotifier = AutoDisposeNotifier<DeliveryCartState>;
 String _$createDeliveryNotifierHash() =>
     r'2001b798a14acdfb8eaf0e4f4cc342c99a6453ee';
 

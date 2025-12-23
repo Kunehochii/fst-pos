@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../../product/domain/entities/product.dart';
 import '../../../product/presentation/providers/product_provider.dart';
 import '../../domain/entities/delivery.dart';
@@ -38,20 +39,24 @@ class _CreateDeliveryDialogState extends ConsumerState<CreateDeliveryDialog> {
     ref.listen(createDeliveryNotifierProvider, (previous, next) {
       if (next is CreateDeliverySuccess) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.isOffline
-                ? 'Delivery saved offline. Will sync when online.'
-                : 'Delivery created successfully!'),
-            backgroundColor: next.isOffline ? Colors.orange : Colors.green,
-          ),
-        );
+        if (next.isOffline) {
+          AppToast.warning(
+            context,
+            title: 'Saved Offline',
+            message: 'Delivery saved offline. Will sync when online.',
+          );
+        } else {
+          AppToast.success(
+            context,
+            title: 'Success',
+            message: 'Delivery created successfully!',
+          );
+        }
       } else if (next is CreateDeliveryError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.failure.userMessage),
-            backgroundColor: Colors.red,
-          ),
+        AppToast.error(
+          context,
+          title: 'Error',
+          message: next.failure.userMessage,
         );
       }
     });
@@ -309,11 +314,10 @@ class _CreateDeliveryDialogState extends ConsumerState<CreateDeliveryDialog> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     if (_items.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add at least one item'),
-          backgroundColor: Colors.orange,
-        ),
+      AppToast.warning(
+        context,
+        title: 'Missing Items',
+        message: 'Please add at least one item',
       );
       return;
     }

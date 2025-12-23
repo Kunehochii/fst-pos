@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../domain/entities/formula.dart';
 import '../../domain/entities/sheet.dart';
 import '../../domain/repositories/sheet_repository.dart';
@@ -107,28 +108,45 @@ class _SheetPageState extends ConsumerState<SheetPage> {
         centerTitle: false,
         actions: [
           // Date picker button
-          TextButton.icon(
-            onPressed: _selectDate,
-            icon: const Icon(Icons.calendar_today, size: 18),
-            label: Text(
-              DateFormat('MMM d, yyyy').format(_selectedDate),
-              style: const TextStyle(fontWeight: FontWeight.w500),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.muted,
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: InkWell(
+              onTap: _selectDate,
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.calendar_today,
+                      size: 16, color: AppColors.foreground),
+                  const SizedBox(width: 8),
+                  Text(
+                    DateFormat('MMM d, yyyy').format(_selectedDate),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.foreground,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 8),
           if (_hasUnsavedChanges)
             Padding(
               padding: const EdgeInsets.only(right: 8),
-              child: ElevatedButton.icon(
+              child: AppButton.primary(
                 onPressed: _isSaving ? null : _saveChanges,
-                icon: _isSaving
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.save, size: 18),
-                label: Text(_isSaving ? 'Saving...' : 'Save'),
+                isLoading: _isSaving,
+                icon: const Icon(Icons.save, size: 16),
+                small: true,
+                child: Text(_isSaving ? 'Saving...' : 'Save'),
               ),
             ),
         ],
@@ -181,14 +199,10 @@ class _SheetPageState extends ConsumerState<SheetPage> {
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
+          AppButton.primary(
             onPressed: _createSheet,
-            icon: const Icon(Icons.add),
-            label: const Text('Create Sheet'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.primaryForeground,
-            ),
+            icon: const Icon(Icons.add, size: 18),
+            child: const Text('Create Sheet'),
           ),
         ],
       ),
@@ -223,10 +237,10 @@ class _SheetPageState extends ConsumerState<SheetPage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
+          AppButton.primary(
             onPressed: _refresh,
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
+            icon: const Icon(Icons.refresh, size: 18),
+            child: const Text('Retry'),
           ),
         ],
       ),
@@ -562,20 +576,34 @@ class _SheetPageState extends ConsumerState<SheetPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete rows?'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        ),
+        title: const Text(
+          'Delete rows?',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.foreground,
+          ),
+        ),
         content: Text(
-            'Are you sure you want to delete ${_selectedRowIds.length} row(s)?'),
+          'Are you sure you want to delete ${_selectedRowIds.length} row(s)? This action cannot be undone.',
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.mutedForeground,
+          ),
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         actions: [
-          TextButton(
+          AppButton.secondary(
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          ElevatedButton(
+          const SizedBox(width: 12),
+          AppButton.destructive(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.destructive,
-              foregroundColor: AppColors.destructiveForeground,
-            ),
+            icon: const Icon(Icons.delete_outline, size: 18),
             child: const Text('Delete'),
           ),
         ],

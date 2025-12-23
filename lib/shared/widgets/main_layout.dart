@@ -11,8 +11,11 @@ import '../../features/auth/auth.dart';
 ///
 /// This widget wraps all pages and provides consistent navigation.
 /// The sidebar uses flutter_side_menu for collapsible navigation.
-/// Features a deep navy blue (primary color) sidebar with white text
-/// for a modern, professional look.
+///
+/// "Aura Daybreak" Design:
+/// - White sidebar background with Deep Navy text
+/// - Orange accents for selected/active items
+/// - Crisp border separator on the right
 ///
 /// Usage:
 /// Used automatically by GoRouter's ShellRoute in app_router.dart.
@@ -35,21 +38,32 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
     return Scaffold(
       body: Row(
         children: [
-          SideMenu(
-            controller: _controller,
-            mode: SideMenuMode.auto,
-            hasResizer: true,
-            hasResizerToggle: true,
-            minWidth: 70,
-            maxWidth: 250,
-            backgroundColor: AppColors.primary,
-            builder: (data) {
-              return SideMenuData(
-                header: _buildHeader(data.isOpen),
-                items: _buildMenuItems(context, currentPath),
-                footer: _buildFooter(data.isOpen),
-              );
-            },
+          // Sidebar with border separator
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: AppColors.sidebarBorder,
+                  width: 1,
+                ),
+              ),
+            ),
+            child: SideMenu(
+              controller: _controller,
+              mode: SideMenuMode.auto,
+              hasResizer: true,
+              hasResizerToggle: true,
+              minWidth: 70,
+              maxWidth: 250,
+              backgroundColor: AppColors.sidebar,
+              builder: (data) {
+                return SideMenuData(
+                  header: _buildHeader(data.isOpen),
+                  items: _buildMenuItems(context, currentPath),
+                  footer: _buildFooter(data.isOpen),
+                );
+              },
+            ),
           ),
           Expanded(
             child: widget.child,
@@ -64,10 +78,19 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          Icon(
-            Icons.point_of_sale,
-            size: 32,
-            color: AppColors.primaryForeground,
+          // Orange icon box for brand
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.point_of_sale,
+              size: 20,
+              color: AppColors.primaryForeground,
+            ),
           ),
           if (isOpen) ...[
             const SizedBox(width: 12),
@@ -77,7 +100,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryForeground,
+                  color: AppColors.sidebarForeground,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -102,18 +125,23 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
     required IconData icon,
     required String title,
   }) {
+    final isSelected = currentPath == route;
     return SideMenuItemDataTile(
-      isSelected: currentPath == route,
+      isSelected: isSelected,
       onTap: () => context.go(route),
-      icon: Icon(icon, color: AppColors.primaryForeground),
+      icon: Icon(
+        icon,
+        color: isSelected ? AppColors.primary : AppColors.sidebarForeground,
+      ),
       title: title,
-      titleStyle: TextStyle(color: AppColors.primaryForeground),
+      titleStyle: TextStyle(color: AppColors.sidebarForeground),
       selectedTitleStyle: TextStyle(
-        color: AppColors.primaryForeground,
+        color: AppColors.primary,
         fontWeight: FontWeight.w600,
       ),
+      // Light gray wash for selected state
       highlightSelectedColor: AppColors.sidebarAccent,
-      hoverColor: AppColors.sidebarAccent.withOpacity(0.5),
+      hoverColor: AppColors.sidebarAccent,
     );
   }
 
@@ -259,6 +287,11 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
 
     return Container(
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: AppColors.sidebarBorder, width: 1),
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -267,8 +300,10 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.3),
+                color: AppColors.warning.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4),
+                border:
+                    Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -292,7 +327,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
                 child: Icon(
                   Icons.person,
                   size: 20,
-                  color: AppColors.primaryForeground,
+                  color: AppColors.sidebarForeground,
                 ),
               ),
               if (isOpen) ...[
@@ -306,7 +341,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
                         cashier?.username ?? 'Unknown',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: AppColors.primaryForeground,
+                          color: AppColors.sidebarForeground,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -314,7 +349,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
                         cashier?.branchName ?? '',
                         style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.primaryForeground.withOpacity(0.7),
+                          color: AppColors.mutedForeground,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -325,7 +360,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
                   icon: Icon(
                     Icons.logout,
                     size: 20,
-                    color: AppColors.primaryForeground,
+                    color: AppColors.mutedForeground,
                   ),
                   tooltip: 'Logout',
                   onPressed: () async {

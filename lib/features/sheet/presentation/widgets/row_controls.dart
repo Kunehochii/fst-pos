@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../domain/entities/sheet.dart';
 
 /// Widget for row drag handle and actions.
@@ -302,38 +303,47 @@ class BulkActionsBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.accent,
-        border: Border(
+        color: AppColors.card,
+        border: const Border(
           top: BorderSide(color: AppColors.border),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Text(
-            '$selectedCount row${selectedCount > 1 ? 's' : ''} selected',
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              color: AppColors.accentForeground,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+            ),
+            child: Text(
+              '$selectedCount row${selectedCount > 1 ? 's' : ''} selected',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: AppColors.primary,
+              ),
             ),
           ),
           const Spacer(),
-          TextButton.icon(
+          AppButton.ghost(
             onPressed: onClearSelection,
-            icon: const Icon(Icons.clear, size: 18),
-            label: const Text('Clear'),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.mutedForeground,
-            ),
+            small: true,
+            icon: const Icon(Icons.clear, size: 16),
+            child: const Text('Clear'),
           ),
           const SizedBox(width: 8),
-          ElevatedButton.icon(
+          AppButton.destructive(
             onPressed: onDelete,
-            icon: const Icon(Icons.delete_outline, size: 18),
-            label: const Text('Delete'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.destructive,
-              foregroundColor: AppColors.destructiveForeground,
-            ),
+            small: true,
+            icon: const Icon(Icons.delete_outline, size: 16),
+            child: const Text('Delete'),
           ),
         ],
       ),
@@ -378,14 +388,10 @@ class EmptySheetPlaceholder extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
+          AppButton.primary(
             onPressed: onAddRow,
-            icon: const Icon(Icons.add),
-            label: const Text('Add First Row'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.primaryForeground,
-            ),
+            icon: const Icon(Icons.add, size: 18),
+            child: const Text('Add First Row'),
           ),
         ],
       ),

@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../domain/entities/cart_item.dart';
-import '../providers/sales_provider.dart';
-import 'checkout_page.dart';
+import '../../domain/entities/delivery_cart_item.dart';
+import '../providers/delivery_provider.dart';
+import 'delivery_checkout_page.dart';
 
-/// Cart widget showing items and checkout button.
+/// Cart widget showing delivery items and checkout button.
 ///
 /// "Aura Daybreak" design:
 /// - White background with right border separator
 /// - Clean header with subtle background
 /// - Soft shadows for floating elements
-class CartWidget extends ConsumerWidget {
-  const CartWidget({super.key});
+class DeliveryCartWidget extends ConsumerWidget {
+  const DeliveryCartWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartState = ref.watch(cartNotifierProvider);
+    final cartState = ref.watch(deliveryCartNotifierProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -40,13 +40,23 @@ class CartWidget extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Cart',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.foreground,
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.local_shipping,
+                      color: AppColors.primary,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Delivery Items',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                  ],
                 ),
                 if (cartState.isNotEmpty)
                   TextButton.icon(
@@ -82,7 +92,7 @@ class CartWidget extends ConsumerWidget {
           borderRadius: BorderRadius.circular(AppColors.radiusLg),
         ),
         title: Text(
-          'Clear Cart',
+          'Clear Delivery Items',
           style: TextStyle(
             color: AppColors.foreground,
             fontWeight: FontWeight.bold,
@@ -102,7 +112,7 @@ class CartWidget extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              ref.read(cartNotifierProvider.notifier).clearCart();
+              ref.read(deliveryCartNotifierProvider.notifier).clearCart();
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
@@ -127,13 +137,13 @@ class _EmptyCart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.shopping_cart_outlined,
+            Icons.inventory_2_outlined,
             size: 64,
             color: AppColors.mutedForeground.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
-            'Cart is empty',
+            'No items added',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -155,7 +165,7 @@ class _EmptyCart extends StatelessWidget {
 }
 
 class _CartItemList extends ConsumerWidget {
-  final List<CartItem> items;
+  final List<DeliveryCartItem> items;
 
   const _CartItemList({required this.items});
 
@@ -177,7 +187,7 @@ class _CartItemList extends ConsumerWidget {
 }
 
 class _CartItemTile extends ConsumerWidget {
-  final CartItem item;
+  final DeliveryCartItem item;
 
   const _CartItemTile({required this.item});
 
@@ -196,7 +206,9 @@ class _CartItemTile extends ConsumerWidget {
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       onDismissed: (_) {
-        ref.read(cartNotifierProvider.notifier).removeItem(item.cartItemId);
+        ref
+            .read(deliveryCartNotifierProvider.notifier)
+            .removeItem(item.cartItemId);
       },
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -220,37 +232,6 @@ class _CartItemTile extends ConsumerWidget {
                 color: AppColors.mutedForeground,
               ),
             ),
-            const SizedBox(height: 2),
-            if (item.isDiscounted && item.discountedPrice != null)
-              Row(
-                children: [
-                  Text(
-                    '₱${item.effectiveUnitPrice.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      decoration: TextDecoration.lineThrough,
-                      color: AppColors.mutedForeground,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '₱${item.discountedPrice!.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.success,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-            else
-              Text(
-                '₱${item.effectiveUnitPrice.toStringAsFixed(0)} / unit',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.mutedForeground,
-                ),
-              ),
           ],
         ),
         trailing: Column(
@@ -258,18 +239,18 @@ class _CartItemTile extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '₱${item.totalPrice.toStringAsFixed(0)}',
+              item.quantityDisplay,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: AppColors.foreground,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 4),
             InkWell(
               onTap: () {
                 ref
-                    .read(cartNotifierProvider.notifier)
+                    .read(deliveryCartNotifierProvider.notifier)
                     .removeItem(item.cartItemId);
               },
               borderRadius: BorderRadius.circular(12),
@@ -294,7 +275,7 @@ class _CartItemTile extends ConsumerWidget {
 }
 
 class _CheckoutSection extends StatelessWidget {
-  final CartState cartState;
+  final DeliveryCartState cartState;
 
   const _CheckoutSection({required this.cartState});
 
@@ -328,9 +309,9 @@ class _CheckoutSection extends StatelessWidget {
                 ),
               ),
               Text(
-                '₱${cartState.totalPrice.toStringAsFixed(0)}',
+                '${cartState.totalQuantity.toStringAsFixed(cartState.totalQuantity % 1 == 0 ? 0 : 2)} units',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
@@ -342,8 +323,8 @@ class _CheckoutSection extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => _navigateToCheckout(context),
-              icon: const Icon(Icons.shopping_cart_checkout),
-              label: const Text('Checkout'),
+              icon: const Icon(Icons.check),
+              label: const Text('Continue'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.primaryForeground,
@@ -363,7 +344,7 @@ class _CheckoutSection extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => const CheckoutPage(),
+        builder: (context) => const DeliveryCheckoutPage(),
       ),
     );
   }

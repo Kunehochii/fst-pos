@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../printer/domain/entities/printer_device.dart';
 import '../../../printer/domain/entities/receipt_line.dart' hide TextAlign;
 import '../../../printer/presentation/providers/printer_provider.dart';
@@ -8,6 +9,11 @@ import '../../domain/entities/payment_method.dart';
 import '../../domain/entities/sale.dart';
 
 /// Receipt preview page shown after a successful sale.
+///
+/// "Aura Daybreak" design:
+/// - Clean white receipt card
+/// - Green success banner
+/// - Orange accent for primary actions
 class ReceiptPreviewPage extends ConsumerStatefulWidget {
   final Sale sale;
   final double? cashTendered;
@@ -39,12 +45,26 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Sale Complete'),
+        backgroundColor: AppColors.card,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Sale Complete',
+          style: TextStyle(
+            color: AppColors.foreground,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: Icon(Icons.close, color: AppColors.foreground),
           onPressed: () =>
               Navigator.of(context).popUntil((route) => route.isFirst),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: AppColors.border),
         ),
       ),
       body: Column(
@@ -53,30 +73,50 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            color: Colors.green[50],
+            decoration: BoxDecoration(
+              color: _printingFailed
+                  ? AppColors.warning.withValues(alpha: 0.1)
+                  : AppColors.success.withValues(alpha: 0.1),
+              border: Border(
+                bottom: BorderSide(color: AppColors.border, width: 1),
+              ),
+            ),
             child: Column(
               children: [
-                Icon(
-                  _printingFailed ? Icons.warning : Icons.check_circle,
-                  size: 64,
-                  color: _printingFailed ? Colors.orange : Colors.green,
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: _printingFailed
+                        ? AppColors.warning.withValues(alpha: 0.2)
+                        : AppColors.success.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _printingFailed ? Icons.warning : Icons.check_circle,
+                    size: 48,
+                    color:
+                        _printingFailed ? AppColors.warning : AppColors.success,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Sale Completed!',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green[800],
-                      ),
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        _printingFailed ? AppColors.warning : AppColors.success,
+                  ),
                 ),
                 if (widget.sale.isSynced == false)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       'Sale saved offline. Will sync when online.',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.orange[700],
-                          ),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.warning,
+                      ),
                     ),
                   ),
                 if (_printingFailed && _printError != null)
@@ -84,9 +124,10 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       'Print failed: $_printError',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.red,
-                          ),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.destructive,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -105,38 +146,65 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
           // Action buttons
           Container(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                if (_printingFailed || !_isPrinting)
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              border: Border(
+                top: BorderSide(color: AppColors.border, width: 1),
+              ),
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  if (_printingFailed || !_isPrinting)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _isPrinting ? null : _printReceipt,
+                        icon: _isPrinting
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(Icons.print),
+                        label:
+                            Text(_isPrinting ? 'Printing...' : 'Print Receipt'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.secondary,
+                          foregroundColor: AppColors.secondaryForeground,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppColors.radiusSm),
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _isPrinting ? null : _printReceipt,
-                      icon: _isPrinting
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Icon(Icons.print),
-                      label:
-                          Text(_isPrinting ? 'Printing...' : 'Print Receipt'),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.primaryForeground,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppColors.radiusSm),
+                        ),
+                      ),
+                      child: const Text('New Sale'),
                     ),
                   ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    },
-                    child: const Text('New Sale'),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -150,30 +218,49 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
         ? widget.cashTendered! - sale.totalAmount
         : null;
 
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+        border: Border.all(color: AppColors.border, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             // Header
             Text(
               'Falsisters',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
+                color: AppColors.foreground,
               ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 4),
             Text(
               'Rice Trading',
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.mutedForeground,
+              ),
               textAlign: TextAlign.center,
             ),
-            const Divider(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: AppColors.border, height: 1),
+            const SizedBox(height: 16),
 
             // Items
             ...sale.saleItems.map((item) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Column(
                     children: [
                       Row(
@@ -182,23 +269,35 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
                           Expanded(
                             child: Text(
                               item.product?.name ?? 'Product',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.foreground,
+                              ),
                             ),
                           ),
-                          Text(item.quantityDisplay),
+                          Text(
+                            item.quantityDisplay,
+                            style: TextStyle(color: AppColors.mutedForeground),
+                          ),
                         ],
                       ),
+                      const SizedBox(height: 2),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             '₱${(item.isDiscounted && item.discountedPrice != null ? item.discountedPrice! : item.price).toStringAsFixed(0)}',
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.mutedForeground,
+                            ),
                           ),
                           Text(
                             '₱${item.totalPrice.toStringAsFixed(0)}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.foreground,
+                            ),
                           ),
                         ],
                       ),
@@ -206,24 +305,28 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
                   ),
                 )),
 
-            const Divider(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: AppColors.border, height: 1),
+            const SizedBox(height: 16),
 
             // Total
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Total',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: AppColors.foreground,
                   ),
                 ),
                 Text(
                   '₱${sale.totalAmount.toStringAsFixed(0)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
                   ),
                 ),
               ],
@@ -232,31 +335,50 @@ class _ReceiptPreviewPageState extends ConsumerState<ReceiptPreviewPage> {
             // Cash tendered and change (only for cash payments)
             if (sale.paymentMethod == PaymentMethod.cash &&
                 widget.cashTendered != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Cash Tendered'),
-                  Text('₱${widget.cashTendered!.toStringAsFixed(0)}'),
+                  Text(
+                    'Cash Tendered',
+                    style: TextStyle(color: AppColors.mutedForeground),
+                  ),
+                  Text(
+                    '₱${widget.cashTendered!.toStringAsFixed(0)}',
+                    style: TextStyle(color: AppColors.foreground),
+                  ),
                 ],
               ),
+              const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Change'),
-                  Text('₱${change!.toStringAsFixed(0)}'),
+                  Text(
+                    'Change',
+                    style: TextStyle(color: AppColors.mutedForeground),
+                  ),
+                  Text(
+                    '₱${change!.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      color: AppColors.success,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ],
 
-            const Divider(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: AppColors.border, height: 1),
+            const SizedBox(height: 16),
 
             // Footer
             Text(
               'Thank You!',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
+                color: AppColors.foreground,
               ),
               textAlign: TextAlign.center,
             ),

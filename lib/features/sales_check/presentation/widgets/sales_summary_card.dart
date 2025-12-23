@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../domain/entities/grouped_sale.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_card.dart';
 import '../../domain/entities/sales_summary.dart';
 
 /// Card widget displaying sales summary totals.
@@ -20,224 +21,349 @@ class SalesSummaryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
 
-    return Card(
-      margin: const EdgeInsets.all(8),
-      color: isOfflineData
-          ? theme.colorScheme.errorContainer.withOpacity(0.3)
-          : theme.colorScheme.primaryContainer.withOpacity(0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with offline warning
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Sales Summary',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (isOfflineData)
+    return AppCard(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with offline warning
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.error,
-                      borderRadius: BorderRadius.circular(12),
+                      color: isOfflineData
+                          ? AppColors.warning.withOpacity(0.1)
+                          : AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(AppColors.radiusSm),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.cloud_off,
-                          size: 14,
-                          color: theme.colorScheme.onError,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Offline',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onError,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    child: Icon(
+                      isOfflineData
+                          ? Icons.analytics_outlined
+                          : Icons.analytics,
+                      size: 20,
+                      color:
+                          isOfflineData ? AppColors.warning : AppColors.primary,
                     ),
                   ),
-              ],
-            ),
-
-            if (isOfflineData) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: theme.colorScheme.error,
-                      size: 20,
+                  const SizedBox(width: 12),
+                  Text(
+                    'Sales Summary',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.foreground,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Showing locally cached sales only. Connect to internet for latest data.',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onErrorContainer,
+                  ),
+                ],
+              ),
+              if (isOfflineData)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning,
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.warning.withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.cloud_off,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Offline',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+            ],
+          ),
+
+          if (isOfflineData) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.warning.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                border: Border.all(
+                  color: AppColors.warning.withOpacity(0.3),
                 ),
               ),
-            ],
-
-            const SizedBox(height: 16),
-
-            // Total amount - big number
-            Center(
-              child: Column(
+              child: Row(
                 children: [
-                  Text(
-                    currencyFormat.format(summary.totalAmount),
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
+                  const Icon(
+                    Icons.warning_amber_rounded,
+                    color: AppColors.warning,
+                    size: 20,
                   ),
-                  Text(
-                    'Total Sales',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Showing locally cached sales only. Connect to internet for latest data.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.foreground,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
+          ],
 
-            const Divider(height: 24),
+          const SizedBox(height: 20),
 
-            // Stats row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // Total amount - big number
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primary.withOpacity(0.05),
+                  AppColors.primary.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(AppColors.radiusMd),
+              border: Border.all(
+                color: AppColors.primary.withOpacity(0.2),
+              ),
+            ),
+            child: Column(
               children: [
-                _buildStatItem(
-                  context,
-                  'Transactions',
-                  summary.transactionCount.toString(),
-                  Icons.receipt_long,
+                Text(
+                  currencyFormat.format(summary.totalAmount),
+                  style: theme.textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                    fontSize: 32,
+                  ),
                 ),
-                _buildStatItem(
-                  context,
-                  'Quantity',
-                  _formatQuantity(summary.totalQuantity),
-                  Icons.inventory,
-                ),
-                _buildStatItem(
-                  context,
-                  'Average',
-                  currencyFormat.format(summary.averageTransaction),
-                  Icons.analytics,
+                const SizedBox(height: 4),
+                Text(
+                  'Total Sales',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.mutedForeground,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
+          ),
 
-            const Divider(height: 24),
+          const SizedBox(height: 20),
 
-            // Payment breakdown
-            Text(
-              'Payment Breakdown',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
+          // Stats row with table-like borders
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.border),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildStatCell(
+                    context,
+                    'Transactions',
+                    summary.transactionCount.toString(),
+                    Icons.receipt_long,
+                    showRightBorder: true,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCell(
+                    context,
+                    'Quantity',
+                    _formatQuantity(summary.totalQuantity),
+                    Icons.inventory,
+                    showRightBorder: true,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCell(
+                    context,
+                    'Average',
+                    currencyFormat.format(summary.averageTransaction),
+                    Icons.analytics,
+                    showRightBorder: false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Payment breakdown header
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Icon(
+                  Icons.payments_outlined,
+                  size: 16,
+                  color: AppColors.secondary,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
+              const SizedBox(width: 8),
+              Text(
+                'Payment Breakdown',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
 
-            _buildPaymentRow(
-              context,
-              'Cash',
-              summary.paymentTotals.cash,
-              Icons.money,
-              Colors.green,
+          // Payment breakdown with table borders
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.border),
+              borderRadius: BorderRadius.circular(AppColors.radiusSm),
             ),
-            _buildPaymentRow(
-              context,
-              'Check',
-              summary.paymentTotals.check,
-              Icons.fact_check,
-              Colors.blue,
+            child: Column(
+              children: [
+                _buildPaymentTableRow(
+                  context,
+                  'Cash',
+                  summary.paymentTotals.cash,
+                  Icons.money,
+                  AppColors.success,
+                  showBottomBorder: true,
+                ),
+                _buildPaymentTableRow(
+                  context,
+                  'Check',
+                  summary.paymentTotals.check,
+                  Icons.fact_check,
+                  AppColors.info,
+                  showBottomBorder: true,
+                ),
+                _buildPaymentTableRow(
+                  context,
+                  'Bank Transfer',
+                  summary.paymentTotals.bankTransfer,
+                  Icons.account_balance,
+                  AppColors.primary,
+                  showBottomBorder: false,
+                ),
+              ],
             ),
-            _buildPaymentRow(
-              context,
-              'Bank Transfer',
-              summary.paymentTotals.bankTransfer,
-              Icons.account_balance,
-              Colors.orange,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildStatItem(
+  Widget _buildStatCell(
     BuildContext context,
     String label,
     String value,
-    IconData icon,
-  ) {
+    IconData icon, {
+    required bool showRightBorder,
+  }) {
     final theme = Theme.of(context);
 
-    return Column(
-      children: [
-        Icon(icon, size: 24, color: theme.colorScheme.primary),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      decoration: BoxDecoration(
+        border: showRightBorder
+            ? const Border(right: BorderSide(color: AppColors.border))
+            : null,
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 22, color: AppColors.primary),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.foreground,
+            ),
           ),
-        ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: AppColors.mutedForeground,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildPaymentRow(
+  Widget _buildPaymentTableRow(
     BuildContext context,
     String label,
     double amount,
     IconData icon,
-    Color color,
-  ) {
+    Color color, {
+    required bool showBottomBorder,
+  }) {
     final theme = Theme.of(context);
     final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        border: showBottomBorder
+            ? const Border(bottom: BorderSide(color: AppColors.border))
+            : null,
+      ),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: color),
-          const SizedBox(width: 8),
-          Expanded(child: Text(label)),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Icon(icon, size: 16, color: color),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.foreground,
+              ),
+            ),
+          ),
           Text(
             currencyFormat.format(amount),
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w600,
+              color: AppColors.foreground,
             ),
           ),
         ],

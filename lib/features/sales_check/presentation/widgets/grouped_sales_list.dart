@@ -1,6 +1,10 @@
+// ignore_for_file: unused_local_variable, unused_element
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/app_card.dart';
 import '../../domain/entities/grouped_sale.dart';
 
 /// Widget for displaying grouped sales in a list format.
@@ -17,25 +21,42 @@ class GroupedSalesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (groupedSales.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'No sales found',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
+      return Center(
+        child: AppCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.muted,
+                  borderRadius: BorderRadius.circular(AppColors.radiusLg),
+                ),
+                child: const Icon(
+                  Icons.receipt_long_outlined,
+                  size: 48,
+                  color: AppColors.mutedForeground,
+                ),
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Try adjusting your filters',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                'No sales found',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.foreground,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Try adjusting your filters',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.mutedForeground,
+                    ),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -45,17 +66,186 @@ class GroupedSalesList extends StatelessWidget {
       return _buildGroupedByProductView(context);
     }
 
-    // For other views, use simple list
-    return _buildSimpleListView(context);
+    // For other views, use table view with numbered rows
+    return _buildTableView(context);
   }
 
-  Widget _buildSimpleListView(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 16),
-      itemCount: groupedSales.length,
-      itemBuilder: (context, index) {
-        return GroupedSaleCard(sale: groupedSales[index]);
-      },
+  Widget _buildTableView(BuildContext context) {
+    final theme = Theme.of(context);
+    final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
+
+    return AppCard(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          // Table Header
+          Container(
+            decoration: const BoxDecoration(
+              color: AppColors.muted,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(AppColors.radiusLg),
+                topRight: Radius.circular(AppColors.radiusLg),
+              ),
+            ),
+            child: Row(
+              children: [
+                _buildTableHeaderCell('#',
+                    flex: 1, alignment: Alignment.center),
+                _buildTableHeaderCell('Product', flex: 4),
+                _buildTableHeaderCell('Qty',
+                    flex: 2, alignment: Alignment.centerRight),
+                _buildTableHeaderCell('Txns',
+                    flex: 1, alignment: Alignment.center),
+                _buildTableHeaderCell('Amount',
+                    flex: 3, alignment: Alignment.centerRight),
+              ],
+            ),
+          ),
+          // Table Body
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: groupedSales.length,
+              itemBuilder: (context, index) {
+                final sale = groupedSales[index];
+                final isLast = index == groupedSales.length - 1;
+                final rowNumber = index + 1;
+
+                return InkWell(
+                  onTap: () => _showSaleDetailsSheet(context, sale),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: index.isEven
+                          ? AppColors.card
+                          : AppColors.muted.withOpacity(0.5),
+                      border: isLast
+                          ? null
+                          : const Border(
+                              bottom: BorderSide(color: AppColors.border),
+                            ),
+                    ),
+                    child: Row(
+                      children: [
+                        _buildTableCell(
+                          rowNumber.toString(),
+                          flex: 1,
+                          alignment: Alignment.center,
+                          isRowNumber: true,
+                        ),
+                        _buildTableCell(
+                          sale.productName,
+                          flex: 4,
+                          isBold: true,
+                        ),
+                        _buildTableCell(
+                          _formatQuantity(sale.totalQuantity),
+                          flex: 2,
+                          alignment: Alignment.centerRight,
+                        ),
+                        _buildTableCell(
+                          sale.transactionCount.toString(),
+                          flex: 1,
+                          alignment: Alignment.center,
+                        ),
+                        _buildTableCell(
+                          currencyFormat.format(sale.totalAmount),
+                          flex: 3,
+                          alignment: Alignment.centerRight,
+                          isPrimary: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTableHeaderCell(
+    String text, {
+    required int flex,
+    Alignment alignment = Alignment.centerLeft,
+  }) {
+    return Expanded(
+      flex: flex,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        decoration: const BoxDecoration(
+          border: Border(
+            right: BorderSide(color: AppColors.border),
+          ),
+        ),
+        alignment: alignment,
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+            color: AppColors.mutedForeground,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTableCell(
+    String text, {
+    required int flex,
+    Alignment alignment = Alignment.centerLeft,
+    bool isBold = false,
+    bool isPrimary = false,
+    bool isRowNumber = false,
+  }) {
+    return Expanded(
+      flex: flex,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        decoration: const BoxDecoration(
+          border: Border(
+            right: BorderSide(color: AppColors.border),
+          ),
+        ),
+        alignment: alignment,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight:
+                isBold || isPrimary ? FontWeight.w600 : FontWeight.normal,
+            fontSize: isRowNumber ? 12 : 13,
+            color: isRowNumber
+                ? AppColors.mutedForeground
+                : isPrimary
+                    ? AppColors.primary
+                    : AppColors.foreground,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
+
+  void _showSaleDetailsSheet(BuildContext context, GroupedSale sale) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.4,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) {
+          return GroupedSaleDetailSheet(
+            sale: sale,
+            scrollController: scrollController,
+          );
+        },
+      ),
     );
   }
 
@@ -64,18 +254,25 @@ class GroupedSalesList extends StatelessWidget {
     final grouped = _groupByBaseName(groupedSales);
     final productNames = grouped.keys.toList();
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 16),
-      itemCount: productNames.length,
-      itemBuilder: (context, index) {
-        final productName = productNames[index];
-        final variants = grouped[productName]!;
+    return AppCard(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.zero,
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: productNames.length,
+        itemBuilder: (context, index) {
+          final productName = productNames[index];
+          final variants = grouped[productName]!;
+          final isLast = index == productNames.length - 1;
 
-        return _ProductGroupSection(
-          productName: productName,
-          variants: variants,
-        );
-      },
+          return _ProductGroupSection(
+            index: index + 1,
+            productName: productName,
+            variants: variants,
+            isLast: isLast,
+          );
+        },
+      ),
     );
   }
 
@@ -125,16 +322,27 @@ class GroupedSalesList extends StatelessWidget {
     if (productName.contains('Per Kilo')) return 3;
     return 5;
   }
+
+  String _formatQuantity(double quantity) {
+    if (quantity == quantity.roundToDouble()) {
+      return '${quantity.toInt()} units';
+    }
+    return '${quantity.toStringAsFixed(2)} units';
+  }
 }
 
 /// Section widget for a product with its variants.
 class _ProductGroupSection extends StatelessWidget {
+  final int index;
   final String productName;
   final List<GroupedSale> variants;
+  final bool isLast;
 
   const _ProductGroupSection({
+    required this.index,
     required this.productName,
     required this.variants,
+    required this.isLast,
   });
 
   @override
@@ -147,65 +355,270 @@ class _ProductGroupSection extends StatelessWidget {
       0,
       (sum, v) => sum + v.totalAmount,
     );
+    final totalQuantity = variants.fold<double>(
+      0,
+      (sum, v) => sum + v.totalQuantity,
+    );
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: ExpansionTile(
-        title: Text(
-          productName,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+    return Container(
+      decoration: BoxDecoration(
+        border: isLast
+            ? null
+            : const Border(
+                bottom: BorderSide(color: AppColors.border),
+              ),
+      ),
+      child: Theme(
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          childrenPadding: EdgeInsets.zero,
+          leading: Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              index.toString(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: AppColors.primary,
+              ),
+            ),
           ),
-        ),
-        subtitle: Text(
-          '${variants.length} variants • ${currencyFormat.format(totalAmount)}',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.primary,
+          title: Text(
+            productName,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.foreground,
+            ),
           ),
+          subtitle: Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.muted,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Text(
+                  '${variants.length} variants',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: AppColors.mutedForeground,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  _formatQuantity(totalQuantity),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          trailing: Text(
+            currencyFormat.format(totalAmount),
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+          children: [
+            // Variants table header
+            Container(
+              color: AppColors.muted,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                children: [
+                  const SizedBox(width: 40), // Indent for alignment
+                  const Expanded(
+                    flex: 3,
+                    child: Text(
+                      'Variant',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.mutedForeground,
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Qty',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.mutedForeground,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Txns',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.mutedForeground,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Amount',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.mutedForeground,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Variant rows
+            ...variants.asMap().entries.map((entry) {
+              final variantIndex = entry.key;
+              final variant = entry.value;
+              return _VariantTableRow(
+                rowNumber: variantIndex + 1,
+                sale: variant,
+                isLast: variantIndex == variants.length - 1,
+              );
+            }),
+          ],
         ),
-        children: variants.map((variant) {
-          return _VariantTile(sale: variant);
-        }).toList(),
       ),
     );
   }
+
+  String _formatQuantity(double quantity) {
+    if (quantity == quantity.roundToDouble()) {
+      return '${quantity.toInt()} units';
+    }
+    return '${quantity.toStringAsFixed(2)} units';
+  }
+
+  String _formatItemQuantity(double quantity) {
+    if (quantity == quantity.roundToDouble()) {
+      return '${quantity.toInt()} units';
+    }
+    return '${quantity.toStringAsFixed(2)} kg';
+  }
 }
 
-/// Tile widget for a single variant within a product group.
-class _VariantTile extends StatelessWidget {
+/// A table row displaying a variant's details.
+class _VariantTableRow extends StatelessWidget {
+  final int rowNumber;
   final GroupedSale sale;
+  final bool isLast;
 
-  const _VariantTile({required this.sale});
+  const _VariantTableRow({
+    required this.rowNumber,
+    required this.sale,
+    required this.isLast,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
 
-    // Extract variant name (the suffix)
-    final variantName = _extractVariantName(sale.productName);
-
-    return ListTile(
-      dense: true,
-      title: Text(variantName),
-      subtitle: Text('${sale.transactionCount} transactions'),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+    return Container(
+      decoration: BoxDecoration(
+        border: isLast
+            ? null
+            : const Border(
+                bottom: BorderSide(color: AppColors.border, width: 0.5),
+              ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
         children: [
-          Text(
-            currencyFormat.format(sale.totalAmount),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
+          SizedBox(
+            width: 40,
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: AppColors.muted,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.border),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                rowNumber.toString(),
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.mutedForeground,
+                ),
+              ),
             ),
           ),
-          Text(
-            _formatQuantity(sale.totalQuantity),
-            style: theme.textTheme.bodySmall,
+          Expanded(
+            flex: 3,
+            child: Text(
+              _extractVariantName(sale.productName),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.foreground,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              _formatQuantity(sale.totalQuantity),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.mutedForeground,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              sale.transactionCount.toString(),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.mutedForeground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              currencyFormat.format(sale.totalAmount),
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
+              textAlign: TextAlign.right,
+            ),
           ),
         ],
       ),
-      onTap: () => _showSaleDetails(context),
     );
   }
 
@@ -231,275 +644,7 @@ class _VariantTile extends StatelessWidget {
     if (quantity == quantity.roundToDouble()) {
       return '${quantity.toInt()} units';
     }
-    return '${quantity.toStringAsFixed(2)} units';
-  }
-
-  void _showSaleDetails(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        minChildSize: 0.3,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) {
-          return GroupedSaleDetailSheet(
-            sale: sale,
-            scrollController: scrollController,
-          );
-        },
-      ),
-    );
-  }
-}
-
-/// Card widget for displaying a single grouped sale.
-class GroupedSaleCard extends StatelessWidget {
-  final GroupedSale sale;
-
-  const GroupedSaleCard({super.key, required this.sale});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: ExpansionTile(
-        title: Text(
-          sale.productName,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        subtitle: Row(
-          children: [
-            Text(
-              '${sale.transactionCount} transactions',
-              style: theme.textTheme.bodySmall,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '•',
-              style: theme.textTheme.bodySmall,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              _formatQuantity(sale.totalQuantity),
-              style: theme.textTheme.bodySmall,
-            ),
-          ],
-        ),
-        trailing: Text(
-          currencyFormat.format(sale.totalAmount),
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Payment breakdown
-                _buildPaymentBreakdown(context, sale.paymentTotals),
-                const Divider(),
-                // Recent items
-                Text(
-                  'Recent Sales (${sale.items.length})',
-                  style: theme.textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                ...sale.items
-                    .take(5)
-                    .map((item) => _buildItemRow(context, item)),
-                if (sale.items.length > 5)
-                  TextButton(
-                    onPressed: () => _showAllItems(context),
-                    child: Text('View all ${sale.items.length} items'),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentBreakdown(BuildContext context, PaymentTotals totals) {
-    final theme = Theme.of(context);
-    final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        if (totals.hasCash)
-          _buildPaymentChip(
-            context,
-            'Cash',
-            currencyFormat.format(totals.cash),
-            Colors.green,
-          ),
-        if (totals.hasCheck)
-          _buildPaymentChip(
-            context,
-            'Check',
-            currencyFormat.format(totals.check),
-            Colors.blue,
-          ),
-        if (totals.hasBankTransfer)
-          _buildPaymentChip(
-            context,
-            'Bank',
-            currencyFormat.format(totals.bankTransfer),
-            Colors.orange,
-          ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentChip(
-    BuildContext context,
-    String label,
-    String amount,
-    Color color,
-  ) {
-    return Chip(
-      avatar: CircleAvatar(
-        backgroundColor: color,
-        radius: 10,
-        child: Icon(
-          label == 'Cash'
-              ? Icons.money
-              : label == 'Check'
-                  ? Icons.fact_check
-                  : Icons.account_balance,
-          size: 12,
-          color: Colors.white,
-        ),
-      ),
-      label: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 10)),
-          Text(amount,
-              style:
-                  const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildItemRow(BuildContext context, GroupedSaleItem item) {
-    final theme = Theme.of(context);
-    final dateFormat = DateFormat('MMM d, HH:mm');
-    final currencyFormat = NumberFormat.currency(symbol: '₱', decimalDigits: 2);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  dateFormat.format(item.saleDate.toLocal()),
-                  style: theme.textTheme.bodySmall,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      _formatItemQuantity(item.quantity),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    if (item.isSpecialPrice) ...[
-                      const SizedBox(width: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 1,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.purple.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          'SP',
-                          style: TextStyle(fontSize: 9, color: Colors.purple),
-                        ),
-                      ),
-                    ],
-                    if (item.isDiscounted) ...[
-                      const SizedBox(width: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 1,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          'D',
-                          style: TextStyle(fontSize: 9, color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Text(
-            currencyFormat.format(item.totalAmount),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _formatQuantity(double quantity) {
-    if (quantity == quantity.roundToDouble()) {
-      return '${quantity.toInt()} total';
-    }
-    return '${quantity.toStringAsFixed(2)} total';
-  }
-
-  String _formatItemQuantity(double quantity) {
-    if (quantity == quantity.roundToDouble()) {
-      return '${quantity.toInt()} units';
-    }
     return '${quantity.toStringAsFixed(2)} kg';
-  }
-
-  void _showAllItems(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        minChildSize: 0.3,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) {
-          return GroupedSaleDetailSheet(
-            sale: sale,
-            scrollController: scrollController,
-          );
-        },
-      ),
-    );
   }
 }
 
@@ -522,109 +667,254 @@ class GroupedSaleDetailSheet extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        color: AppColors.card,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppColors.radiusXl),
+        ),
       ),
       child: Column(
         children: [
           // Handle
           Container(
-            margin: const EdgeInsets.only(top: 8),
+            margin: const EdgeInsets.only(top: 12),
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+              color: AppColors.border,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
 
           // Header
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  sale.productName,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${sale.items.length} transactions'),
-                    Text(
-                      currencyFormat.format(sale.totalAmount),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                      ),
+                      child: const Icon(
+                        Icons.receipt_long,
+                        size: 20,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        sale.productName,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
+                        ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                    border:
+                        Border.all(color: AppColors.primary.withOpacity(0.2)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${sale.items.length} transactions',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.foreground,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            _formatQuantity(sale.totalQuantity),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: AppColors.mutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        currencyFormat.format(sale.totalAmount),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
 
-          const Divider(height: 1),
+          // Table header
+          Container(
+            color: AppColors.muted,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 36,
+                  child: Text(
+                    '#',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.mutedForeground,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Expanded(
+                  flex: 3,
+                  child: Text(
+                    'Date / Details',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.mutedForeground,
+                    ),
+                  ),
+                ),
+                const Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Amount',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.mutedForeground,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
+          ),
 
           // Items list
           Expanded(
-            child: ListView.separated(
+            child: ListView.builder(
               controller: scrollController,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.zero,
               itemCount: sale.items.length,
-              separatorBuilder: (_, __) => const Divider(height: 16),
               itemBuilder: (context, index) {
                 final item = sale.items[index];
+                final rowNumber = index + 1;
+                final isLast = index == sale.items.length - 1;
 
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            dateFormat.format(item.saleDate.toLocal()),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: rowNumber.isEven
+                        ? AppColors.muted.withOpacity(0.3)
+                        : AppColors.card,
+                    border: isLast
+                        ? null
+                        : const Border(
+                            bottom: BorderSide(color: AppColors.border),
+                          ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Row number
+                      SizedBox(
+                        width: 36,
+                        child: Container(
+                          width: 26,
+                          height: 26,
+                          decoration: BoxDecoration(
+                            color: AppColors.muted,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            rowNumber.toString(),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.mutedForeground,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(item.formattedSale),
-                          const SizedBox(height: 4),
-                          Wrap(
-                            spacing: 4,
-                            children: [
-                              _buildMethodChip(item.paymentMethod.displayName),
-                              if (item.isSpecialPrice)
-                                _buildTagChip('Special Price', Colors.purple),
-                              if (item.isDiscounted)
-                                _buildTagChip('Discounted', Colors.red),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          currencyFormat.format(item.totalAmount),
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              dateFormat.format(item.saleDate.toLocal()),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: AppColors.mutedForeground,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item.formattedSale,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: AppColors.foreground,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              children: [
+                                _buildMethodChip(
+                                    item.paymentMethod.displayName),
+                                if (item.isSpecialPrice)
+                                  _buildTagChip('Special Price', Colors.purple),
+                                if (item.isDiscounted)
+                                  _buildTagChip(
+                                      'Discounted', AppColors.destructive),
+                              ],
+                            ),
+                          ],
                         ),
-                        Text(
-                          '@ ${currencyFormat.format(item.unitPrice)}',
-                          style: theme.textTheme.bodySmall,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              currencyFormat.format(item.totalAmount),
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '@ ${currencyFormat.format(item.unitPrice)}',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: AppColors.mutedForeground,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -634,30 +924,46 @@ class GroupedSaleDetailSheet extends StatelessWidget {
     );
   }
 
+  String _formatQuantity(double quantity) {
+    if (quantity == quantity.roundToDouble()) {
+      return '${quantity.toInt()} units sold';
+    }
+    return '${quantity.toStringAsFixed(2)} units sold';
+  }
+
   Widget _buildMethodChip(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.2),
+        color: AppColors.muted,
         borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.border),
       ),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 10),
+        style: const TextStyle(
+          fontSize: 10,
+          color: AppColors.foreground,
+        ),
       ),
     );
   }
 
   Widget _buildTagChip(String label, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 10, color: color),
+        style: TextStyle(
+          fontSize: 10,
+          color: color,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

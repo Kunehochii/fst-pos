@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../../domain/entities/bill_count.dart';
 
 /// Widget for displaying bill count summary.
+///
+/// Styled with "Aura Daybreak" design:
+/// - Pure white card with soft shadow
+/// - Deep Navy text for high contrast
+/// - Orange accents for primary values
+/// - Emerald/Rose for positive/negative differences
 class BillCountSummaryCard extends StatelessWidget {
   final BillCount billCount;
 
@@ -13,188 +21,263 @@ class BillCountSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                Icon(
+    return AppCard(
+      padding: const EdgeInsets.all(20),
+      elevation: 1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
                   Icons.receipt_long,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: AppColors.primary,
+                  size: 22,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Bill Count Summary',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                if (!billCount.isSynced)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.sync_problem,
-                          size: 14,
-                          color: Colors.orange,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Pending Sync',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: Colors.orange,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 8),
-
-            // Bills Breakdown
-            ...BillType.values.map((type) => _buildBillRow(context, type)),
-
-            const Divider(),
-            const SizedBox(height: 8),
-
-            // Bills Total
-            _buildSummaryRow(
-              context,
-              'Bills Total',
-              billCount.billsTotalDisplay,
-              isBold: true,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-
-            // Beginning Balance (if shown)
-            if (billCount.showBeginningBalance) ...[
-              const SizedBox(height: 4),
-              _buildSummaryRow(
-                context,
-                'Beginning Balance',
-                '- ${billCount.beginningBalanceDisplay}',
-                color: Theme.of(context).colorScheme.error,
               ),
-            ],
-
-            const Divider(),
-            const SizedBox(height: 8),
-
-            // Step 1: Bills - Beginning Balance
-            _buildSummaryRow(
-              context,
-              'Subtotal (Bills${billCount.showBeginningBalance ? ' - Beginning' : ''})',
-              billCount.summaryStep1Display,
-            ),
-
-            const SizedBox(height: 4),
-
-            // Total Expenses
-            _buildSummaryRow(
-              context,
-              'Total Expenses',
-              '+ ${billCount.totalExpensesDisplay}',
-              color: Theme.of(context).colorScheme.error,
-            ),
-
-            const Divider(),
-            const SizedBox(height: 8),
-
-            // Final Total
-            _buildSummaryRow(
-              context,
-              'Final Total',
-              billCount.summaryFinalDisplay,
-              isBold: true,
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 18,
-            ),
-
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 8),
-
-            // Comparison Section
-            Text(
-              'Comparison with Sales',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Bill Count Summary',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.foreground,
                   ),
-            ),
+                ),
+              ),
+              if (!billCount.isSynced)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.warning.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.sync_problem,
+                        size: 14,
+                        color: AppColors.warning,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Pending Sync',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.warning,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Divider
+          Container(
+            height: 1,
+            color: AppColors.border,
+          ),
+          const SizedBox(height: 16),
+
+          // Bills Breakdown
+          ...BillType.values.map((type) => _buildBillRow(context, type)),
+
+          Container(
+            height: 1,
+            color: AppColors.border,
+          ),
+          const SizedBox(height: 12),
+
+          // Bills Total
+          _buildSummaryRow(
+            context,
+            'Bills Total',
+            billCount.billsTotalDisplay,
+            isBold: true,
+            color: AppColors.primary,
+          ),
+
+          // Beginning Balance (if shown)
+          if (billCount.showBeginningBalance) ...[
             const SizedBox(height: 8),
-
             _buildSummaryRow(
               context,
-              'Net Cash (Sales - Expenses)',
-              billCount.netCashDisplay,
+              'Beginning Balance',
+              '- ${billCount.beginningBalanceDisplay}',
+              color: AppColors.destructive,
             ),
+          ],
 
-            const SizedBox(height: 4),
+          const SizedBox(height: 12),
+          Container(
+            height: 1,
+            color: AppColors.border,
+          ),
+          const SizedBox(height: 12),
 
-            _buildSummaryRow(
-              context,
-              'Difference',
-              billCount.differenceDisplay,
-              isBold: true,
-              color: billCount.difference >= 0 ? Colors.green : Colors.red,
+          // Step 1: Bills - Beginning Balance
+          _buildSummaryRow(
+            context,
+            'Subtotal (Bills${billCount.showBeginningBalance ? ' - Beginning' : ''})',
+            billCount.summaryStep1Display,
+          ),
+
+          const SizedBox(height: 8),
+
+          // Total Expenses
+          _buildSummaryRow(
+            context,
+            'Total Expenses',
+            '+ ${billCount.totalExpensesDisplay}',
+            color: AppColors.destructive,
+          ),
+
+          const SizedBox(height: 12),
+          Container(
+            height: 1,
+            color: AppColors.border,
+          ),
+          const SizedBox(height: 12),
+
+          // Final Total
+          _buildSummaryRow(
+            context,
+            'Final Total',
+            billCount.summaryFinalDisplay,
+            isBold: true,
+            color: AppColors.primary,
+            fontSize: 18,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Section Divider
+          Container(
+            height: 2,
+            decoration: BoxDecoration(
+              color: AppColors.border,
+              borderRadius: BorderRadius.circular(1),
             ),
+          ),
+          const SizedBox(height: 16),
 
-            if (billCount.difference.abs() > 0.01) ...[
-              const SizedBox(height: 8),
+          // Comparison Section
+          Row(
+            children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (billCount.difference >= 0 ? Colors.green : Colors.red)
-                      .withOpacity(0.1),
+                  color: AppColors.secondary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
+                child: Icon(
+                  Icons.compare_arrows,
+                  size: 18,
+                  color: AppColors.secondary,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Comparison with Sales',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.foreground,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          _buildSummaryRow(
+            context,
+            'Net Cash (Sales - Expenses)',
+            billCount.netCashDisplay,
+          ),
+
+          const SizedBox(height: 8),
+
+          _buildSummaryRow(
+            context,
+            'Difference',
+            billCount.differenceDisplay,
+            isBold: true,
+            color: billCount.difference >= 0
+                ? AppColors.success
+                : AppColors.destructive,
+          ),
+
+          if (billCount.difference.abs() > 0.01) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: billCount.difference >= 0
+                    ? AppColors.success.withValues(alpha: 0.1)
+                    : AppColors.destructive.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppColors.radiusSm),
+                border: Border.all(
+                  color: billCount.difference >= 0
+                      ? AppColors.success.withValues(alpha: 0.2)
+                      : AppColors.destructive.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: billCount.difference >= 0
+                          ? AppColors.success.withValues(alpha: 0.2)
+                          : AppColors.destructive.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
                       billCount.difference >= 0
                           ? Icons.arrow_upward
                           : Icons.arrow_downward,
                       size: 16,
-                      color:
-                          billCount.difference >= 0 ? Colors.green : Colors.red,
+                      color: billCount.difference >= 0
+                          ? AppColors.success
+                          : AppColors.destructive,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        billCount.difference >= 0
-                            ? 'Over by ${billCount.differenceDisplay}'
-                            : 'Short by ₱${billCount.difference.abs().toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: billCount.difference >= 0
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontWeight: FontWeight.w500,
-                            ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      billCount.difference >= 0
+                          ? 'Over by ${billCount.differenceDisplay}'
+                          : 'Short by ₱${billCount.difference.abs().toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: billCount.difference >= 0
+                            ? AppColors.success
+                            : AppColors.destructive,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -206,30 +289,45 @@ class BillCountSummaryCard extends StatelessWidget {
     if (amount == 0) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          SizedBox(
+          Container(
             width: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: type == BillType.peso1
+                  ? AppColors.secondary.withValues(alpha: 0.1)
+                  : AppColors.muted,
+              borderRadius: BorderRadius.circular(6),
+            ),
             child: Text(
               type.displayName,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: type == BillType.peso1
-                        ? Theme.of(context).colorScheme.secondary
-                        : null,
-                  ),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: type == BillType.peso1
+                    ? AppColors.secondary
+                    : AppColors.foreground,
+              ),
             ),
           ),
+          const SizedBox(width: 12),
           Text(
             'x $amount',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.mutedForeground,
+            ),
           ),
           const Spacer(),
           Text(
             '₱${totalValue.toStringAsFixed(0)}',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColors.foreground,
+            ),
           ),
         ],
       ),
@@ -249,17 +347,19 @@ class BillCountSummaryCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: isBold ? FontWeight.bold : null,
-              ),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
+            color: AppColors.foreground,
+          ),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-                color: color,
-                fontSize: fontSize,
-              ),
+          style: TextStyle(
+            fontSize: fontSize ?? 14,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+            color: color ?? AppColors.foreground,
+          ),
         ),
       ],
     );

@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/widgets.dart';
-import '../../domain/entities/employee.dart';
 import '../../domain/entities/shift.dart';
 import '../providers/shift_provider.dart';
 import '../widgets/time_in_modal.dart';
@@ -201,25 +200,91 @@ class _ActiveShiftViewState extends ConsumerState<_ActiveShiftView> {
   Future<void> _handleTimeOut() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('End Shift?'),
-        content: const Text(
-          'Are you sure you want to end your current shift? This action cannot be undone.',
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(AppColors.radiusLg),
+            border: Border.all(color: AppColors.border),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: AppColors.destructive.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: Icon(
+                        Icons.logout,
+                        size: 28,
+                        color: AppColors.destructive,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'End Shift?',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.foreground,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Are you sure you want to end your current shift? This action cannot be undone.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Actions
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: AppColors.border)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: AppButton.secondary(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: AppButton.destructive(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('End Shift'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.destructive,
-              foregroundColor: AppColors.destructiveForeground,
-            ),
-            child: const Text('End Shift'),
-          ),
-        ],
       ),
     );
 
@@ -227,9 +292,8 @@ class _ActiveShiftViewState extends ConsumerState<_ActiveShiftView> {
 
     setState(() => _isEndingShift = true);
 
-    final failure = await ref
-        .read(shiftNotifierProvider.notifier)
-        .timeOut(widget.shift.id);
+    final failure =
+        await ref.read(shiftNotifierProvider.notifier).timeOut(widget.shift.id);
 
     if (!mounted) return;
     setState(() => _isEndingShift = false);
@@ -300,102 +364,93 @@ class _ActiveShiftViewState extends ConsumerState<_ActiveShiftView> {
             // Active shift status card
             AppCard(
               elevation: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppColors.radiusLg),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.primary,
-                      AppColors.primary.withOpacity(0.85),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // Status badge with light background
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.success.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.success.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: AppColors.success,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Active Shift',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.success,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        Icons.timer,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${hours}h ${minutes}m',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.success,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Active Shift',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.successForeground,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          Icons.timer,
-                          color: AppColors.primaryForeground.withOpacity(0.8),
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${hours}h ${minutes}m',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryForeground,
-                          ),
-                        ),
-                      ],
+                  const SizedBox(height: 24),
+                  Text(
+                    dateFormat.format(widget.shift.startTime.toLocal()),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.mutedForeground,
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      dateFormat.format(widget.shift.startTime.toLocal()),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.primaryForeground.withOpacity(0.9),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.login,
+                        size: 18,
+                        color: AppColors.primary,
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.login,
-                          size: 18,
-                          color: AppColors.primaryForeground.withOpacity(0.8),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Started at ${timeFormat.format(widget.shift.startTime.toLocal())}',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.foreground,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Started at ${timeFormat.format(widget.shift.startTime.toLocal())}',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryForeground,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 24),
@@ -474,7 +529,8 @@ class _ActiveShiftViewState extends ConsumerState<_ActiveShiftView> {
                             size: 20,
                             color: AppColors.destructiveForeground,
                           ),
-                    child: Text(_isEndingShift ? 'Ending Shift...' : 'Time Out'),
+                    child:
+                        Text(_isEndingShift ? 'Ending Shift...' : 'Time Out'),
                   ),
                 ],
               ),
@@ -491,9 +547,8 @@ class _ActiveShiftViewState extends ConsumerState<_ActiveShiftView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: index > 0
-            ? Border(top: BorderSide(color: AppColors.border))
-            : null,
+        border:
+            index > 0 ? Border(top: BorderSide(color: AppColors.border)) : null,
       ),
       child: Row(
         children: [
