@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,7 +12,6 @@ import '../../data/datasources/sheet_remote_datasource.dart';
 import '../../data/repositories/sheet_repository_impl.dart';
 import '../../domain/entities/formula.dart';
 import '../../domain/entities/number_format.dart';
-import '../../domain/entities/quick_formula.dart';
 import '../../domain/entities/sheet.dart';
 import '../../domain/repositories/sheet_repository.dart';
 

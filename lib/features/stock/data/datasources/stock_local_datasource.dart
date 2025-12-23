@@ -6,7 +6,6 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/transfer.dart';
 import '../models/transfer_model.dart';
-import 'stock_tables.dart';
 
 /// Local data source for transfer operations using Drift.
 class StockLocalDataSource {

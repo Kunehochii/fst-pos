@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/widgets.dart';
-import '../../domain/entities/employee.dart';
 import '../../domain/entities/shift.dart';
 import '../providers/shift_provider.dart';
 import '../widgets/time_in_modal.dart';
