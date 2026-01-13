@@ -79,6 +79,26 @@ class PrinterRepositoryImpl implements PrinterRepository {
   }
 
   @override
+  Future<bool> requestBluetoothPermissions() async {
+    return await _dataSource.requestBluetoothPermissions();
+  }
+
+  @override
+  Future<String> getBluetoothStatus() async {
+    final state = await _dataSource.getBluetoothAvailabilityStatus();
+    switch (state) {
+      case 'poweredOn':
+        return 'Bluetooth is on';
+      case 'poweredOff':
+        return 'Bluetooth is off. Please turn on Bluetooth.';
+      case 'unauthorized':
+        return 'Bluetooth permission denied. Please grant Bluetooth permissions in Settings.';
+      default:
+        return 'Bluetooth status unknown. Please check your device settings.';
+    }
+  }
+
+  @override
   Future<void> dispose() async {
     await _dataSource.dispose();
   }

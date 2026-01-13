@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../../printer/domain/entities/printer_device.dart';
-import '../../../printer/domain/entities/receipt_line.dart';
+// ignore: unused_import
+import '../../../printer/domain/entities/receipt_line.dart' hide TextAlign;
 import '../../../printer/presentation/providers/printer_provider.dart';
 import '../providers/settings_provider.dart';
 
@@ -23,6 +24,8 @@ class SettingsPage extends ConsumerStatefulWidget {
 }
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
+  String? _connectingPrinterId;
+
   @override
   void initState() {
     super.initState();
@@ -708,18 +711,24 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: AppColors.destructive.withValues(alpha: 0.1),
+                color: printerListState.errorType ==
+                        PrinterListErrorType.bluetoothOff
+                    ? AppColors.warning.withValues(alpha: 0.1)
+                    : AppColors.destructive.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(28),
               ),
               child: Icon(
-                Icons.error_outline,
+                _getErrorIcon(printerListState.errorType),
                 size: 28,
-                color: AppColors.destructive,
+                color: printerListState.errorType ==
+                        PrinterListErrorType.bluetoothOff
+                    ? AppColors.warning
+                    : AppColors.destructive,
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              'Scan failed',
+              _getErrorTitle(printerListState.errorType),
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: AppColors.foreground,
@@ -728,17 +737,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             const SizedBox(height: 4),
             Text(
               printerListState.message,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
                 color: AppColors.mutedForeground,
               ),
             ),
             const SizedBox(height: 16),
-            AppButton.primary(
-              onPressed: _startScan,
-              icon: const Icon(Icons.refresh, size: 18),
-              child: const Text('Retry'),
-            ),
+            _buildErrorActionButton(printerListState.errorType),
           ],
         ),
       );
@@ -749,11 +755,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   Widget _buildPrinterTile(PrinterDevice printer, dynamic settings) {
     final isSelected = settings.selectedPrinterId == printer.id;
+    final isConnecting = _connectingPrinterId == printer.id;
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => _selectPrinter(printer),
+        onTap: isConnecting ? null : () => _selectPrinter(printer),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
@@ -772,13 +779,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       : AppColors.muted,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  _getConnectionIcon(printer.connectionType),
-                  size: 20,
-                  color: isSelected
-                      ? AppColors.primary
-                      : AppColors.mutedForeground,
-                ),
+                child: isConnecting
+                    ? Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primary,
+                        ),
+                      )
+                    : Icon(
+                        _getConnectionIcon(printer.connectionType),
+                        size: 20,
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.mutedForeground,
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -795,16 +810,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      printer.connectionTypeDisplay,
+                      isConnecting
+                          ? 'Connecting...'
+                          : printer.connectionTypeDisplay,
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.mutedForeground,
+                        color: isConnecting
+                            ? AppColors.primary
+                            : AppColors.mutedForeground,
                       ),
                     ),
                   ],
                 ),
               ),
-              if (isSelected)
+              if (isSelected && !isConnecting)
                 Container(
                   width: 24,
                   height: 24,
@@ -844,25 +863,40 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 
   void _selectPrinter(PrinterDevice printer) async {
-    // Connect to printer
-    final connected =
-        await ref.read(printerNotifierProvider.notifier).connect(printer);
-    if (connected) {
-      ref.read(settingsNotifierProvider.notifier).setSelectedPrinter(printer);
-      if (mounted) {
-        AppToast.success(
-          context,
-          title: 'Printer Selected',
-          message: 'Connected to ${printer.name}',
-        );
+    // Set connecting state
+    setState(() {
+      _connectingPrinterId = printer.id;
+    });
+
+    try {
+      // Connect to printer
+      final connected =
+          await ref.read(printerNotifierProvider.notifier).connect(printer);
+      if (connected) {
+        ref.read(settingsNotifierProvider.notifier).setSelectedPrinter(printer);
+        if (mounted) {
+          AppToast.success(
+            context,
+            title: 'Printer Selected',
+            message: 'Connected to ${printer.name}',
+          );
+        }
+      } else {
+        if (mounted) {
+          AppToast.error(
+            context,
+            title: 'Connection Failed',
+            message:
+                'Could not connect to ${printer.name}. Make sure the printer is on and nearby.',
+          );
+        }
       }
-    } else {
+    } finally {
+      // Clear connecting state
       if (mounted) {
-        AppToast.error(
-          context,
-          title: 'Connection Failed',
-          message: 'Could not connect to ${printer.name}',
-        );
+        setState(() {
+          _connectingPrinterId = null;
+        });
       }
     }
   }
@@ -902,5 +936,117 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   void _setKioskMode(bool enabled) {
     ref.read(settingsNotifierProvider.notifier).setKioskMode(enabled);
     // TODO: Actually enable/disable kiosk mode using kiosk_mode package
+  }
+
+  IconData _getErrorIcon(PrinterListErrorType errorType) {
+    switch (errorType) {
+      case PrinterListErrorType.permissionDenied:
+        return Icons.block;
+      case PrinterListErrorType.bluetoothOff:
+        return Icons.bluetooth_disabled;
+      case PrinterListErrorType.bluetoothUnsupported:
+        return Icons.bluetooth_disabled;
+      case PrinterListErrorType.unknown:
+        return Icons.error_outline;
+    }
+  }
+
+  String _getErrorTitle(PrinterListErrorType errorType) {
+    switch (errorType) {
+      case PrinterListErrorType.permissionDenied:
+        return 'Permission Required';
+      case PrinterListErrorType.bluetoothOff:
+        return 'Bluetooth is Off';
+      case PrinterListErrorType.bluetoothUnsupported:
+        return 'Bluetooth Not Supported';
+      case PrinterListErrorType.unknown:
+        return 'Scan Failed';
+    }
+  }
+
+  Widget _buildErrorActionButton(PrinterListErrorType errorType) {
+    switch (errorType) {
+      case PrinterListErrorType.permissionDenied:
+        return Column(
+          children: [
+            AppButton.primary(
+              onPressed: _startScan,
+              icon: const Icon(Icons.security, size: 18),
+              child: const Text('Grant Permissions'),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Tap to request Bluetooth permissions',
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.mutedForeground,
+              ),
+            ),
+          ],
+        );
+      case PrinterListErrorType.bluetoothOff:
+        return Column(
+          children: [
+            AppButton.primary(
+              onPressed: _turnOnBluetooth,
+              icon: const Icon(Icons.bluetooth, size: 18),
+              child: const Text('Turn On Bluetooth'),
+            ),
+            const SizedBox(height: 8),
+            AppButton.ghost(
+              onPressed: _startScan,
+              child: const Text('Retry'),
+            ),
+          ],
+        );
+      case PrinterListErrorType.bluetoothUnsupported:
+        return Column(
+          children: [
+            Text(
+              'Try connecting a USB printer instead',
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.mutedForeground,
+              ),
+            ),
+            const SizedBox(height: 8),
+            AppButton.secondary(
+              onPressed: _scanUsbOnly,
+              icon: const Icon(Icons.usb, size: 18),
+              child: const Text('Scan USB Only'),
+            ),
+          ],
+        );
+      case PrinterListErrorType.unknown:
+        return AppButton.primary(
+          onPressed: _startScan,
+          icon: const Icon(Icons.refresh, size: 18),
+          child: const Text('Retry'),
+        );
+    }
+  }
+
+  void _turnOnBluetooth() async {
+    final repository = ref.read(printerRepositoryProvider);
+    try {
+      await repository.turnOnBluetooth();
+      // Wait a moment for Bluetooth to turn on, then start scan
+      await Future.delayed(const Duration(milliseconds: 500));
+      _startScan();
+    } catch (e) {
+      if (mounted) {
+        AppToast.error(
+          context,
+          title: 'Cannot Turn On Bluetooth',
+          message: 'Please turn on Bluetooth manually in your device settings.',
+        );
+      }
+    }
+  }
+
+  void _scanUsbOnly() {
+    ref.read(printerListNotifierProvider.notifier).startScan(
+      connectionTypes: [PrinterConnectionType.usb],
+    );
   }
 }
