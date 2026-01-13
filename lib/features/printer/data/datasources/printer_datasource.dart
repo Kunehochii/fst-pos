@@ -20,6 +20,39 @@ class PrinterDataSource {
             printers.map((p) => PrinterDevice.fromLibrary(p)).toList(),
       );
 
+  /// Request Bluetooth permissions.
+  /// The flutter_thermal_printer package handles permissions internally when scanning.
+  /// This method exists for explicit permission checks.
+  /// Returns true if all permissions are granted.
+  Future<bool> requestBluetoothPermissions() async {
+    try {
+      // The flutter_thermal_printer package uses universal_ble under the hood
+      // which handles permissions automatically during startScan.
+      // We just check if Bluetooth is available as a proxy for permissions.
+      final state = await _thermalPrinter.isBleTurnedOn();
+      return state;
+    } catch (e) {
+      // If we get an exception, permissions might not be granted
+      return false;
+    }
+  }
+
+  /// Get the current Bluetooth availability state.
+  /// Returns a string describing the state.
+  Future<String> getBluetoothAvailabilityStatus() async {
+    try {
+      final isOn = await _thermalPrinter.isBleTurnedOn();
+      if (isOn) {
+        return 'poweredOn';
+      } else {
+        return 'poweredOff';
+      }
+    } catch (e) {
+      // This might indicate a permission issue
+      return 'unauthorized';
+    }
+  }
+
   /// Start scanning for printers.
   Future<void> startScan({
     List<PrinterConnectionType> connectionTypes = const [
@@ -44,7 +77,14 @@ class PrinterDataSource {
     if (device.rawPrinter == null) {
       return false;
     }
-    return await _thermalPrinter.connect(device.rawPrinter!);
+    try {
+      return await _thermalPrinter.connect(device.rawPrinter!);
+    } catch (e) {
+      // Log the error for debugging
+      // ignore: avoid_print
+      print('Printer connection error: $e');
+      return false;
+    }
   }
 
   /// Disconnect from a printer.

@@ -65,7 +65,7 @@ final bluetoothOnProvider = AutoDisposeFutureProvider<bool>.internal(
 // ignore: unused_element
 typedef BluetoothOnRef = AutoDisposeFutureProviderRef<bool>;
 String _$printerListNotifierHash() =>
-    r'76f2a60b163c5a2e818aff51ef26385645d7a2b0';
+    r'70afe5368a1945a05983baa779b5e3b67d582270';
 
 /// Notifier for managing printer discovery and list.
 ///

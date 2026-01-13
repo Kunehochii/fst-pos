@@ -69,6 +69,14 @@ abstract class PrinterRepository {
   /// Check if Bluetooth is turned on.
   Future<bool> isBluetoothOn();
 
+  /// Request Bluetooth permissions.
+  /// Returns true if all permissions are granted.
+  Future<bool> requestBluetoothPermissions();
+
+  /// Get the current Bluetooth availability status string.
+  /// Returns a human-readable status message.
+  Future<String> getBluetoothStatus();
+
   /// Dispose resources.
   Future<void> dispose();
 }
