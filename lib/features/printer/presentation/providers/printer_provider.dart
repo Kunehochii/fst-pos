@@ -47,7 +47,17 @@ class PrinterListReady extends PrinterListState {
 
 class PrinterListError extends PrinterListState {
   final String message;
-  const PrinterListError(this.message);
+  final PrinterListErrorType errorType;
+  const PrinterListError(this.message,
+      {this.errorType = PrinterListErrorType.unknown});
+}
+
+/// Type of printer list error for targeted recovery actions.
+enum PrinterListErrorType {
+  permissionDenied,
+  bluetoothOff,
+  bluetoothUnsupported,
+  unknown,
 }
 
 /// Notifier for managing printer discovery and list.
@@ -64,6 +74,7 @@ class PrinterListNotifier extends _$PrinterListNotifier {
   }
 
   /// Start scanning for printers.
+  /// This will first request permissions and check Bluetooth availability.
   Future<void> startScan({
     List<PrinterConnectionType> connectionTypes = const [
       PrinterConnectionType.usb,
@@ -71,6 +82,34 @@ class PrinterListNotifier extends _$PrinterListNotifier {
     ],
   }) async {
     final repository = ref.read(printerRepositoryProvider);
+
+    // First, request permissions
+    final permissionsGranted = await repository.requestBluetoothPermissions();
+    if (!permissionsGranted) {
+      state = const PrinterListError(
+        'Bluetooth permissions are required to scan for printers. Please grant permissions in Settings.',
+        errorType: PrinterListErrorType.permissionDenied,
+      );
+      return;
+    }
+
+    // Check if Bluetooth is available/on (for BLE scanning)
+    if (connectionTypes.contains(PrinterConnectionType.ble) ||
+        connectionTypes.contains(PrinterConnectionType.bluetooth)) {
+      final bluetoothOn = await repository.isBluetoothOn();
+      if (!bluetoothOn) {
+        final statusMessage = await repository.getBluetoothStatus();
+        // Determine error type based on status message
+        PrinterListErrorType errorType = PrinterListErrorType.bluetoothOff;
+        if (statusMessage.contains('not supported')) {
+          errorType = PrinterListErrorType.bluetoothUnsupported;
+        } else if (statusMessage.contains('permission')) {
+          errorType = PrinterListErrorType.permissionDenied;
+        }
+        state = PrinterListError(statusMessage, errorType: errorType);
+        return;
+      }
+    }
 
     state = const PrinterListScanning([]);
 
