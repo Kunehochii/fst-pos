@@ -91,6 +91,14 @@ class PrinterRepositoryImpl implements PrinterRepository {
         return 'Bluetooth is on';
       case 'poweredOff':
         return 'Bluetooth is off. Please turn on Bluetooth.';
+      case 'location_disabled':
+        return 'Location services are disabled. Please enable Location for Bluetooth scanning.';
+      case 'location_permission_denied':
+        return 'Location permission denied. Please grant Location permissions in Settings.';
+      case 'bluetooth_permission_denied':
+        return 'Bluetooth permission denied. Please grant Bluetooth permissions in Settings.';
+      case 'bluetooth_permission_permanently_denied':
+        return 'Bluetooth permission permanently denied. Please enable in app settings.';
       case 'unauthorized':
         return 'Bluetooth permission denied. Please grant Bluetooth permissions in Settings.';
       default:

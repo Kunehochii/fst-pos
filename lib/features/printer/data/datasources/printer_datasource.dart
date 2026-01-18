@@ -1,10 +1,15 @@
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:developer';
 
 // ignore: depend_on_referenced_packages
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart' as esc;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_thermal_printer/flutter_thermal_printer.dart'
     hide PaperSize;
+import 'package:flutter_thermal_printer/utils/printer.dart'
+    show Printer, ConnectionType;
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../domain/entities/printer_device.dart';
 import '../../domain/entities/receipt_line.dart';
@@ -12,6 +17,7 @@ import '../../domain/entities/receipt_line.dart';
 /// Data source for printer operations using flutter_thermal_printer.
 class PrinterDataSource {
   final FlutterThermalPrinter _thermalPrinter = FlutterThermalPrinter.instance;
+  StreamSubscription<List<Printer>>? _devicesStreamSubscription;
 
   /// Stream of available printers.
   Stream<List<PrinterDevice>> get printersStream =>
@@ -20,19 +26,87 @@ class PrinterDataSource {
             printers.map((p) => PrinterDevice.fromLibrary(p)).toList(),
       );
 
-  /// Request Bluetooth permissions.
-  /// The flutter_thermal_printer package handles permissions internally when scanning.
-  /// This method exists for explicit permission checks.
+  /// Ensure location services are enabled (required for BLE scanning on Android).
+  Future<bool> _ensureLocationServices() async {
+    try {
+      // Check if location services are enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        debugPrint('Location services are disabled');
+        return false;
+      }
+
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          debugPrint('Location permissions are denied');
+          return false;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        debugPrint('Location permissions are permanently denied');
+        return false;
+      }
+
+      debugPrint('Location services and permissions are available');
+      return true;
+    } catch (e) {
+      debugPrint('Error checking location services: $e');
+      return false;
+    }
+  }
+
+  /// Ensure Bluetooth permissions are granted.
+  Future<bool> _ensureBluetoothPermissions() async {
+    try {
+      // Request necessary Bluetooth permissions
+      final bluetoothScanStatus = await Permission.bluetoothScan.request();
+      final bluetoothConnectStatus =
+          await Permission.bluetoothConnect.request();
+
+      if (bluetoothScanStatus.isPermanentlyDenied ||
+          bluetoothConnectStatus.isPermanentlyDenied) {
+        debugPrint('Bluetooth permissions permanently denied');
+        return false;
+      }
+
+      if (bluetoothScanStatus.isDenied || bluetoothConnectStatus.isDenied) {
+        debugPrint('Bluetooth permissions denied');
+        return false;
+      }
+
+      debugPrint('Bluetooth permissions granted');
+      return true;
+    } catch (e) {
+      debugPrint('Error requesting Bluetooth permissions: $e');
+      return false;
+    }
+  }
+
+  /// Request all required permissions for Bluetooth scanning.
   /// Returns true if all permissions are granted.
   Future<bool> requestBluetoothPermissions() async {
     try {
-      // The flutter_thermal_printer package uses universal_ble under the hood
-      // which handles permissions automatically during startScan.
-      // We just check if Bluetooth is available as a proxy for permissions.
-      final state = await _thermalPrinter.isBleTurnedOn();
-      return state;
+      // First check location services (required for BLE on Android)
+      final locationOk = await _ensureLocationServices();
+      if (!locationOk) {
+        debugPrint('Location services check failed');
+        return false;
+      }
+
+      // Then check Bluetooth permissions
+      final bluetoothOk = await _ensureBluetoothPermissions();
+      if (!bluetoothOk) {
+        debugPrint('Bluetooth permissions check failed');
+        return false;
+      }
+
+      return true;
     } catch (e) {
-      // If we get an exception, permissions might not be granted
+      debugPrint('Error in requestBluetoothPermissions: $e');
       return false;
     }
   }
@@ -41,6 +115,31 @@ class PrinterDataSource {
   /// Returns a string describing the state.
   Future<String> getBluetoothAvailabilityStatus() async {
     try {
+      // Check location services first
+      final locationEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!locationEnabled) {
+        return 'location_disabled';
+      }
+
+      // Check location permission
+      final locationPermission = await Geolocator.checkPermission();
+      if (locationPermission == LocationPermission.denied ||
+          locationPermission == LocationPermission.deniedForever) {
+        return 'location_permission_denied';
+      }
+
+      // Check Bluetooth permissions
+      final bluetoothScan = await Permission.bluetoothScan.status;
+      final bluetoothConnect = await Permission.bluetoothConnect.status;
+      if (bluetoothScan.isDenied || bluetoothConnect.isDenied) {
+        return 'bluetooth_permission_denied';
+      }
+      if (bluetoothScan.isPermanentlyDenied ||
+          bluetoothConnect.isPermanentlyDenied) {
+        return 'bluetooth_permission_permanently_denied';
+      }
+
+      // Check if Bluetooth is on
       final isOn = await _thermalPrinter.isBleTurnedOn();
       if (isOn) {
         return 'poweredOn';
@@ -48,18 +147,109 @@ class PrinterDataSource {
         return 'poweredOff';
       }
     } catch (e) {
-      // This might indicate a permission issue
-      return 'unauthorized';
+      debugPrint('Error getting Bluetooth status: $e');
+      return 'unknown';
     }
   }
 
-  /// Start scanning for printers.
+  /// Start scanning for BLE printers with proper timeout handling.
+  Future<List<PrinterDevice>> scanBlePrinters({
+    Duration timeout = const Duration(seconds: 8),
+  }) async {
+    try {
+      debugPrint('Starting BLE printer scan...');
+
+      // Ensure permissions first
+      final locationOk = await _ensureLocationServices();
+      if (!locationOk) {
+        debugPrint('Location services not available for Bluetooth scanning');
+        return [];
+      }
+
+      final bluetoothOk = await _ensureBluetoothPermissions();
+      if (!bluetoothOk) {
+        debugPrint('Bluetooth permissions not available');
+        return [];
+      }
+
+      final completer = Completer<List<PrinterDevice>>();
+      final List<PrinterDevice> printers = [];
+
+      _devicesStreamSubscription?.cancel();
+
+      try {
+        await _thermalPrinter.getPrinters(connectionTypes: [
+          ConnectionType.BLE,
+        ]);
+
+        _devicesStreamSubscription = _thermalPrinter.devicesStream.listen(
+          (List<Printer> devices) {
+            log('Found ${devices.length} BLE printers');
+
+            printers.clear();
+            for (var device in devices) {
+              printers.add(PrinterDevice.fromLibrary(device));
+              debugPrint('BLE Printer: ${device.name} - ${device.address}');
+            }
+
+            // Complete after receiving devices (with a small delay to allow more)
+            if (!completer.isCompleted && printers.isNotEmpty) {
+              Future.delayed(const Duration(seconds: 2), () {
+                if (!completer.isCompleted) {
+                  completer.complete(List.from(printers));
+                }
+              });
+            }
+          },
+          onError: (error) {
+            debugPrint('BLE scan error: $error');
+            if (!completer.isCompleted) {
+              completer.complete([]);
+            }
+          },
+        );
+      } catch (e) {
+        debugPrint('Error starting BLE printer scan: $e');
+        if (!completer.isCompleted) {
+          completer.complete([]);
+        }
+      }
+
+      // Wait for results with timeout
+      try {
+        final result = await completer.future.timeout(
+          timeout,
+          onTimeout: () {
+            debugPrint(
+                'BLE scan timeout, returning ${printers.length} printers found so far');
+            return List.from(printers);
+          },
+        );
+
+        return result;
+      } catch (e) {
+        debugPrint('Error in BLE scan: $e');
+        return [];
+      }
+    } catch (e) {
+      debugPrint('Exception in scanBlePrinters: $e');
+      return [];
+    }
+  }
+
+  /// Start scanning for printers (stream-based scanning).
   Future<void> startScan({
     List<PrinterConnectionType> connectionTypes = const [
       PrinterConnectionType.usb,
       PrinterConnectionType.ble,
     ],
   }) async {
+    // Request permissions before scanning
+    final hasPermissions = await requestBluetoothPermissions();
+    if (!hasPermissions) {
+      debugPrint('Bluetooth permissions not granted for scanning');
+    }
+
     final types = connectionTypes.map((t) => t.toLibrary()).toList();
     await _thermalPrinter.getPrinters(
       connectionTypes: types,
@@ -69,20 +259,42 @@ class PrinterDataSource {
 
   /// Stop scanning for printers.
   Future<void> stopScan() async {
+    _devicesStreamSubscription?.cancel();
     await _thermalPrinter.stopScan();
   }
 
   /// Connect to a printer.
   Future<bool> connect(PrinterDevice device) async {
     if (device.rawPrinter == null) {
+      debugPrint('Cannot connect: rawPrinter is null');
       return false;
     }
     try {
-      return await _thermalPrinter.connect(device.rawPrinter!);
+      debugPrint('Connecting to printer: ${device.name}...');
+
+      // For BLE printers, disconnect first to ensure clean state
+      if (device.connectionType == PrinterConnectionType.ble) {
+        try {
+          await _thermalPrinter.disconnect(device.rawPrinter!);
+          await Future.delayed(const Duration(milliseconds: 500));
+        } catch (e) {
+          debugPrint('Disconnect before connect (expected): $e');
+        }
+      }
+
+      final result = await _thermalPrinter.connect(device.rawPrinter!);
+
+      // Wait for connection to stabilize
+      if (device.connectionType == PrinterConnectionType.ble) {
+        await Future.delayed(const Duration(milliseconds: 1500));
+      } else {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+
+      debugPrint('Connection result: $result');
+      return result;
     } catch (e) {
-      // Log the error for debugging
-      // ignore: avoid_print
-      print('Printer connection error: $e');
+      debugPrint('Printer connection error: $e');
       return false;
     }
   }
@@ -260,6 +472,7 @@ class PrinterDataSource {
 
   /// Dispose resources.
   Future<void> dispose() async {
+    _devicesStreamSubscription?.cancel();
     await stopScan();
   }
 }
